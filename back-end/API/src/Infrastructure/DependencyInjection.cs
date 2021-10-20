@@ -20,9 +20,13 @@ namespace API.Infrastructure
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(
-                        configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                    options.UseNpgsql(
+                        configuration.GetConnectionString("DbConnection"),
+                        b =>
+                        {
+                            b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                            b.UseNetTopologySuite();
+                        }));
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());

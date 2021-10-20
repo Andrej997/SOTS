@@ -13,6 +13,7 @@ namespace API.WebApi.Controllers
     {
         [HttpPost]
         [Route("create")]
+        [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> CreateUser(CreateUserCommand command)
         {
             try
@@ -28,6 +29,7 @@ namespace API.WebApi.Controllers
 
         [HttpPost]
         [Route("login")]
+        [ApiExplorerSettings(GroupName = "v1")]
         public async Task<ActionResult<UserDto>> Login(LoginCommand command)
         {
             try
