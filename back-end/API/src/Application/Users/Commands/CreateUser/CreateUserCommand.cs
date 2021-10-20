@@ -19,7 +19,7 @@ namespace API.Application.Users.Commands.CreateUser
 
         public string Surname { get; set; }
 
-        public int RoleId { get; set; }
+        public long RoleId { get; set; }
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
@@ -50,15 +50,23 @@ namespace API.Application.Users.Commands.CreateUser
                     iterationCount: 100000,
                     numBytesRequested: 256 / 8));
 
-                _context.Users
+                var user = _context.Users
                    .Add(new User
                    {
                        Name = request.Name,
                        Surname = request.Surname,
                        Username = request.Username,
-                       PasswordHash = hashed,
+                       PasswordHash = request.Password,
                        CreatedAt = _dateTime.UtcNow
                    });
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                _context.UserRoles.Add(new UserRole
+                {
+                    UserId = user.Entity.Id,
+                    RoleId = request.RoleId
+                });
 
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -68,7 +76,6 @@ namespace API.Application.Users.Commands.CreateUser
             {
                 throw;
             }
-
         }
     }
 }

@@ -6,7 +6,7 @@ namespace API.Application.Users.Commands.Login
 {
     public class UserDto : IMapFrom<User>
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string Name { get; set; }
 
@@ -14,6 +14,6 @@ namespace API.Application.Users.Commands.Login
 
         public string Username { get; set; }
 
-        public int RoleId { get; set; }
+        public long RoleId { get; set; }
     }
 }

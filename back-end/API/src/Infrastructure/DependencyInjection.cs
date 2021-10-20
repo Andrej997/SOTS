@@ -21,7 +21,7 @@ namespace API.Infrastructure
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(
-                        configuration.GetConnectionString("DbConnection"),
+                        configuration.GetConnectionString("DefaultConnection"),
                         b =>
                         {
                             b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);

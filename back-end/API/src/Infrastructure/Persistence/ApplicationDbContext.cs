@@ -33,6 +33,8 @@ namespace API.Infrastructure.Persistence
 
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -62,6 +64,8 @@ namespace API.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            builder.HasAnnotation("Relational:Collation", "C.UTF-8");
 
             base.OnModelCreating(builder);
         }

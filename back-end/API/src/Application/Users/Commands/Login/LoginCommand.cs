@@ -21,12 +21,12 @@ namespace API.Application.Users.Commands.Login
         public string Password { get; set; }
     }
 
-    public class GetResourceQueryHandler : IRequestHandler<LoginCommand, UserDto>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, UserDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetResourceQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public LoginCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -49,17 +49,24 @@ namespace API.Application.Users.Commands.Login
                     iterationCount: 100000,
                     numBytesRequested: 256 / 8));
 
-                return await _context.Users
-                    .Where(user => user.Username == request.Username && user.PasswordHash == hashed)
-                    .AsNoTracking()
-                    .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync(cancellationToken);
+                var user = _context.Users
+                    .Where(user => user.Username == request.Username && user.PasswordHash == request.Password)
+                    .Select(user => new UserDto
+                    {
+                        Id = user.Id,
+                        Username = user.Username,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        RoleId = _context.UserRoles.Where(ur => ur.UserId == user.Id).Select(ur => ur.RoleId).FirstOrDefault()
+                    })
+                    .FirstOrDefault();
+
+                return user;
             }
             catch (Exception e)
             {
                 throw;
             }
-
         }
     }
 }
