@@ -35,6 +35,8 @@ CREATE TABLE "tests" (
 CREATE TABLE "student_tests" (
   "user_id" bigint,
   "test_id" bigint,
+  "took_test" boolean,
+  "grade_id" bigint,
   PRIMARY KEY ("user_id", "test_id")
 );
 
@@ -51,12 +53,8 @@ CREATE TABLE "grades" (
 
 CREATE TABLE "questions" (
   "id" BIGSERIAL PRIMARY KEY,
-  "question_type_id" bigint
-);
-
-CREATE TABLE "question_types" (
-  "id" bigint PRIMARY KEY,
-  "type" text
+  "question" text,
+  "created_at" timestamp
 );
 
 CREATE TABLE "answers" (
@@ -90,7 +88,7 @@ ALTER TABLE "tests" ADD FOREIGN KEY ("creator_id") REFERENCES "users" ("id");
 
 ALTER TABLE "tests" ADD FOREIGN KEY ("test_time_id") REFERENCES "test_time" ("id");
 
-ALTER TABLE "questions" ADD FOREIGN KEY ("question_type_id") REFERENCES "question_types" ("id");
+ALTER TABLE "student_tests" ADD FOREIGN KEY ("grade_id") REFERENCES "grades" ("id");
 
 ALTER TABLE "questions_answers" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
 
