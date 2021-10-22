@@ -35,6 +35,7 @@ Table tests {
   created_at timestamp
   creator_id bigint
   test_time_id bigint
+  question_id bigint
  }
  
 Ref: tests.subject_id > subjects.id
@@ -73,6 +74,8 @@ Table questions {
  created_at timestamp
 }
 
+Ref: questions.id > tests.question_id
+
 Table answers {
  id bigint [pk, increment]
  text_answer text
@@ -80,12 +83,3 @@ Table answers {
 }
 
 Ref: questions.id < answers.question_id
-
-Table test_questions {
- test_id bigint [pk]
- question_id bigint [pk]
-}
-
-Ref: test_questions.question_id > questions.id
-Ref: test_questions.test_id > tests.id
-

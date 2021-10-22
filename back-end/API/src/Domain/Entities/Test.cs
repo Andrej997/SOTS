@@ -13,5 +13,7 @@ namespace API.Domain.Entities
         public long CreatorId { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public long QuestionId { get; set; }
     }
 }

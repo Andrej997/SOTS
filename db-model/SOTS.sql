@@ -29,7 +29,8 @@ CREATE TABLE "tests" (
   "subject_id" bigint,
   "created_at" timestamp,
   "creator_id" bigint,
-  "test_time_id" bigint
+  "test_time_id" bigint,
+  "question_id" bigint
 );
 
 CREATE TABLE "student_tests" (
@@ -63,12 +64,6 @@ CREATE TABLE "answers" (
   "question_id" bigint
 );
 
-CREATE TABLE "test_questions" (
-  "test_id" bigint,
-  "question_id" bigint,
-  PRIMARY KEY ("test_id", "question_id")
-);
-
 ALTER TABLE "user_roles" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
 
 ALTER TABLE "user_roles" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
@@ -85,9 +80,7 @@ ALTER TABLE "tests" ADD FOREIGN KEY ("test_time_id") REFERENCES "test_time" ("id
 
 ALTER TABLE "student_tests" ADD FOREIGN KEY ("grade_id") REFERENCES "grades" ("id");
 
+ALTER TABLE "questions" ADD FOREIGN KEY ("id") REFERENCES "tests" ("question_id");
+
 ALTER TABLE "answers" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
-
-ALTER TABLE "test_questions" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
-
-ALTER TABLE "test_questions" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("id");
 
