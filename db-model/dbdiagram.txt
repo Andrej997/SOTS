@@ -1,0 +1,91 @@
+
+Table users {
+  id bigint [pk, increment] // auto-increment
+  name text
+  surname text
+  username text
+  password_hash text
+  created_at timestamp
+}
+
+Table roles {
+  id bigint [pk]
+  name varchar
+}
+ 
+Table user_roles {
+  user_id bigint [pk]
+  role_id bigint [pk]
+}
+
+Ref: user_roles.role_id > roles.id
+Ref: user_roles.user_id > users.id
+
+//----------------------------------------------//
+
+Table subjects {
+  id bigint [pk]
+  name text
+ }
+
+Table tests {
+  id bigint [pk, increment]
+  name varchar
+  subject_id bigint
+  created_at timestamp
+  creator_id bigint
+  test_time_id bigint
+ }
+ 
+Ref: tests.subject_id > subjects.id
+ 
+//----------------------------------------------//
+ 
+Table student_tests {
+ user_id bigint [pk]
+ test_id bigint [pk]
+ took_test boolean
+ grade_id bigint
+} 
+ 
+Ref: student_tests.test_id > tests.id
+Ref: student_tests.user_id > users.id
+Ref: users.id < tests.creator_id
+
+Table test_time {
+ id bigint [pk]
+ start timestamp
+ end timestamp
+} 
+
+Ref: test_time.id < tests.test_time_id
+
+Table grades {
+  id [pk]
+  label text // moze biti kao u osnovnoj/srednoj (1..5) ili fax (5..10) ili USA (A..F)
+}
+
+Ref: grades.id < student_tests.grade_id
+
+Table questions {
+ id bigint [pk, increment]
+ text_question text
+ created_at timestamp
+}
+
+Table answers {
+ id bigint [pk, increment]
+ text_answer text
+ question_id bigint
+}
+
+Ref: questions.id < answers.question_id
+
+Table test_questions {
+ test_id bigint [pk]
+ question_id bigint [pk]
+}
+
+Ref: test_questions.question_id > questions.id
+Ref: test_questions.test_id > tests.id
+

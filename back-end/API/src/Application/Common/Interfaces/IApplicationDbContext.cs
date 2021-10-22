@@ -15,7 +15,6 @@ namespace API.Application.Common.Interfaces
         DbSet<Grade> Grades { get; set; }
         DbSet<Question> Questions { get; set; }
         DbSet<Answer> Answers { get; set; }
-        DbSet<QuestionAnswer> QuestionAnswers { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

@@ -53,19 +53,14 @@ CREATE TABLE "grades" (
 
 CREATE TABLE "questions" (
   "id" BIGSERIAL PRIMARY KEY,
-  "question" text,
+  "text_question" text,
   "created_at" timestamp
 );
 
 CREATE TABLE "answers" (
   "id" BIGSERIAL PRIMARY KEY,
-  "answer" text
-);
-
-CREATE TABLE "questions_answers" (
-  "question_id" bigint,
-  "answer_id" bigint,
-  PRIMARY KEY ("question_id", "answer_id")
+  "text_answer" text,
+  "question_id" bigint
 );
 
 CREATE TABLE "test_questions" (
@@ -90,9 +85,7 @@ ALTER TABLE "tests" ADD FOREIGN KEY ("test_time_id") REFERENCES "test_time" ("id
 
 ALTER TABLE "student_tests" ADD FOREIGN KEY ("grade_id") REFERENCES "grades" ("id");
 
-ALTER TABLE "questions_answers" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
-
-ALTER TABLE "questions_answers" ADD FOREIGN KEY ("answer_id") REFERENCES "answers" ("id");
+ALTER TABLE "answers" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
 
 ALTER TABLE "test_questions" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
 

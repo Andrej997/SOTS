@@ -18,6 +18,9 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.TextAnswer)
                 .HasColumnName("text_answer");
+
+            builder.Property(e => e.QuestionId)
+                .HasColumnName("question_id");
         }
     }
 }

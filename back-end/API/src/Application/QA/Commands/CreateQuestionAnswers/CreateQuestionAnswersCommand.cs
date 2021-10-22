@@ -59,17 +59,9 @@ namespace API.Application.QA.Commands.CreateQuestionAnswers
                     var answerDb = _context.Answers
                       .Add(new Answer
                       {
-                          TextAnswer = answer.TextAnswer
+                          TextAnswer = answer.TextAnswer,
+                          QuestionId = question.Entity.Id
                       });
-
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    _context.QuestionAnswers
-                        .Add(new QuestionAnswer
-                        {
-                            AnswerId = answerDb.Entity.Id,
-                            QuestionId = question.Entity.Id
-                        });
 
                     await _context.SaveChangesAsync(cancellationToken);
                 }
