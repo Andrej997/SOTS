@@ -13,6 +13,9 @@ namespace API.Application.Common.Interfaces
         DbSet<Test> Tests { get; set; }
         DbSet<Subject> Subjects { get; set; }
         DbSet<Grade> Grades { get; set; }
+        DbSet<Question> Questions { get; set; }
+        DbSet<Answer> Answers { get; set; }
+        DbSet<QuestionAnswer> QuestionAnswers { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
