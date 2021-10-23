@@ -14,6 +14,8 @@ namespace API.Domain.Entities
 
         public DateTime CreatedAt { get; set; }
 
+        public long TestTimeId { get; set; }
+
         public long QuestionId { get; set; }
     }
 }

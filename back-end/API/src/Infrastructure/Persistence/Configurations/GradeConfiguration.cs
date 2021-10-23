@@ -16,6 +16,12 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Id)
                 .HasColumnName("id");
 
+            builder.Property(e => e.FromProcentage)
+                .HasColumnName("from_procentage");
+
+            builder.Property(e => e.ToProcentage)
+                .HasColumnName("to_procentage");
+
             builder.Property(e => e.Label)
                 .HasColumnName("label");
         }

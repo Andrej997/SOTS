@@ -7,5 +7,7 @@
         public string TextAnswer { get; set; }
 
         public long QuestionId { get; set; }
+
+        public bool IsCorrect { get; set; }
     }
 }
