@@ -43,9 +43,11 @@ Ref: tests.subject_id > subjects.id
 //----------------------------------------------//
  
 Table student_tests {
- user_id bigint [pk]
- test_id bigint [pk]
+ id bigint [pk, increment]
+ user_id bigint
+ test_id bigint
  took_test boolean
+ points float
  grade_id bigint
 } 
  
@@ -53,16 +55,24 @@ Ref: student_tests.test_id > tests.id
 Ref: student_tests.user_id > users.id
 Ref: users.id < tests.creator_id
 
+Table tests_test_time {
+ test_id bigint [pk]
+ test_time_id bigint [pk]
+}
+
 Table test_time {
  id bigint [pk]
  start timestamp
  end timestamp
 } 
 
-Ref: test_time.id < tests.test_time_id
+Ref: tests_test_time.test_id > tests.test_time_id
+Ref: test_time.id < tests_test_time.test_time_id
 
 Table grades {
   id [pk]
+  from_procentage float
+  to_procentage float
   label text // moze biti kao u osnovnoj/srednoj (1..5) ili fax (5..10) ili USA (A..F)
 }
 
@@ -80,6 +90,48 @@ Table answers {
  id bigint [pk, increment]
  text_answer text
  question_id bigint
+ is_correct boolean
 }
 
 Ref: questions.id < answers.question_id
+
+Table question_completed {
+ id bigint [pk]
+ student_tests_id bigint
+ question_id bigint
+ completed_persentage fload
+}
+
+Ref: student_tests.id < question_completed.student_tests_id
+Ref: questions.id < question_completed.question_id
+
+Table user_subject {
+  subject_id bigint [pk]
+  user_id bigint [pk]
+  
+  
+}
+
+Ref: user_subject.subject_id > subjects.id
+Ref: users.id < user_subject.user_id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
