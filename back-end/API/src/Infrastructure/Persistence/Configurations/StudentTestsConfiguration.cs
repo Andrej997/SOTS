@@ -11,7 +11,7 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.ToTable("student_tests", "project");
 
             builder.HasKey(e => e.Id)
-                    .HasName("pk_test_time");
+                    .HasName("pk_student_test");
 
             builder.Property(e => e.UserId)
                 .HasColumnName("user_id");
