@@ -35,7 +35,6 @@ Table tests {
   created_at timestamp
   creator_id bigint
   test_time_id bigint
-  question_id bigint
  }
  
 Ref: tests.subject_id > subjects.id
@@ -70,7 +69,7 @@ Ref: tests_test_time.test_id > tests.test_time_id
 Ref: test_time.id < tests_test_time.test_time_id
 
 Table grades {
-  id [pk]
+  id bigint [pk]
   from_procentage float
   to_procentage float
   label text // moze biti kao u osnovnoj/srednoj (1..5) ili fax (5..10) ili USA (A..F)
@@ -82,9 +81,10 @@ Table questions {
  id bigint [pk, increment]
  text_question text
  created_at timestamp
+ test_id bigint
 }
 
-Ref: questions.id > tests.question_id
+Ref: questions.test_id > tests.id
 
 Table answers {
  id bigint [pk, increment]

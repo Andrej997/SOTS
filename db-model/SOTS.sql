@@ -29,8 +29,7 @@ CREATE TABLE "tests" (
   "subject_id" bigint,
   "created_at" timestamp,
   "creator_id" bigint,
-  "test_time_id" bigint,
-  "question_id" bigint
+  "test_time_id" bigint
 );
 
 CREATE TABLE "student_tests" (
@@ -55,7 +54,7 @@ CREATE TABLE "test_time" (
 );
 
 CREATE TABLE "grades" (
-  "id" [pk],
+  "id" bigint PRIMARY KEY,
   "from_procentage" float,
   "to_procentage" float,
   "label" text
@@ -64,7 +63,8 @@ CREATE TABLE "grades" (
 CREATE TABLE "questions" (
   "id" BIGSERIAL PRIMARY KEY,
   "text_question" text,
-  "created_at" timestamp
+  "created_at" timestamp,
+  "test_id" bigint
 );
 
 CREATE TABLE "answers" (
@@ -105,7 +105,7 @@ ALTER TABLE "tests_test_time" ADD FOREIGN KEY ("test_time_id") REFERENCES "test_
 
 ALTER TABLE "student_tests" ADD FOREIGN KEY ("grade_id") REFERENCES "grades" ("id");
 
-ALTER TABLE "questions" ADD FOREIGN KEY ("id") REFERENCES "tests" ("question_id");
+ALTER TABLE "questions" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("id");
 
 ALTER TABLE "answers" ADD FOREIGN KEY ("question_id") REFERENCES "questions" ("id");
 
