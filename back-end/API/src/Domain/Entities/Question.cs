@@ -10,5 +10,9 @@ namespace API.Domain.Entities
         public string TextQuestion { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public long TestId { get; set; }
+
+        public virtual List<Answer> Answers { get; set; }
     }
 }

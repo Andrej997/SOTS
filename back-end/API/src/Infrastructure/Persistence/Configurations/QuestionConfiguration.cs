@@ -19,6 +19,9 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.TextQuestion)
                 .HasColumnName("text_question");
 
+            builder.Property(e => e.TestId)
+                .HasColumnName("test_id");
+
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("created_at");
         }

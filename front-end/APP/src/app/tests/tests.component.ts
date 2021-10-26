@@ -43,41 +43,42 @@ export class TestsComponent implements OnInit {
   }
 
   addQuestionText(event: any, questionId: number) {
-    let question = <Question>this.questions.find(x => x.id == questionId);
+    let question = <Question>this.questions.find(x => x.question_id == questionId);
     question.TextQuestion = event.srcElement.value;
   }
 
   addAnswer(questionId: number) {
-    let question = <Question>this.questions.find(x => x.id == questionId);
+    let question = <Question>this.questions.find(x => x.question_id == questionId);
     let id = question.Answers.length + 1;
     question.Answers.push(new Answer(id));
   }
 
   addAnswerText(event: any, questionId: number, answerId: number) {
-    let question = <Question>this.questions.find(x => x.id == questionId);
-    let answer = <Answer>question.Answers.find(x => x.id == answerId);
+    let question = <Question>this.questions.find(x => x.question_id == questionId);
+    let answer = <Answer>question.Answers.find(x => x.answer_id == answerId);
     answer.TextAnswer = event.srcElement.value;
   }
 
   setCorrectAnswer(questionId: number, answerId: number) {
-    let question = <Question>this.questions.find(x => x.id == questionId);
-    let answer = <Answer>question.Answers.find(x => x.id == answerId);
+    let question = <Question>this.questions.find(x => x.question_id == questionId);
+    let answer = <Answer>question.Answers.find(x => x.answer_id == answerId);
     answer.IsCorrect = !answer.IsCorrect;
   }
 
   private createTest() {
     console.log(this.questions);
     
-    // let body = {
-    //   Name: this.testForm.value.name,
-    //   SubjectId: this.testForm.value.subject,
-    //   CreatorId: 1
-    // };
-    // this.testsService.createTest(body).subscribe(result => {
-    //   console.log("Created");
-    // }, error => {
-    //     console.error(error);
-    // });
+    let body = {
+      Name: this.testForm.value.name,
+      SubjectId: this.testForm.value.subject,
+      Questions: this.questions,
+      CreatorId: 1
+    };
+    this.testsService.createTest(body).subscribe(result => {
+      console.log("Created");
+    }, error => {
+        console.error(error);
+    });
   }
 
   onFirstSubmit() {

@@ -2,6 +2,7 @@
 using API.Domain.Entities;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace API.Application.Tests.Commands.CreateTest
         public string Name { get; set; }
 
         public long SubjectId { get; set; }
+
+        public List<Question> Questions { get; set; }
 
         public long CreatorId { get; set; }
     }
@@ -41,7 +44,7 @@ namespace API.Application.Tests.Commands.CreateTest
                 if (!_context.Subjects.Any(ur => ur.Id == request.SubjectId))
                     throw new Exception("Subject not found!");
 
-                _context.Tests
+                var testDb = _context.Tests
                    .Add(new Test
                    {
                        Name = request.Name,
@@ -51,6 +54,27 @@ namespace API.Application.Tests.Commands.CreateTest
                    });
 
                 await _context.SaveChangesAsync(cancellationToken);
+
+                foreach (var question in request.Questions)
+                {
+                    question.TestId = testDb.Entity.Id;
+                    question.CreatedAt = _dateTime.UtcNow;
+
+                    var questionDb = _context.Questions
+                        .Add(question);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    // TODO : conflict
+                    foreach (var answer in question.Answers)
+                    {
+                        answer.QuestionId = questionDb.Entity.Id;
+                        var answerDb = _context.Answers.Add(answer);
+                        await _context.SaveChangesAsync(cancellationToken);
+                        answerDb.DetectChanges();
+                    }
+                    questionDb.DetectChanges();
+                }
 
                 return Unit.Value;
             }
