@@ -21,6 +21,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
+import { NewTestComponent } from './tests/new-test/new-test.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { HomeComponent } from './home/home.component';
     AppComponent,
     TestsComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    NewTestComponent
   ],
   imports: [
     BrowserModule,

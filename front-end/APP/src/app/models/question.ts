@@ -2,6 +2,7 @@ export class Question {
     id: number;
     question_id: number;
     TextQuestion: string;
+    Points: number;
     Answers: Answer[];
 
     constructor(id: number) {

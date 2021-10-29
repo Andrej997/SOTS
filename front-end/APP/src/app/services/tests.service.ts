@@ -8,6 +8,10 @@ export class TestsService {
 
   constructor(private http: HttpClient) { }
 
+  getTests() {
+    return this.http.get(environment.api + `Tests`);
+  }
+
   getSubjects() {
     return this.http.get(environment.api + `Tests/subjects`);
   }
