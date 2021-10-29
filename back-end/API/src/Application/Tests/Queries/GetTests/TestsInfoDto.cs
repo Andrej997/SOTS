@@ -8,12 +8,14 @@ namespace API.Application.Tests.Queries.GetTests
 
         public string Name { get; set; }
 
+        public long QuestionCount { get; set; }
+
         public string SubjectName { get; set; }
 
         public string CreatorName { get; set; }
 
         public DateTime Created { get; set; }
 
-        public long QuestionCount { get; set; }
+        public long MaxPoints { get; set; }
     }
 }
