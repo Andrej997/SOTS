@@ -10,6 +10,7 @@ namespace API.Application.Common.Interfaces
         DbSet<User> Users { get; set; }
         DbSet<Role> Roles { get; set; }
         DbSet<UserRole> UserRoles { get; set; }
+        DbSet<UserSubject> UserSubjects { get; set; }
         DbSet<Test> Tests { get; set; }
         DbSet<Subject> Subjects { get; set; }
         DbSet<Grade> Grades { get; set; }

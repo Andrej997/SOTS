@@ -23,6 +23,7 @@ export class NewTestComponent implements OnInit {
     this.testForm = this.fb.group({
       name: ['', Validators.required],
       subject: [0, Validators.required],
+      maxPoints: [100, Validators.required],
     });
     this.getSubjects();
     this.addQuestion();
@@ -52,6 +53,11 @@ export class NewTestComponent implements OnInit {
     question.TextQuestion = event.srcElement.value;
   }
 
+  addQuestionPoints(event: any, questionId: number) {
+    let question = <Question>this.questions.find(x => x.question_id == questionId);
+    question.Points = event.srcElement.value;
+  }
+
   addAnswer(questionId: number) {
     let question = <Question>this.questions.find(x => x.question_id == questionId);
     let id = question.Answers.length + 1;
@@ -76,19 +82,14 @@ export class NewTestComponent implements OnInit {
     answer.IsCorrect = !answer.IsCorrect;
   }
 
-  maxPoints(event: any) {
-    console.log(event.srcElement.value);
-    
-  }
-
   private createTest() {
-    console.log(this.questions);
-    
     let body = {
       Name: this.testForm.value.name,
       SubjectId: this.testForm.value.subject,
       Questions: this.questions,
-      CreatorId: 1
+      CreatorId: 1,
+      MaxPoints: this.testForm.value.maxPoints,
+      TestTimeId: 1
     };
     this.testsService.createTest(body).subscribe(result => {
       console.log("Created");
@@ -98,7 +99,6 @@ export class NewTestComponent implements OnInit {
   }
 
   onFirstSubmit() {
-    console.log(this.testForm.value.name);
     this.createTest();
   }
 

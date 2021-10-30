@@ -7,27 +7,20 @@
     <th scope="col">Subject</th>
     <th scope="col">Creator</th>
     <th scope="col">Created</th>
-    <th scope="col">MP</th>
+    <th scope="col" style='width:50px;'>MP</th>
+    <th scope="col"></th>
     </tr>
 </thead>
 <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>Kolokvijum 1</td>
-        <td>5</td>
-        <td>Web1</td>
-        <td>Petar Peric</td>
-        <td>1-1-2021</td>
-        <td>100</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Kolokvijum 2</td>
-        <td>15</td>
-        <td>Web2</td>
-        <td>Jovan Jovanovic</td>
-        <td>1-1-2021</td>
-        <td>100</td>
+    <tr *ngFor='let test of tests; let i = index'>
+        <th scope="row">{{i + 1}}</th>
+        <td>{{ test.name }}</td>
+        <td>{{ test.questionCount }}</td>
+        <td>{{ test.subjectName }}</td>
+        <td>{{ test.creatorName }}</td>
+        <td>{{ test.created }}</td>
+        <td>{{ test.maxPoints }}</td>
+        <td><a href="/test/{{test.id}}/questions">open</a></td>
     </tr>
     <tr>
         <a href="/new-test">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace API.Domain.Entities
 {
@@ -15,5 +16,10 @@ namespace API.Domain.Entities
         public DateTime CreatedAt { get; set; }
 
         public long TestTimeId { get; set; }
+
+        public long MaxPoints { get; set; }
+
+
+        public virtual List<Question> Questions { get; set; }
     }
 }

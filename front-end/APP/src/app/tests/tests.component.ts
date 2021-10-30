@@ -19,7 +19,7 @@ export class TestsComponent implements OnInit {
   }
 
   private getTests() {
-    this.testsService.getTests().subscribe(result => {
+    this.testsService.getTests(1).subscribe(result => {
       this.tests = result as any[];
       console.log(this.tests);
     }, error => {

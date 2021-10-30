@@ -18,6 +18,10 @@ namespace API.Application.Tests.Commands.CreateTest
         public List<Question> Questions { get; set; }
 
         public long CreatorId { get; set; }
+
+        public long MaxPoints { get; set; }
+
+        public long TestTimeId { get; set; }
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateTestCommand>
@@ -35,7 +39,7 @@ namespace API.Application.Tests.Commands.CreateTest
         {
             try
             {
-                if (!_context.UserRoles.Any(ur => ur.UserId == request.CreatorId)) 
+                if (!_context.UserRoles.Any(ur => ur.UserId == request.CreatorId))
                     throw new Exception("Creator not found!");
 
                 if (_context.UserRoles.Any(ur => ur.UserId == request.CreatorId && (ur.RoleId != (long)Domain.Enums.Roles.admin && ur.RoleId != (long)Domain.Enums.Roles.proffesor)))
@@ -50,31 +54,13 @@ namespace API.Application.Tests.Commands.CreateTest
                        Name = request.Name,
                        SubjectId = request.SubjectId,
                        CreatedAt = _dateTime.UtcNow,
-                       CreatorId = request.CreatorId
+                       CreatorId = request.CreatorId,
+                       MaxPoints = request.MaxPoints,
+                       Questions = request.Questions,
+                       TestTimeId = request.TestTimeId
                    });
 
                 await _context.SaveChangesAsync(cancellationToken);
-
-                foreach (var question in request.Questions)
-                {
-                    question.TestId = testDb.Entity.Id;
-                    question.CreatedAt = _dateTime.UtcNow;
-
-                    var questionDb = _context.Questions
-                        .Add(question);
-
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    // TODO : conflict
-                    foreach (var answer in question.Answers)
-                    {
-                        answer.QuestionId = questionDb.Entity.Id;
-                        var answerDb = _context.Answers.Add(answer);
-                        await _context.SaveChangesAsync(cancellationToken);
-                        answerDb.DetectChanges();
-                    }
-                    questionDb.DetectChanges();
-                }
 
                 return Unit.Value;
             }

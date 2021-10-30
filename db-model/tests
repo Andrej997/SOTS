@@ -1,0 +1,17 @@
+SELECT 
+		t.id, 
+		t.name, 
+		q.text_question, 
+		q.points,
+		a.text_answer, 
+		a.is_correct, 
+		u.name || ' ' || u.surname as test_creator 
+	FROM project.tests t
+left join project.questions q
+	on t.id=q.test_id
+left join project.answers a
+	on q.id=a.question_id
+left join project.users u
+	on u.id=t.creator_id
+where t.id=17
+ORDER BY t.id ASC;

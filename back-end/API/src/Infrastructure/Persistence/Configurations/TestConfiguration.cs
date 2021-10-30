@@ -30,6 +30,9 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.TestTimeId)
                 .HasColumnName("test_time_id");
+
+            builder.Property(e => e.MaxPoints)
+                .HasColumnName("max_points");
         }
     }
 }

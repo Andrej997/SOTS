@@ -1,5 +1,6 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Queries.GetSubjects;
+using API.Application.Tests.Queries.GetTests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,20 @@ namespace API.WebApi.Controllers
 {
     public class TestsController : ApiControllerBase
     {
+        [HttpGet]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<List<TestsInfoDto>>> GetTestsInfo(long userId)
+        {
+            try
+            {
+                return await Mediator.Send(new GetTestsInfoQuery { UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route("subjects")]
         [ApiExplorerSettings(GroupName = "v1")]

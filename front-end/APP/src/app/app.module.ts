@@ -22,6 +22,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { NewTestComponent } from './tests/new-test/new-test.component';
+import { QuestionsComponent } from './questions/questions.component';
+import { AnswersComponent } from './answers/answers.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { NewTestComponent } from './tests/new-test/new-test.component';
     TestsComponent,
     HeaderComponent,
     HomeComponent,
-    NewTestComponent
+    NewTestComponent,
+    QuestionsComponent,
+    AnswersComponent
   ],
   imports: [
     BrowserModule,

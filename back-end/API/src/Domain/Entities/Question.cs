@@ -13,6 +13,9 @@ namespace API.Domain.Entities
 
         public long TestId { get; set; }
 
+        public long Points { get; set; }
+
+
         public virtual List<Answer> Answers { get; set; }
     }
 }

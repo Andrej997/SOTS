@@ -10,7 +10,11 @@ namespace API.Application.Tests.Queries.GetTests
 
         public long QuestionCount { get; set; }
 
+        public long SubjectId { get; set; }
+
         public string SubjectName { get; set; }
+
+        public long CreatorId { get; set; }
 
         public string CreatorName { get; set; }
 
