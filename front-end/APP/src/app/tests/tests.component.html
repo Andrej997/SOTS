@@ -21,7 +21,11 @@
         <td>{{ test.creatorName }}</td>
         <td>{{ test.created }}</td>
         <td>{{ test.maxPoints }}</td>
-        <td><a href="/test/{{test.id}}/questions">open</a></td>
+        <td>
+            <button type="button" class="btn btn-info">
+                <a href="/test/{{test.id}}/questions">Open</a>
+            </button>
+        </td>
         <td>
             <div>
                 <button type="button" class="btn btn-warning"  *ngIf='!editRow' style='float:left'>Edit</button> <!--(click)='edit(answer.id)'-->

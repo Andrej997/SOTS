@@ -9,22 +9,49 @@
         <th scope="col" style='width:50px;'></th>
         <th scope="col">Text</th>
         <th scope="col" style='width:50px;' data-toggle="tooltip" data-placement="top" title="Number of answers">NoA</th>
-        <th scope="col" style='width:50px;'>Points</th>
+        <th scope="col" style='width:100px;'>Points</th>
         <th scope="col" style='width:50px;'></th>
+        <th scope="col" style='width:170px;'></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor='let question of questions; let i = index'>
             <th scope="row">{{i + 1}}</th>
-            <td>{{ question.text }}</td>
+            <td>
+                <span *ngIf='!editRow'>{{ question.text }}</span>
+                <span *ngIf='editRow && editQuestion!=question.id'>{{ question.text }}</span>
+                <input id="i_{{question.id}}" class="form-control" type="text" *ngIf='editRow && editQuestion==question.id' value='{{ question.text }}'>
+            </td>
             <td>{{ question.answersCount }}</td>
-            <td>{{ question.points }}</td>
-            <td><a href="/test/{{question.testId}}/question/{{question.id}}/answers">open</a></td>
+            <td>
+                <span *ngIf='!editRow'>{{ question.points }}</span>
+                <span *ngIf='editRow && editQuestion!=question.id'>{{ question.points }}</span>
+                <input id="in_{{question.id}}" 
+                    class="form-control" 
+                    type="number" 
+                    *ngIf='editRow && editQuestion==question.id' 
+                    value='{{ question.points }}'>
+            </td>
+            <td>
+                <button type="button" class="btn btn-info">
+                    <a href="/test/{{question.testId}}/question/{{question.id}}/answers" *ngIf='question.id>0'>Open</a>
+                </button>
+            </td>
+            <td>
+                <div>
+                    <button type="button" class="btn btn-warning"  *ngIf='!editRow' style='float:left'>Edit</button> <!--(click)='edit(question.id)'-->
+                    <button type="button" class="btn btn-danger" (click)='delete(question.id)' *ngIf='!editRow' style='float:right'>Delete</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-danger" (click)='cancel(question.id)' *ngIf='editRow && editQuestion==question.id' style='float:left'>Cancel</button>
+                    <button type="button" class="btn btn-success" (click)='save(question.id)' *ngIf='editRow && editQuestion==question.id' style='float:right'>Save</button>
+                </div>
+            </td>
         </tr>
         <tr>
-            <a href="/new-question">
+            <button type="button" class="btn" style='cursor:pointer;' (click)='addQuestion()' *ngIf='!editRow'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.75 4.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"></path></svg>
-            </a>
+            </button>
         </tr>
     </tbody>
 </table>

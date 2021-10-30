@@ -24,6 +24,7 @@ import { HomeComponent } from './home/home.component';
 import { NewTestComponent } from './tests/new-test/new-test.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { AnswersComponent } from './answers/answers.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { AnswersComponent } from './answers/answers.component';
     HomeComponent,
     NewTestComponent,
     QuestionsComponent,
-    AnswersComponent
+    AnswersComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

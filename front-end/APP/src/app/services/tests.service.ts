@@ -29,6 +29,10 @@ export class TestsService {
     return this.http.post(environment.api + `QA/create/answer`, body);
   }
 
+  createQuestion(body: any) {
+    return this.http.post(environment.api + `QA/create/question`, body);
+  }
+
   createTest(body: any) {
     return this.http.post(environment.api + `Tests/create`, body);
   }

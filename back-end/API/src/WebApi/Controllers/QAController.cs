@@ -1,4 +1,5 @@
 ﻿using API.Application.QA.Commands.CreateAnswer;
+using API.Application.QA.Commands.CreateQuestion;
 using API.Application.QA.Commands.CreateQuestionAnswers;
 using API.Application.QA.Commands.DeleteAnswer;
 using API.Application.QA.Commands.EditAnswer;
@@ -47,6 +48,22 @@ namespace API.WebApi.Controllers
         [Route("create/answer")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> CreateQuestionAnswers(CreateAnswerCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("create/question")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> CreateQuestion(CreateQuestionCommand command)
         {
             try
             {
