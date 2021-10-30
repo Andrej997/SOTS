@@ -24,6 +24,8 @@ export class NewTestComponent implements OnInit {
       name: ['', Validators.required],
       subject: [0, Validators.required],
       maxPoints: [100, Validators.required],
+      start: ['', Validators.required],
+      end: ['', Validators.required],
     });
     this.getSubjects();
     this.addQuestion();
@@ -89,7 +91,8 @@ export class NewTestComponent implements OnInit {
       Questions: this.questions,
       CreatorId: 1,
       MaxPoints: this.testForm.value.maxPoints,
-      TestTimeId: 1
+      Start: this.testForm.value.start,
+      End: this.testForm.value.end
     };
     this.testsService.createTest(body).subscribe(result => {
       console.log("Created");

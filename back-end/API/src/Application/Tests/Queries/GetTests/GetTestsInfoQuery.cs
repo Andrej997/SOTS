@@ -39,13 +39,27 @@ namespace API.Application.Tests.Queries.GetTests
                     {
                         Created = test.CreatedAt,
                         CreatorId = test.CreatorId,
-                        CreatorName = _context.Users.Where(user => user.Id == test.CreatorId).Select(user => user.Name + " " + user.Surname).FirstOrDefault(),
+                        CreatorName = _context.Users
+                            .Where(user => user.Id == test.CreatorId)
+                            .Select(user => user.Name + " " + user.Surname)
+                            .FirstOrDefault(),
                         Name = test.Name,
                         Id = test.Id,
                         MaxPoints = test.MaxPoints,
                         QuestionCount = test.Questions.Count,
-                        SubjectName = _context.Subjects.Where(subject => subject.Id == test.SubjectId).Select(subject => subject.Name).FirstOrDefault(),
-                        SubjectId = test.SubjectId
+                        SubjectName = _context.Subjects
+                            .Where(subject => subject.Id == test.SubjectId)
+                            .Select(subject => subject.Name)
+                            .FirstOrDefault(),
+                        SubjectId = test.SubjectId,
+                        Start = _context.TestTimes
+                            .Where(tt => tt.Id == test.TestTimeId)
+                            .Select(tt => tt.Start)
+                            .FirstOrDefault(),
+                        End = _context.TestTimes
+                            .Where(tt => tt.Id == test.TestTimeId)
+                            .Select(tt => tt.End)
+                            .FirstOrDefault()
                     });
 
                 if (request.UserId == (long)Domain.Enums.Roles.proffesor || request.UserId == (long)Domain.Enums.Roles.student)

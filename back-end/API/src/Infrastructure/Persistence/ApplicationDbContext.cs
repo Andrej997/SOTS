@@ -37,6 +37,7 @@ namespace API.Infrastructure.Persistence
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSubject> UserSubjects { get; set; }
         public DbSet<Test> Tests { get; set; }
+        public DbSet<TestTime> TestTimes { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Question> Questions { get; set; }

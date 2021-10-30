@@ -21,7 +21,9 @@ namespace API.Application.Tests.Commands.CreateTest
 
         public long MaxPoints { get; set; }
 
-        public long TestTimeId { get; set; }
+        public DateTime Start { get; set; }
+
+        public DateTime End { get; set; }
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateTestCommand>
@@ -48,6 +50,14 @@ namespace API.Application.Tests.Commands.CreateTest
                 if (!_context.Subjects.Any(ur => ur.Id == request.SubjectId))
                     throw new Exception("Subject not found!");
 
+                var testTimeDb = _context.TestTimes.Add(new TestTime
+                {
+                    Start = request.Start,
+                    End = request.End
+                });
+
+                await _context.SaveChangesAsync(cancellationToken);
+
                 var testDb = _context.Tests
                    .Add(new Test
                    {
@@ -57,7 +67,7 @@ namespace API.Application.Tests.Commands.CreateTest
                        CreatorId = request.CreatorId,
                        MaxPoints = request.MaxPoints,
                        Questions = request.Questions,
-                       TestTimeId = request.TestTimeId
+                       TestTimeId = testTimeDb.Entity.Id
                    });
 
                 await _context.SaveChangesAsync(cancellationToken);

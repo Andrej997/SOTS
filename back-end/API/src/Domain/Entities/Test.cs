@@ -21,5 +21,6 @@ namespace API.Domain.Entities
 
 
         public virtual List<Question> Questions { get; set; }
+        public virtual TestTime TestTime { get; set; }
     }
 }

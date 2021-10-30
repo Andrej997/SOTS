@@ -21,5 +21,9 @@ namespace API.Application.Tests.Queries.GetTests
         public DateTime Created { get; set; }
 
         public long MaxPoints { get; set; }
+
+        public DateTime Start { get; set; }
+
+        public DateTime End { get; set; }
     }
 }
