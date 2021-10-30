@@ -10,6 +10,8 @@ import { TestsService } from '../services/tests.service';
 })
 export class TestsComponent implements OnInit {
 
+  editRow: boolean = false;
+  editTest: number = 0;
   tests: any[] = [];
 
   constructor(private testsService: TestsService) { }
@@ -25,5 +27,16 @@ export class TestsComponent implements OnInit {
     }, error => {
         console.error(error);
     });
+  }
+
+  delete(testId: number) {
+    this.testsService.deleteTest(testId).toPromise()
+    .then(result => {
+      this.getTests();
+    })
+    .catch(
+      error => {
+        console.error(error);
+      });
   }
 }

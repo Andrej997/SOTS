@@ -46,7 +46,7 @@ export class AnswersComponent implements OnInit {
     if (answerId === 0)
       this.saveNewAnswer();
     else 
-      this.updateAnswer();
+      this.updateAnswer(answerId);
   }
 
   addAnswer() {
@@ -73,8 +73,31 @@ export class AnswersComponent implements OnInit {
     });
   }
 
-  private updateAnswer() {
+  private updateAnswer(answerId: number) {
+    let body = {
+      AnswerId: answerId,
+      AnswerText: (<HTMLInputElement>document.getElementById("i_" + answerId)).value,
+      IsCorrect: ((<HTMLSelectElement>document.getElementById("s_" + answerId)).value == 'true')? true : false
+    };
+    this.testsService.editAnswer(body).toPromise()
+      .then(result => {
+        this.getAnswers(this.testId, this.questionId);
+      })
+      .catch(
+        error => {
+          console.error(error);
+        });
+  }
 
+  delete(answerId: number) {
+    this.testsService.deleteAnswer(answerId).toPromise()
+      .then(result => {
+        this.getAnswers(this.testId, this.questionId);
+      })
+      .catch(
+        error => {
+          console.error(error);
+        });
   }
 
   private getAnswers(testId: number, questionId: number) {

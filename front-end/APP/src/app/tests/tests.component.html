@@ -3,12 +3,13 @@
     <tr>
     <th scope="col"></th>
     <th scope="col">Name</th>
-    <th scope="col" style='width:50px;'>NoQ</th>
+    <th scope="col" style='width:50px;' data-toggle="tooltip" data-placement="top" title="Number of questions">NoQ</th>
     <th scope="col">Subject</th>
     <th scope="col">Creator</th>
     <th scope="col">Created</th>
-    <th scope="col" style='width:50px;'>MP</th>
-    <th scope="col"></th>
+    <th scope="col" style='width:50px;' data-toggle="tooltip" data-placement="top" title="Max points">MP</th>
+    <th scope="col" style='width:50px;'></th>
+    <th scope="col" style='width:170px;'></th>
     </tr>
 </thead>
 <tbody>
@@ -21,6 +22,16 @@
         <td>{{ test.created }}</td>
         <td>{{ test.maxPoints }}</td>
         <td><a href="/test/{{test.id}}/questions">open</a></td>
+        <td>
+            <div>
+                <button type="button" class="btn btn-warning"  *ngIf='!editRow' style='float:left'>Edit</button> <!--(click)='edit(answer.id)'-->
+                <button type="button" class="btn btn-danger" (click)='delete(test.id)' *ngIf='!editRow' style='float:right'>Delete</button> 
+            </div>
+            <div>
+                <button type="button" class="btn btn-danger"  *ngIf='editRow && editTest==test.id' style='float:left'>Cancel</button><!--(click)='cancel(answer.id)'-->
+                <button type="button" class="btn btn-success"  *ngIf='editRow && editTest==test.id' style='float:right'>Save</button><!--(click)='save(answer.id)'-->
+            </div>
+        </td>
     </tr>
     <tr>
         <a href="/new-test">

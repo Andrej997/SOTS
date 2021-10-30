@@ -1,5 +1,7 @@
 ﻿using API.Application.QA.Commands.CreateAnswer;
 using API.Application.QA.Commands.CreateQuestionAnswers;
+using API.Application.QA.Commands.DeleteAnswer;
+using API.Application.QA.Commands.EditAnswer;
 using API.Application.QA.Queries.GetAnswersInfo;
 using API.Application.QA.Queries.GetQustionsInfo;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +67,38 @@ namespace API.WebApi.Controllers
             try
             {
                 await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("update")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> EditAnswer(EditAnswerCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("detele/answer/{answerId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteAnswer(long answerId)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteAnswerCommand { AnswerId = answerId });
                 return Ok();
             }
             catch (Exception ex)

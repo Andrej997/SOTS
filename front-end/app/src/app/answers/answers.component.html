@@ -32,13 +32,12 @@
             <td>
                 <div>
                     <button type="button" class="btn btn-warning" (click)='edit(answer.id)' *ngIf='!editRow' style='float:left'>Edit</button>
-                    <button type="button" class="btn btn-danger" (click)='edit(answer.id)' *ngIf='!editRow' style='float:right'>Delete</button>
+                    <button type="button" class="btn btn-danger" (click)='delete(answer.id)' *ngIf='!editRow' style='float:right'>Delete</button>
                 </div>
                 <div>
                     <button type="button" class="btn btn-danger" (click)='cancel(answer.id)' *ngIf='editRow && editAnswer==answer.id' style='float:left'>Cancel</button>
                     <button type="button" class="btn btn-success" (click)='save(answer.id)' *ngIf='editRow && editAnswer==answer.id' style='float:right'>Save</button>
                 </div>
-                
             </td>
         </tr>
         <tr>

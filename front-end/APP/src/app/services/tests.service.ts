@@ -32,4 +32,16 @@ export class TestsService {
   createTest(body: any) {
     return this.http.post(environment.api + `Tests/create`, body);
   }
+
+  editAnswer(body: any) {
+    return this.http.put(environment.api + `QA/update`, body);
+  }
+
+  deleteAnswer(answerId: number) {
+    return this.http.delete(environment.api + `QA/detele/answer/${answerId}`);
+  }
+
+  deleteTest(testId: number) {
+    return this.http.delete(environment.api + `Tests/detele/${testId}`);
+  }
 }

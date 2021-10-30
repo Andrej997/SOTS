@@ -1,4 +1,5 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
+using API.Application.Tests.Commands.DeleteTest;
 using API.Application.Tests.Queries.GetSubjects;
 using API.Application.Tests.Queries.GetTests;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,22 @@ namespace API.WebApi.Controllers
             try
             {
                 await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("detele/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteTest(long testId)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteTestCommand { TestId = testId });
                 return Ok();
             }
             catch (Exception ex)
