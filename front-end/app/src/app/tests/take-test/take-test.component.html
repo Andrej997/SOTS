@@ -1,0 +1,13 @@
+<div [hidden]='config.leftTime == 0'>
+    <countdown #cd [config]="config"></countdown>
+</div>
+<div *ngIf='testLoaded'>
+    <h2>Test: {{test.name}}</h2>
+    <h2>Subject: {{test.subjectName}}</h2>
+    <h2>Proffesor: {{test.creatorName}}</h2>
+    <button (click)='startTest()'>START TEST</button>
+</div>
+
+<div *ngIf='testStarted'>
+    <h2>Test started</h2>
+</div>

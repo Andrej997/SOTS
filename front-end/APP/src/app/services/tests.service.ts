@@ -13,6 +13,10 @@ export class TestsService {
     return this.http.get(environment.api + `Tests`, {params: params});
   }
 
+  getTakeTest(testId: number) {
+    return this.http.get(environment.api + `Tests/take-test/` + testId);
+  }
+
   getSubjects() {
     return this.http.get(environment.api + `Tests/subjects`);
   }

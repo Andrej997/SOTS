@@ -20,6 +20,13 @@ export class AuthGuard implements CanActivate {
         return true;
       }
   }
+
+  isStudent(): boolean {
+    var user = JSON.parse(this.authService.getData() as string);
+    if (user.roleId == 3) return true;
+
+    return false;
+  }
   
   isLoggedIn() {
     if (this.authService.getData() == null){

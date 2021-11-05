@@ -61,6 +61,8 @@ namespace API.Application.Users.Commands.Login
                     })
                     .FirstOrDefault();
 
+                if (user == null) throw new Exception("Unknown user");
+
                 return user;
             }
             catch (Exception e)

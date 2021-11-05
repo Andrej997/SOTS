@@ -1,6 +1,7 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Commands.DeleteTest;
 using API.Application.Tests.Queries.GetSubjects;
+using API.Application.Tests.Queries.GetTakeTest;
 using API.Application.Tests.Queries.GetTests;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,6 +19,21 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(new GetTestsInfoQuery { UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("take-test/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<TakeTestDto>> GetTakeTest(long testId)
+        {
+            try
+            {
+                return await Mediator.Send(new GetTakeTestQuery { TestId = testId });
             }
             catch (Exception ex)
             {

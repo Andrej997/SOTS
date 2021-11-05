@@ -25,6 +25,9 @@ import { NewTestComponent } from './tests/new-test/new-test.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { AnswersComponent } from './answers/answers.component';
 import { LoginComponent } from './login/login.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { TakeTestComponent } from './tests/take-test/take-test.component';
+import { CountdownModule } from 'ngx-countdown';
 
 
 @NgModule({
@@ -36,7 +39,8 @@ import { LoginComponent } from './login/login.component';
     NewTestComponent,
     QuestionsComponent,
     AnswersComponent,
-    LoginComponent
+    LoginComponent,
+    TakeTestComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +60,9 @@ import { LoginComponent } from './login/login.component';
     ReactiveFormsModule,
     MatButtonModule,
     MatNativeDateModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    Ng2SmartTableModule,
+    CountdownModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

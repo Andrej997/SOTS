@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { NewTestComponent } from './tests/new-test/new-test.component';
+import { TakeTestComponent } from './tests/take-test/take-test.component';
 import { TestsComponent } from './tests/tests.component';
 
 const routes: Routes = [
@@ -29,6 +30,12 @@ const routes: Routes = [
   {
     path: 'new-test',
     component: NewTestComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'take-test/:t_id',
+    component: TakeTestComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },
