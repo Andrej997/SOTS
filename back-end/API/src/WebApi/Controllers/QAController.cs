@@ -3,6 +3,7 @@ using API.Application.QA.Commands.CreateQuestion;
 using API.Application.QA.Commands.CreateQuestionAnswers;
 using API.Application.QA.Commands.DeleteAnswer;
 using API.Application.QA.Commands.EditAnswer;
+using API.Application.QA.Commands.SaveUserAnswer;
 using API.Application.QA.Queries.GetAnswersInfo;
 using API.Application.QA.Queries.GetQustionsInfo;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,22 @@ namespace API.WebApi.Controllers
         [Route("create/answer")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> CreateQuestionAnswers(CreateAnswerCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("save/user/answer")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> SaveUserAnswer(SaveUserAnswerCommand command)
         {
             try
             {

@@ -11,12 +11,14 @@ namespace API.Application.Common.Interfaces
         DbSet<Role> Roles { get; set; }
         DbSet<UserRole> UserRoles { get; set; }
         DbSet<UserSubject> UserSubjects { get; set; }
+        DbSet<StudentTest> StudentTests { get; set; }
         DbSet<Test> Tests { get; set; }
         DbSet<TestTime> TestTimes { get; set; }
         DbSet<Subject> Subjects { get; set; }
         DbSet<Grade> Grades { get; set; }
         DbSet<Question> Questions { get; set; }
         DbSet<Answer> Answers { get; set; }
+        DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

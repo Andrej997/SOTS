@@ -1,5 +1,7 @@
 ﻿using API.Application.Users.Commands.CreateUser;
+using API.Application.Users.Commands.FinishTest;
 using API.Application.Users.Commands.Login;
+using API.Application.Users.Commands.StartTest;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +13,38 @@ namespace API.WebApi.Controllers
 {
     public class UsersController : ApiControllerBase
     {
+        [HttpPost]
+        [Route("start/test")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> StartTest(StartTestCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("finish/test")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<TestGradeDto>> FinishTest(FinishTestCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("create")]
         [ApiExplorerSettings(GroupName = "v1")]

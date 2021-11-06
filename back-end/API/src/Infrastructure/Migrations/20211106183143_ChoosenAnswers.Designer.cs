@@ -3,15 +3,17 @@ using System;
 using API.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace API.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211106183143_ChoosenAnswers")]
+    partial class ChoosenAnswers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,10 +63,6 @@ namespace API.Infrastructure.Migrations
                     b.Property<long>("AnswerId")
                         .HasColumnType("bigint")
                         .HasColumnName("answer_id");
-
-                    b.Property<DateTime>("AnswerDated")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("answer_dated");
 
                     b.HasKey("StudentTestId", "QuestionId", "AnswerId")
                         .HasName("pk_choosen_answer");

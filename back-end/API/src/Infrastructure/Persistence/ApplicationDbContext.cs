@@ -36,12 +36,14 @@ namespace API.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSubject> UserSubjects { get; set; }
+        public DbSet<StudentTest> StudentTests { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestTime> TestTimes { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

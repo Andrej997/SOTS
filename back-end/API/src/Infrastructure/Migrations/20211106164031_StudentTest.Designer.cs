@@ -3,15 +3,17 @@ using System;
 using API.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace API.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211106164031_StudentTest")]
+    partial class StudentTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,30 +48,6 @@ namespace API.Infrastructure.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("answers", "project");
-                });
-
-            modelBuilder.Entity("API.Domain.Entities.ChoosenAnswer", b =>
-                {
-                    b.Property<long>("StudentTestId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("student_test_id");
-
-                    b.Property<long>("QuestionId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("question_id");
-
-                    b.Property<long>("AnswerId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("answer_id");
-
-                    b.Property<DateTime>("AnswerDated")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("answer_dated");
-
-                    b.HasKey("StudentTestId", "QuestionId", "AnswerId")
-                        .HasName("pk_choosen_answer");
-
-                    b.ToTable("choosen_answers", "project");
                 });
 
             modelBuilder.Entity("API.Domain.Entities.Grade", b =>

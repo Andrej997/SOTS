@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace API.Domain.Entities
 {
@@ -15,5 +16,8 @@ namespace API.Domain.Entities
         public string PasswordHash { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+
+        public virtual List<StudentTest> StudentTests { get; set; }
     }
 }

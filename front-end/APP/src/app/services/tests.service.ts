@@ -33,6 +33,18 @@ export class TestsService {
     return this.http.post(environment.api + `QA/create/answer`, body);
   }
 
+  startTest(body: any) {
+    return this.http.post(environment.api + `Users/start/test`, body);
+  }
+
+  finishTest(body: any) {
+    return this.http.put(environment.api + `Users/finish/test`, body);
+  }
+
+  saveUserAnswer(body: any) {
+    return this.http.post(environment.api + `QA/save/user/answer`, body);
+  }
+
   createQuestion(body: any) {
     return this.http.post(environment.api + `QA/create/question`, body);
   }
