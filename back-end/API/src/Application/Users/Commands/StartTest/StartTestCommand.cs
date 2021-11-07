@@ -41,7 +41,8 @@ namespace API.Application.Users.Commands.StartTest
                     {
                         TestId = request.TestId,
                         UserId = request.UserId,
-                        TestStarted = _dateTime.UtcNow
+                        TestStarted = _dateTime.UtcNow,
+                        GradeId = 1
                     });
 
                 await _context.SaveChangesAsync(cancellationToken);

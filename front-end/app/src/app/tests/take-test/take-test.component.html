@@ -1,13 +1,32 @@
-<div [hidden]='config.leftTime == 0'>
+<div class='container' [hidden]='config.leftTime == 0'>
     <countdown #cd [config]="config"></countdown>
 </div>
-<div *ngIf='testLoaded'>
+<div class='container' *ngIf='testLoaded'>
     <h2>Test: {{test.name}}</h2>
     <h2>Subject: {{test.subjectName}}</h2>
     <h2>Proffesor: {{test.creatorName}}</h2>
     <button (click)='startTest()'>START TEST</button>
 </div>
+<div class='container'>
+    <div *ngIf='testStarted'>
+        <h2>Test started {{currentQuestionCounter + 1}} / {{questionCount}}</h2>
+        <h3>{{currentQuestion.question}}</h3>
+        <!-- <div *ngFor='let answer in currentQuestion.answers'>
+            <input type="checkbox" name="" id="">
+        </div> -->
+        <div class="form-group">
+            <label for="exampleFormControlSelect2">Example multiple select</label>
+            <select multiple class="form-control mb-3" id="exampleFormControlSelect2">
+              <option *ngFor='let answer of currentQuestion.answers' value={{answer.id}}>{{answer.answer}}</option>
+            </select>
+          </div>
+    </div>
 
-<div *ngIf='testStarted'>
-    <h2>Test started</h2>
+    <div *ngIf='testStarted && showNextBtn'>
+        <button (click)='nextQuestion();'>Next</button>
+    </div>
+    <div *ngIf='testStarted && showFinishBtn'>
+        <button (click)='finishQuestion();'>Finish</button>
+    </div>
+    
 </div>

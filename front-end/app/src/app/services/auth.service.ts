@@ -30,7 +30,11 @@ export class AuthService {
   }
   
   getData() {
-      return localStorage.getItem('user')
+      return JSON.parse(localStorage.getItem('user') as string);
+  }
+
+  getUserId(): number {
+    return JSON.parse(localStorage.getItem('user') as string).id as number;
   }
   
   private removeData(key: any) {
