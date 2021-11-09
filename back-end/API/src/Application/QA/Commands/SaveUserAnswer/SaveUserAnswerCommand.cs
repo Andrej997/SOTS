@@ -2,6 +2,7 @@
 using API.Domain.Entities;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace API.Application.QA.Commands.SaveUserAnswer
 
         public long QuestionId { get; set; }
 
-        public long AnswerId { get; set; }
+        public List<long> AnswersId { get; set; }
     }
 
     public class SaveUserAnswerCommandHandler : IRequestHandler<SaveUserAnswerCommand>
@@ -37,17 +38,19 @@ namespace API.Application.QA.Commands.SaveUserAnswer
                 if (!_context.Questions.Any(question => question.Id == request.QuestionId))
                     throw new Exception("Wrong question");
 
-                if (!_context.Answers.Any(answer => answer.Id == request.AnswerId && answer.QuestionId == request.QuestionId))
-                    throw new Exception("Wrong answer");
+                foreach (var answerId in request.AnswersId)
+                    if (!_context.Answers.Any(answer => answer.Id == answerId && answer.QuestionId == request.QuestionId))
+                        throw new Exception("Wrong answer");
 
-                _context.ChoosenAnswers
-                    .Add(new ChoosenAnswer
-                    {
-                        AnswerId = request.AnswerId,
-                        QuestionId = request.QuestionId,
-                        StudentTestId = request.StudentTestId,
-                        AnswerDated = _dateTime.UtcNow
-                    });
+                foreach (var answerId in request.AnswersId)
+                    _context.ChoosenAnswers
+                        .Add(new ChoosenAnswer
+                        {
+                            AnswerId = answerId,
+                            QuestionId = request.QuestionId,
+                            StudentTestId = request.StudentTestId,
+                            AnswerDated = _dateTime.UtcNow
+                        });
 
                 await _context.SaveChangesAsync(cancellationToken);
 

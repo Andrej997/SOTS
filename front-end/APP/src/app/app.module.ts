@@ -28,7 +28,7 @@ import { LoginComponent } from './login/login.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
 import { CountdownModule } from 'ngx-countdown';
-
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -62,6 +62,7 @@ import { CountdownModule } from 'ngx-countdown';
     MatNativeDateModule,
     NgxMaterialTimepickerModule,
     Ng2SmartTableModule,
+    ToastrModule.forRoot(),
     CountdownModule 
   ],
   providers: [],

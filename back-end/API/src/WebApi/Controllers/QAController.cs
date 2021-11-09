@@ -3,6 +3,8 @@ using API.Application.QA.Commands.CreateQuestion;
 using API.Application.QA.Commands.CreateQuestionAnswers;
 using API.Application.QA.Commands.DeleteAnswer;
 using API.Application.QA.Commands.EditAnswer;
+using API.Application.QA.Commands.QuestionEndTime;
+using API.Application.QA.Commands.QuestionStartTime;
 using API.Application.QA.Commands.SaveUserAnswer;
 using API.Application.QA.Queries.GetAnswersInfo;
 using API.Application.QA.Queries.GetQustionsInfo;
@@ -65,6 +67,38 @@ namespace API.WebApi.Controllers
         [Route("save/user/answer")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> SaveUserAnswer(SaveUserAnswerCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("question/starttime")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> QuestionStartTime(QuestionStartTimeCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("question/endtime")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> QuestionEndTime(QuestionEndTimeCommand command)
         {
             try
             {

@@ -18,12 +18,12 @@ namespace API.Application.Users.Commands.FinishTest
         public long UserId { get; set; }
     }
 
-    public class LoginCommandHandler : IRequestHandler<FinishTestCommand, TestGradeDto>
+    public class FinishTestCommandHandler : IRequestHandler<FinishTestCommand, TestGradeDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IDateTime _dateTime;
 
-        public LoginCommandHandler(IApplicationDbContext context, IDateTime dateTime)
+        public FinishTestCommandHandler(IApplicationDbContext context, IDateTime dateTime)
         {
             _context = context;
             _dateTime = dateTime;
@@ -48,7 +48,7 @@ namespace API.Application.Users.Commands.FinishTest
                 List<ChoosenAnswer> choosenAnswers = new List<ChoosenAnswer>();
 
                 var questions = _context.Questions
-                    .Where(question => question.Id == studentTest.TestId)
+                    .Where(question => question.TestId == studentTest.TestId)
                     .ToList();
 
                 var allCorrectAnswersCount = 0;
@@ -83,18 +83,23 @@ namespace API.Application.Users.Commands.FinishTest
                 }
 
                 var persentage = (correctAnswersCount / allCorrectAnswersCount) * 100;
+                studentTest.Points = persentage;
+                await _context.SaveChangesAsync(cancellationToken);
 
                 var grade = _context.Grades
-                        .Where(grade => grade.FromProcentage < persentage && persentage < grade.ToProcentage)
-                        .Select(grade => grade.Label)
+                        .Where(grade => grade.FromProcentage < persentage && persentage <= grade.ToProcentage)
                         .FirstOrDefault();
-
-                if (grade == null)
-                    grade = "F";
+                var gradeStr = "F";
+                if (grade != null)
+                {
+                    gradeStr = grade.Label;
+                    studentTest.GradeId = grade.Id;
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
 
                 return new TestGradeDto 
                 {
-                    Grade = grade,
+                    Grade = gradeStr,
                     Points = persentage
                 };
             }

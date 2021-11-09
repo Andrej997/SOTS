@@ -17,7 +17,7 @@
         <div class="form-group">
             <label for="exampleFormControlSelect2">Example multiple select</label>
             <select multiple class="form-control mb-3" id="exampleFormControlSelect2">
-              <option *ngFor='let answer of currentQuestion.answers' value={{answer.id}}>{{answer.answer}}</option>
+              <option id="o_{{answer.id}}" *ngFor='let answer of currentQuestion.answers' value={{answer.id}} (click)='storeAnswer(answer.id)'>{{answer.answer}}</option>
             </select>
           </div>
     </div>
@@ -29,4 +29,17 @@
         <button (click)='finishQuestion();'>Finish</button>
     </div>
     
+</div>
+
+<div class='container' *ngIf='showChoosenAnswer'>
+    <h1>Test: {{choosenAnswerDto.testText}}</h1>
+    <div *ngFor='let question of choosenAnswerDto.questions'>
+        <h2>Test: {{question.qustionText}}</h2>
+        <div *ngFor='let answer of question.awnsers'>
+            <h3 *ngIf='answer.isChoosen && answer.isCorrect' style="background-color: green;">Answer: {{answer.answerText}}</h3>
+            <h3 *ngIf='answer.isChoosen && !answer.isCorrect' style="background-color: red;">Answer: {{answer.answerText}}</h3>
+            <h3 *ngIf='!answer.isChoosen && !answer.isCorrect'>Answer: {{answer.answerText}}</h3>
+            <h3 *ngIf='!answer.isChoosen && answer.isCorrect' style="background-color: aqua;">Answer: {{answer.answerText}}</h3>
+        </div>
+    </div>
 </div>

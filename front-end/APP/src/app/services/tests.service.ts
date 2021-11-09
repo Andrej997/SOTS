@@ -29,8 +29,20 @@ export class TestsService {
     return this.http.get(environment.api + `QA/test/${testId}/question/${questionId}`);
   }
 
+  questionStartTime(body: any) {
+    return this.http.post(environment.api + `QA/question/starttime`, body);
+  }
+
+  questionEndTime(body: any) {
+    return this.http.post(environment.api + `QA/question/endtime`, body);
+  }
+
   createAnswer(body: any) {
     return this.http.post(environment.api + `QA/create/answer`, body);
+  }
+
+  choosenAnswers(body: any) {
+    return this.http.post(environment.api + `Users/choosenanswers`, body);
   }
 
   startTest(body: any) {
@@ -38,7 +50,7 @@ export class TestsService {
   }
 
   finishTest(body: any) {
-    return this.http.put(environment.api + `Users/finish/test`, body);
+    return this.http.post(environment.api + `Users/finish/test`, body);
   }
 
   saveUserAnswer(body: any) {

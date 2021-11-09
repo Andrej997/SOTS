@@ -17,6 +17,7 @@ namespace API.Application.Common.Interfaces
         DbSet<Subject> Subjects { get; set; }
         DbSet<Grade> Grades { get; set; }
         DbSet<Question> Questions { get; set; }
+        DbSet<QuestionTime> QuestionTimes { get; set; }
         DbSet<Answer> Answers { get; set; }
         DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
 

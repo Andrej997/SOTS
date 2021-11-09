@@ -2,6 +2,7 @@
 using API.Application.Users.Commands.FinishTest;
 using API.Application.Users.Commands.Login;
 using API.Application.Users.Commands.StartTest;
+using API.Application.Users.Queries.ChoosenAnswers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,12 +17,11 @@ namespace API.WebApi.Controllers
         [HttpPost]
         [Route("start/test")]
         [ApiExplorerSettings(GroupName = "v1")]
-        public async Task<IActionResult> StartTest(StartTestCommand command)
+        public async Task<ActionResult<long>> StartTest(StartTestCommand command)
         {
             try
             {
-                await Mediator.Send(command);
-                return Ok();
+                return await Mediator.Send(command);
             }
             catch (Exception ex)
             {
@@ -29,15 +29,29 @@ namespace API.WebApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("finish/test")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<ActionResult<TestGradeDto>> FinishTest(FinishTestCommand command)
         {
             try
             {
-                await Mediator.Send(command);
-                return Ok();
+                return await Mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("choosenanswers")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<ChoosenAnswersDto>> ChoosenAnswers(ChoosenAnswersCommand command)
+        {
+            try
+            {
+                return await Mediator.Send(command);
             }
             catch (Exception ex)
             {

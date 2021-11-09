@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from 'src/app/services/auth.service';
 import { TestsService } from 'src/app/services/tests.service';
@@ -25,8 +26,10 @@ export class TakeTestComponent implements OnInit {
   questionCount: number = 0;
   currentQuestionCounter: number = 0;
   currentQuestion: any;
+  private startTestId: number = 0;
 
   constructor(private route: ActivatedRoute,
+    private toastr: ToastrService,
     private testsService: TestsService,
     private authService: AuthService) { }
 
@@ -59,6 +62,8 @@ export class TakeTestComponent implements OnInit {
       UserId: this.authService.getUserId()
     }
     this.testsService.startTest(body).subscribe(result => {
+      this.toastr.success('Test started');
+      this.startTestId = result as number;
       this.testLoaded = false;
       this.testStarted = true;
       let dstart = new Date(this.test.start);
@@ -83,7 +88,18 @@ export class TakeTestComponent implements OnInit {
       this.showFinishBtn = true;
     }
     else {
-      this.currentQuestion = this.test.questions[this.currentQuestionCounter];
+      let body = {
+        AnswersId: this.userAnswers,
+        QuestionId: this.currentQuestion.id,
+        StudentTestId: this.startTestId
+      };
+      this.testsService.saveUserAnswer(body).subscribe(result => {
+        this.userAnswers = [];
+        this.currentQuestion = this.test.questions[this.currentQuestionCounter];
+      }, error => {
+          console.error(error);
+      });
+      
       if (this.currentQuestionCounter + 1 == this.questionCount) {
         this.showNextBtn = false;
         this.showFinishBtn = true;
@@ -91,7 +107,83 @@ export class TakeTestComponent implements OnInit {
     }
   }
 
-  finishQuestion() {
+  userAnswers: number[] = [];
+  storeAnswer(answerId: number) {
+    let elem = <HTMLElement>document.getElementById('o_'+answerId);
+    
+    if (!this.userAnswers.includes(answerId)) {
+      elem.style.background = 'green';
+      this.userAnswers.push(answerId);
+    }
+    else {
+      let index = this.userAnswers.findIndex(x => x == answerId);
+      this.userAnswers.splice(index, 1);
+      elem.style.background = 'white';
+    }
+  }
 
+  startQuestionTime(questionId: number) {
+    let body = {
+      StudentTestId: this.startTestId,
+      QuestionId: questionId,
+    }
+    this.testsService.questionStartTime(body).subscribe(result => {
+    }, error => {
+        console.error(error);
+    });
+  }
+
+  endQuestionTime(questionId: number) {
+    let body = {
+      StudentTestId: this.startTestId,
+      QuestionId: questionId,
+    }
+    this.testsService.questionEndTime(body).subscribe(result => {
+    }, error => {
+        console.error(error);
+    });
+  }
+
+  finishQuestion() {
+    let body = {
+      AnswersId: this.userAnswers,
+      QuestionId: this.currentQuestion.id,
+      StudentTestId: this.startTestId
+    };
+    this.testsService.saveUserAnswer(body).subscribe(result => {
+      this.userAnswers = [];
+      let body = {
+        StudentTestId: this.startTestId,
+        TestId: this.testId,
+        UserId: this.authService.getUserId()
+      };
+      this.testsService.finishTest(body).subscribe(result => {
+        this.testStarted = false;
+        this.toastr.success('Test finished');
+        console.log(result);
+        this.getChoosenAnswer();
+      }, error => {
+          console.error(error);
+      });
+    }, error => {
+        console.error(error);
+    });
+  }
+
+  showChoosenAnswer: boolean = false;
+  choosenAnswerDto: any;
+  getChoosenAnswer() {
+    let body = {
+      StudentTestId: this.startTestId,
+      UserId: this.authService.getUserId()
+    };
+    this.testsService.choosenAnswers(body).subscribe(result => {
+      this.choosenAnswerDto = result;
+      this.showChoosenAnswer = true;
+      console.log(this.choosenAnswerDto);
+      
+    }, error => {
+        console.error(error);
+    });
   }
 }

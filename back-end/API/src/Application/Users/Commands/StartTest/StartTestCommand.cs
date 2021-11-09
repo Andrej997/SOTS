@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace API.Application.Users.Commands.StartTest
 {
-    public class StartTestCommand : IRequest
+    public class StartTestCommand : IRequest<long>
     {
         public long TestId { get; set; }
 
         public long UserId { get; set; }
     }
 
-    public class LoginCommandHandler : IRequestHandler<StartTestCommand>
+    public class StartTestCommandHandler : IRequestHandler<StartTestCommand, long>
     {
         private readonly IApplicationDbContext _context;
         private readonly IDateTime _dateTime;
 
-        public LoginCommandHandler(IApplicationDbContext context, IDateTime dateTime)
+        public StartTestCommandHandler(IApplicationDbContext context, IDateTime dateTime)
         {
             _context = context;
             _dateTime = dateTime;
         }
 
-        public async Task<Unit> Handle(StartTestCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(StartTestCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace API.Application.Users.Commands.StartTest
                 if (!_context.Users.Any(user => user.Id == request.UserId))
                     throw new Exception("User not found");
 
-                _context.StudentTests
+                var startTest = _context.StudentTests
                     .Add(new StudentTest
                     {
                         TestId = request.TestId,
@@ -47,7 +47,7 @@ namespace API.Application.Users.Commands.StartTest
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return Unit.Value;
+                return startTest.Entity.Id;
             }
             catch (Exception e)
             {
