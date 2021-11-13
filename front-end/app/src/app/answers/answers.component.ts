@@ -141,6 +141,9 @@ export class AnswersComponent implements OnInit {
   }
 
   settings = {
+    actions: {
+      position: 'right'
+    },
     delete: {
       confirmDelete: true,
     },

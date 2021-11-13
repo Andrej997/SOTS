@@ -23,9 +23,14 @@ export class AuthGuard implements CanActivate {
 
   isStudent(): boolean {
     let user = this.authService.getData();
-    if (user.roleId == 3) return true;
-
+    if (user.roleId == 3) 
+      return true;
     return false;
+  }
+
+  getId(): number {
+    let user = this.authService.getData();
+    return user.id;
   }
   
   isLoggedIn() {

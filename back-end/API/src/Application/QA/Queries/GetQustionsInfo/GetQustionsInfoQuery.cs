@@ -49,7 +49,7 @@ namespace API.Application.QA.Queries.GetQustionsInfo
                         AnswersCount = question.Answers.Count
                     });
 
-                return questionsQuery.ToList();
+                return questionsQuery.OrderBy(question => question.TestText).ToList();
             }
             catch (Exception e)
             {

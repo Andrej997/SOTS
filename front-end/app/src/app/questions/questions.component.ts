@@ -131,6 +131,9 @@ export class QuestionsComponent implements OnInit, OnDestroy {
           return 'text';
       }
     },
+    actions: {
+      position: 'right'
+    },
     delete: {
       confirmDelete: true,
     },

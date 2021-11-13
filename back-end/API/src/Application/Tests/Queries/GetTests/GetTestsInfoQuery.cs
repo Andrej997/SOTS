@@ -59,14 +59,15 @@ namespace API.Application.Tests.Queries.GetTests
                         End = _context.TestTimes
                             .Where(tt => tt.Id == test.TestTimeId)
                             .Select(tt => tt.End)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                        Published = test.Published
                     });
 
                 if (request.UserId == (long)Domain.Enums.Roles.proffesor || request.UserId == (long)Domain.Enums.Roles.student)
                     testsQuery = testsQuery
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == test.CreatorId && us.SubjectId == test.SubjectId));
 
-                return testsQuery.ToList();
+                return testsQuery.OrderBy(test => test.Name).ToList();
             }
             catch (Exception e)
             {

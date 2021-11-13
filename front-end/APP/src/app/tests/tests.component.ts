@@ -27,7 +27,7 @@ export class TestsComponent implements OnInit {
   }
 
   private getTests() {
-    this.testsService.getTests(1).subscribe(result => {
+    this.testsService.getTests(this.authGuard.getId()).subscribe(result => {
       this.tests = result as any[];
       this.data = this.tests;
       console.log(this.tests);
@@ -97,6 +97,15 @@ export class TestsComponent implements OnInit {
       this.router.navigate([`/test/${event.data.id}/questions`]);
   }
 
+  onCustomAction(testId: any) {
+    this.testsService.publishTest(testId).subscribe(result => {
+      this.getTests();
+    }, error => {
+        this.toastr.error(error.error);
+        console.error(error);
+    });
+  }
+
   settings = {
     rowClassFunction: (row: any) => {
       if (row.data.questionCount == 0) {
@@ -107,6 +116,10 @@ export class TestsComponent implements OnInit {
     },
     actions: {
       add: false,
+      custom: [
+        { name: 'publish', title: 'Publish '}
+      ],
+      position: 'right'
     },
     delete: {
       confirmDelete: true,
@@ -143,6 +156,10 @@ export class TestsComponent implements OnInit {
       },
       maxPoints: {
         title: 'Max points'
+      },
+      published: {
+        title: 'Published',
+        editable:false
       }
     }
   };

@@ -5,29 +5,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace API.Application.Tests.Commands.UpdateTest
+namespace API.Application.Tests.Commands.PublishTest
 {
-    public class UpdateTestCommand : IRequest
+    public class PublishTestCommand : IRequest
     {
         public long TestId { get; set; }
-
-        public string TestText { get; set; }
-
-        public long MaxPoints { get; set; }
     }
 
-    public class UpdateTestCommandHandler : IRequestHandler<UpdateTestCommand>
+    public class PublishTestCommandHandler : IRequestHandler<PublishTestCommand>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IDateTime _dateTime;
 
-        public UpdateTestCommandHandler(IApplicationDbContext context, IDateTime dateTime)
+        public PublishTestCommandHandler(IApplicationDbContext context)
         {
             _context = context;
-            _dateTime = dateTime;
         }
 
-        public async Task<Unit> Handle(UpdateTestCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(PublishTestCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,8 +31,13 @@ namespace API.Application.Tests.Commands.UpdateTest
 
                 if (test != null)
                 {
-                    test.Name = request.TestText;
-                    test.MaxPoints = request.MaxPoints;
+                    if (!_context.Questions.Any(question => question.TestId == test.Id))
+                        throw new Exception("Can't publish, test does not have questions");
+
+                    if (_context.Answers.Any(answer => !_context.Questions.Any(question => question.TestId == test.Id && answer.QuestionId == question.Id)))
+                        throw new Exception("Can't publish, some questions does not have answers");
+
+                    test.Published = true;
                     await _context.SaveChangesAsync(cancellationToken);
                 }
                 else throw new Exception("Unknown id");

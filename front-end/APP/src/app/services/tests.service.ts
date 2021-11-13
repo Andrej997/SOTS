@@ -77,6 +77,10 @@ export class TestsService {
     return this.http.put(environment.api + `Tests/update`, body);
   }
 
+  publishTest(testId: number) {
+    return this.http.get(environment.api + `Tests/publish/` + testId);
+  }
+
   deleteAnswer(answerId: number) {
     return this.http.delete(environment.api + `QA/detele/answer/${answerId}`);
   }

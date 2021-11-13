@@ -33,6 +33,10 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.MaxPoints)
                 .HasColumnName("max_points");
+
+            builder.Property(e => e.Published)
+                .HasDefaultValue(false)
+                .HasColumnName("published");
         }
     }
 }

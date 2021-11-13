@@ -19,6 +19,8 @@ namespace API.Domain.Entities
 
         public long MaxPoints { get; set; }
 
+        public bool Published { get; set; }
+
 
         public virtual List<Question> Questions { get; set; }
         public virtual TestTime TestTime { get; set; }

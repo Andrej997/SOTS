@@ -1,5 +1,6 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Commands.DeleteTest;
+using API.Application.Tests.Commands.PublishTest;
 using API.Application.Tests.Commands.UpdateTest;
 using API.Application.Tests.Queries.GetSubjects;
 using API.Application.Tests.Queries.GetTakeTest;
@@ -20,6 +21,22 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(new GetTestsInfoQuery { UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("publish/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> PublishTest(long testId)
+        {
+            try
+            {
+                await Mediator.Send(new PublishTestCommand { TestId = testId });
+                return Ok();
             }
             catch (Exception ex)
             {

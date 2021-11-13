@@ -46,7 +46,7 @@ namespace API.Application.QA.Queries.GetAnswersInfo
                         TestId = _context.Questions.Where(question => question.Id == answer.QuestionId).Select(question => question.TestId).FirstOrDefault()
                     });
 
-                return answerQuery.ToList();
+                return answerQuery.OrderBy(answer => answer.Text).ToList();
             }
             catch (Exception e)
             {
