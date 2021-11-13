@@ -64,6 +64,8 @@ export class TakeTestComponent implements OnInit {
     this.testsService.startTest(body).subscribe(result => {
       this.toastr.success('Test started');
       this.startTestId = result as number;
+      console.log(this.startTestId);
+      
       this.testLoaded = false;
       this.testStarted = true;
       let dstart = new Date(this.test.start);
@@ -74,6 +76,7 @@ export class TakeTestComponent implements OnInit {
         leftTime: endNum - startNum
       }; 
       this.countdown.restart();
+      this.startQuestionTime(this.currentQuestion.id, this.startTestId);
     }, error => {
         console.error(error);
     });
@@ -95,7 +98,9 @@ export class TakeTestComponent implements OnInit {
       };
       this.testsService.saveUserAnswer(body).subscribe(result => {
         this.userAnswers = [];
+        
         this.currentQuestion = this.test.questions[this.currentQuestionCounter];
+        this.startQuestionTime(this.currentQuestion.id, this.startTestId);
       }, error => {
           console.error(error);
       });
@@ -122,9 +127,9 @@ export class TakeTestComponent implements OnInit {
     }
   }
 
-  startQuestionTime(questionId: number) {
+  startQuestionTime(questionId: number, startTestId: number) {
     let body = {
-      StudentTestId: this.startTestId,
+      StudentTestsId: startTestId,
       QuestionId: questionId,
     }
     this.testsService.questionStartTime(body).subscribe(result => {
@@ -133,16 +138,16 @@ export class TakeTestComponent implements OnInit {
     });
   }
 
-  endQuestionTime(questionId: number) {
-    let body = {
-      StudentTestId: this.startTestId,
-      QuestionId: questionId,
-    }
-    this.testsService.questionEndTime(body).subscribe(result => {
-    }, error => {
-        console.error(error);
-    });
-  }
+  // endQuestionTime(questionId: number) {
+  //   let body = {
+  //     StudentTestId: this.startTestId,
+  //     QuestionId: questionId,
+  //   }
+  //   this.testsService.questionEndTime(body).subscribe(result => {
+  //   }, error => {
+  //       console.error(error);
+  //   });
+  // }
 
   finishQuestion() {
     let body = {

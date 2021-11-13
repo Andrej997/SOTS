@@ -42,6 +42,7 @@ namespace API.Application.QA.Queries.GetAnswersInfo
                         Text = answer.TextAnswer,
                         IsCorrect = answer.IsCorrect,
                         QuestionId = answer.QuestionId,
+                        QuestionText = _context.Questions.Where(question => question.Id == answer.QuestionId).Select(question => question.TextQuestion).FirstOrDefault(),
                         TestId = _context.Questions.Where(question => question.Id == answer.QuestionId).Select(question => question.TestId).FirstOrDefault()
                     });
 

@@ -6,6 +6,8 @@
 
         public long TestId { get; set; }
 
+        public string TestText { get; set; }
+
         public string Text { get; set; }
 
         public long AnswersCount { get; set; }

@@ -4,46 +4,11 @@
     </a>
 </button>
 
-<table class="table">
-    <thead>
-        <tr>
-        <th scope="col" style='width:50px;'></th>
-        <th scope="col">Text</th>
-        <th scope="col" style='width:100px;'>Is correct</th>
-        <th scope="col" style='width:170px;'></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor='let answer of answers let i = index'>
-            <th scope="row">{{i + 1}}</th>
-            <td>
-                <span *ngIf='!editRow'>{{ answer.text }}</span>
-                <span *ngIf='editRow && editAnswer!=answer.id'>{{ answer.text }}</span>
-                <input id="i_{{answer.id}}" class="form-control" type="text" *ngIf='editRow && editAnswer==answer.id' value='{{ answer.text }}'>
-            </td>
-            <td>
-                <span *ngIf='!editRow'>{{ answer.isCorrect }}</span>
-                <span *ngIf='editRow && editAnswer!=answer.id'>{{ answer.isCorrect }}</span>
-                <select id="s_{{answer.id}}" class="form-control" *ngIf='editRow && editAnswer==answer.id'>
-                    <option value="false">False</option>
-                    <option value="true">True</option>
-                </select>
-            </td>
-            <td>
-                <div>
-                    <button type="button" class="btn btn-warning" (click)='edit(answer.id)' *ngIf='!editRow' style='float:left'>Edit</button>
-                    <button type="button" class="btn btn-danger" (click)='delete(answer.id)' *ngIf='!editRow' style='float:right'>Delete</button>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-danger" (click)='cancel(answer.id)' *ngIf='editRow && editAnswer==answer.id' style='float:left'>Cancel</button>
-                    <button type="button" class="btn btn-success" (click)='save(answer.id)' *ngIf='editRow && editAnswer==answer.id' style='float:right'>Save</button>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <button type="button" class="btn" style='cursor:pointer;' (click)='addAnswer()' *ngIf='!editRow'>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.75 4.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"></path></svg>
-            </button>
-        </tr>
-    </tbody>
-</table>
+<h1>Question: {{questionText}}</h1>
+
+<ng2-smart-table 
+    style="cursor: pointer;"
+    [settings]="settings" 
+    [source]="data" 
+    allowPaging='true' 
+    (userRowSelect)="onUserRowSelect($event)"></ng2-smart-table>

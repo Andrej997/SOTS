@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Answer, Question } from '../../models/question';
 import { TestsService } from '../../services/tests.service';
 
@@ -17,6 +18,7 @@ export class NewTestComponent implements OnInit {
   answers: Answer[] = [];
 
   constructor(private testsService: TestsService,
+    private toastr: ToastrService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -85,20 +87,108 @@ export class NewTestComponent implements OnInit {
   }
 
   private createTest() {
-    let body = {
-      Name: this.testForm.value.name,
-      SubjectId: this.testForm.value.subject,
-      Questions: this.questions,
-      CreatorId: 1,
-      MaxPoints: this.testForm.value.maxPoints,
-      Start: this.testForm.value.start,
-      End: this.testForm.value.end
-    };
-    this.testsService.createTest(body).subscribe(result => {
-      console.log("Created");
-    }, error => {
-        console.error(error);
-    });
+    let canCreate: boolean = true;
+    
+    if (this.testForm.value.name == '') {
+      this.toastr.error("Missing name");
+      canCreate = false;
+      return;
+    }
+
+    if (this.testForm.value.subject === 0) {
+      this.toastr.error("Missing subject");
+      canCreate = false;
+      return;
+    }
+
+    if (this.testForm.value.start == '') {
+      this.toastr.error("Missing start date");
+      canCreate = false;
+      return;
+    }
+
+    if (this.testForm.value.end == '') {
+      this.toastr.error("Missing end date");
+      canCreate = false;
+      return;
+    }
+
+    let dStart = new Date(this.testForm.value.start);
+    console.log(dStart);
+
+    let dEnd = new Date(this.testForm.value.end);
+    console.log(dEnd);
+    
+    if (dStart.getTime() > dEnd.getTime()) {
+      this.toastr.error("End of test can't be before start of test");
+      canCreate = false;
+      return;
+    }
+    else if (dStart.getTime() == dEnd.getTime()) {
+      this.toastr.error("Start and end time can't be the same");
+      canCreate = false;
+      return;
+    }
+    
+    if (this.questions.length == 0) {
+      this.toastr.error("There must be at least one question");
+      canCreate = false;
+      return;
+    }
+    else {
+      let maxQuestionPointsSum = 0;
+      this.questions.forEach(x => {
+        if (x.TextQuestion == '') {
+          this.toastr.error("Missing question text");
+          canCreate = false;
+          return;
+        }
+
+        if (x.Points == 0) {
+          this.toastr.error("Points of questions must be greater than 0");
+          canCreate = false;
+          return;
+        }
+        
+        if (x.Answers.length < 2) {
+          this.toastr.error("There must be at least two answers for each question");
+          canCreate = false;
+          return;
+        }
+        else {
+          x.Answers.forEach(a => {
+            if (a.TextAnswer == '') {
+              this.toastr.error("Missing answer text");
+              canCreate = false;
+              return;
+            }
+          });
+        }
+        maxQuestionPointsSum += x.Points;
+      });
+
+      if (maxQuestionPointsSum != this.testForm.value.maxPoints) {
+        this.toastr.error("Sum of question points does not equal to max test points");
+        canCreate = false;
+        return;
+      }
+    }
+    if (canCreate) {
+      let body = {
+        Name: this.testForm.value.name,
+        SubjectId: this.testForm.value.subject,
+        Questions: this.questions,
+        CreatorId: 1,
+        MaxPoints: this.testForm.value.maxPoints,
+        Start: this.testForm.value.start,
+        End: this.testForm.value.end
+      };
+      this.testsService.createTest(body).subscribe(result => {
+        console.log("Created");
+      }, error => {
+          console.error(error);
+      });
+    }
   }
 
   onFirstSubmit() {

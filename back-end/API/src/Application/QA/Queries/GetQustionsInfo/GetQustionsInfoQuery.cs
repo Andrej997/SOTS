@@ -1,6 +1,7 @@
 ﻿using API.Application.Common.Interfaces;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,10 @@ namespace API.Application.QA.Queries.GetQustionsInfo
                     {
                         Id = question.Id,
                         TestId = question.TestId,
+                        TestText = _context.Tests
+                            .Where(test => test.Id == question.TestId)
+                            .Select(test => test.Name)
+                            .FirstOrDefault(),
                         Points = question.Points,
                         Text = question.TextQuestion,
                         AnswersCount = question.Answers.Count

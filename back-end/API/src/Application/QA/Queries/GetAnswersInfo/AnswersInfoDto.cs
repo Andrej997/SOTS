@@ -11,5 +11,7 @@
         public long TestId { get; set; }
 
         public long QuestionId { get; set; }
+
+        public string QuestionText { get; set; }
     }
 }

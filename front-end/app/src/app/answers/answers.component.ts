@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TestsService } from '../services/tests.service';
 
@@ -16,8 +16,11 @@ export class AnswersComponent implements OnInit {
   private questionId: number;
   private routeSub: Subscription;
   answers: any[] = [];
+  questionText: string = '';
+  data: any[] = [];
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
     private testsService: TestsService) { }
 
   ngOnInit(): void {
@@ -104,6 +107,8 @@ export class AnswersComponent implements OnInit {
     this.answers = [];
     this.testsService.getAnswers(testId, questionId).subscribe(result => {
       this.answers = result as any[];
+      this.questionText = this.answers[0].questionText;
+      this.data = this.answers;
       console.log(this.answers);
     }, error => {
         console.error(error);
@@ -113,4 +118,28 @@ export class AnswersComponent implements OnInit {
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
+
+  onUserRowSelect(event: any) {
+    // console.log(event);
+  }
+
+  settings = {
+    delete: {
+      confirmDelete: true,
+    },
+    add: {
+      confirmCreate: true,
+    },
+    edit: {
+      confirmSave: true,
+    },
+    columns: {
+      text: {
+        title: 'Question'
+      },
+      isCorrect: {
+        title: 'Is correct'
+      }
+    }
+  };
 }

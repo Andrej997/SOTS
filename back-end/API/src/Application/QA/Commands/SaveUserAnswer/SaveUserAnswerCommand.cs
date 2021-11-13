@@ -54,6 +54,13 @@ namespace API.Application.QA.Commands.SaveUserAnswer
 
                 await _context.SaveChangesAsync(cancellationToken);
 
+                var questionTime = _context.QuestionTimes
+                    .Where(qt => qt.QuestionId == request.QuestionId && qt.StudentTestsId == request.StudentTestId)
+                    .FirstOrDefault();
+
+                questionTime.QuestionEnd = _dateTime.UtcNow;
+                await _context.SaveChangesAsync(cancellationToken);
+
                 return Unit.Value;
             }
             catch (Exception e)

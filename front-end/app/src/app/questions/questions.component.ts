@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TestsService } from '../services/tests.service';
 
@@ -15,8 +15,11 @@ export class QuestionsComponent implements OnInit, OnDestroy {
   private testId: number;
   private routeSub: Subscription;
   questions: any[] = [];
+  testText: string = '';
+  data: any[] = [];
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
     private testsService: TestsService) { }
 
   ngOnInit(): void {
@@ -39,6 +42,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
   private getQustions(testId: number) {
     this.testsService.getQustions(testId).subscribe(result => {
       this.questions = result as any[];
+      this.testText = this.questions[0].testText;
+      this.data = this.questions;
       console.log(this.questions);
     }, error => {
         console.error(error);
@@ -94,4 +99,32 @@ export class QuestionsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
+
+  onUserRowSelect(event: any) {
+    // console.log(event);
+    this.router.navigate([`/test/${event.data.testId}/question/${event.data.id}/answers`]);
+  }
+
+  settings = {
+    delete: {
+      confirmDelete: true,
+    },
+    add: {
+      confirmCreate: true,
+    },
+    edit: {
+      confirmSave: true,
+    },
+    columns: {
+      text: {
+        title: 'Question'
+      },
+      answersCount: {
+        title: 'Number of answers'
+      },
+      points: {
+        title: 'Points'
+      }
+    }
+  };
 }
