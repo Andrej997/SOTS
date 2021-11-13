@@ -107,19 +107,19 @@ export class TestsComponent implements OnInit {
   }
 
   settings = {
+    actions: !this.authGuard.isStudent() ? {
+        add: false,
+        custom: [
+          { name: 'publish', title: 'Publish '}
+        ],
+        position: 'right'
+      } : false,
     rowClassFunction: (row: any) => {
       if (row.data.questionCount == 0) {
           return 'text-danger';
       } else {
           return 'text';
       }
-    },
-    actions: {
-      add: false,
-      custom: [
-        { name: 'publish', title: 'Publish '}
-      ],
-      position: 'right'
     },
     delete: {
       confirmDelete: true,
@@ -150,8 +150,8 @@ export class TestsComponent implements OnInit {
         title: 'End of test',
         editable:false
       },
-      created: {
-        title: 'Test created',
+      creatorName: {
+        title: 'Test creator',
         editable:false
       },
       maxPoints: {

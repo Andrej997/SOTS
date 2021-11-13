@@ -63,9 +63,14 @@ namespace API.Application.Tests.Queries.GetTests
                         Published = test.Published
                     });
 
-                if (request.UserId == (long)Domain.Enums.Roles.proffesor || request.UserId == (long)Domain.Enums.Roles.student)
+                var userRoleId = _context.UserRoles.Where(ur => ur.UserId == request.UserId).Select(ur => ur.RoleId).FirstOrDefault();
+
+                if (userRoleId == (long)Domain.Enums.Roles.proffesor)
                     testsQuery = testsQuery
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == test.CreatorId && us.SubjectId == test.SubjectId));
+                else if (userRoleId == (long)Domain.Enums.Roles.student)
+                    testsQuery = testsQuery
+                        .Where(test => _context.UserSubjects.Any(us => us.UserId == request.UserId && us.SubjectId == test.SubjectId) && test.Published == true);
 
                 return testsQuery.OrderBy(test => test.Name).ToList();
             }
