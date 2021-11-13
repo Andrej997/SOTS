@@ -1,9 +1,11 @@
-﻿namespace API.Domain.Entities
+﻿using System.Text.Json;
+
+namespace API.Domain.Entities
 {
     public class Edge
     {
         public long Id { get; set; }
 
-        public string EdgeJson { get; set; }
+        public JsonDocument EdgeJson { get; set; }
     }
 }

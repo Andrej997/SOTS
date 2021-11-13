@@ -1,5 +1,7 @@
 ﻿using API.Application.Graph.Commands.CreateEdge;
 using API.Application.Graph.Commands.CreateNode;
+using API.Application.Graph.Commands.DeleteEdge;
+using API.Application.Graph.Commands.DeleteNode;
 using API.Application.Graph.Queries.GetEdges;
 using API.Application.Graph.Queries.GetNodes;
 using API.Domain.Entities;
@@ -62,6 +64,38 @@ namespace API.WebApi.Controllers
         [Route("create/edge")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> CreateEdge(CreateEdgeCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("node/{nodeId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteNode(string nodeId)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteNodeCommand { NodeId = nodeId });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("delete/edges")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteEdge(DeleteEdgeCommand command)
         {
             try
             {

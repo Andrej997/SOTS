@@ -11,10 +11,14 @@ import { GraphService } from '../services/graph.service';
 })
 export class GraphComponent implements OnInit {
 
+  allLoaded: boolean = false;
+
   nodeForm: FormGroup;
   addNodeForm: boolean = false;
   addFormBtn: boolean = true;
   nodes: Node[] = [];
+  sourceNodes: Node[] = [];
+  targetNodes: Node[] = [];
 
   edgeForm: FormGroup;
   addEdgeForm: boolean = false;
@@ -35,7 +39,6 @@ export class GraphComponent implements OnInit {
     });
 
     this.getNodes();
-
   }
 
   private getNodes() {
@@ -44,7 +47,9 @@ export class GraphComponent implements OnInit {
     this.graphService.getNodes(body).subscribe(result => {
       console.log(result);
       (result as any[]).forEach(x => {
-        this.nodes.push(JSON.parse(x.nodeJson));
+        this.nodes.push(x.nodeJson);
+        this.sourceNodes.push(x.nodeJson);
+        this.targetNodes.push(x.nodeJson);
       });
       this.nodes = [...this.nodes];
       this.getEdges();
@@ -60,9 +65,10 @@ export class GraphComponent implements OnInit {
     this.graphService.getEdges(body).subscribe(result => {
       console.log(result);
       (result as any[]).forEach(x => {
-        this.edges.push(JSON.parse(x.edgeJson));
+        this.edges.push(x.edgeJson);
       });
       this.edges = [...this.edges];
+      this.allLoaded = true;
     }, error => {
         this.toastr.error(error.error);
         console.error(error);
@@ -113,6 +119,24 @@ export class GraphComponent implements OnInit {
   }
 
   
+  onSearchSourceNode(input: any) {
+    this.sourceNodes = [];
+    this.nodes.forEach(node => {
+      if (node.label?.toLowerCase().includes(input.target.value)) {
+        this.sourceNodes.push(node);
+      }
+    });
+  }
+
+  
+  onSearchTargetNode(input: any) {
+    this.targetNodes = [];
+    this.nodes.forEach(node => {
+      if (node.label?.toLowerCase().includes(input.target.value)) {
+        this.targetNodes.push(node);
+      }
+    });
+  }
 
   showAddForm(form: string) {
     if (form == 'node') {
@@ -214,5 +238,72 @@ export class GraphComponent implements OnInit {
           console.error(error);
       });
     }
+  }
+
+  clickedNode: Node = {
+    id: '',
+    label: ''
+  }
+  clickOnNode(node: Node) {
+    this.clickedNode = node;
+  }
+
+  deleteNode() {
+    let edgeIds: string[] = [];
+    this.edges.forEach(edge => {
+      if (edge.source == this.clickedNode.id || edge.target == this.clickedNode.id) {
+        edgeIds.push(edge.id as string);
+      }
+    });
+    let body = {
+      EdgeIds: edgeIds
+    }
+    this.graphService.deleteEdge(body).subscribe(result => {
+      if (edgeIds.length >0)
+        this.toastr.success("Deteled edges from node "+ this.clickedNode.label);
+      this.graphService.deleteNode(this.clickedNode.id as string).subscribe(result => {
+        this.toastr.success("Deteled node " + this.clickedNode.label);
+        this.clickedNode = {
+          id: '',
+          label: ''
+        }
+        this.getNodes();
+      }, error => {
+          this.toastr.error(error.error);
+          console.error(error);
+      });
+    }, error => {
+        this.toastr.error(error.error);
+        console.error(error);
+    });
+  }
+
+  clickedEdge: Edge = {
+    id: '',
+    label: '',
+    source: '',
+    target: ''
+  }
+  clickOnEdge(edge: Edge){
+    this.clickedEdge = edge;
+  }
+
+  deleteEdge() {
+    let body = {
+      EdgeIds: [this.clickedEdge.id]
+    }
+    this.graphService.deleteEdge(body).subscribe(result => {
+      this.toastr.success("Deteled edge " + this.clickedEdge.label);
+      this.getNodes();
+      this.clickedEdge = {
+        id: '',
+        label: '',
+        source: '',
+        target: ''
+      }
+    }, error => {
+        this.toastr.error(error.error);
+        console.error(error);
+    });
   }
 }

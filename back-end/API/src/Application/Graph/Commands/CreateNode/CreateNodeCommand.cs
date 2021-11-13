@@ -2,6 +2,7 @@
 using API.Domain.Entities;
 using MediatR;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,10 +27,11 @@ namespace API.Application.Graph.Commands.CreateNode
         {
             try
             {
+                JsonDocument json = JsonDocument.Parse(request.NodeJson);
                 _context.Nodes
                     .Add(new Node
                     {
-                        NodeJson = request.NodeJson
+                        NodeJson = json
                     });
 
                 await _context.SaveChangesAsync(cancellationToken);

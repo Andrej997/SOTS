@@ -23,4 +23,12 @@ export class GraphService {
   createEdge(body: any) {
     return this.http.post(environment.api + `Graph/create/edge`, body);
   }
+
+  deleteNode(nodeId: string) {
+    return this.http.delete(environment.api + `Graph/node/${nodeId}`);
+  }
+
+  deleteEdge(body: any) {
+    return this.http.post(environment.api + `Graph/delete/edges`, body);
+  }
 }
