@@ -1,7 +1,7 @@
 <div>   
     <div class='container' style='float: left; width: 20%;'>
-        <button type="button" style='margin-right: 10px;' class="btn btn-primary" (click)='showAddForm("node")' [hidden]='!addFormBtn'>Add node</button>
-        <button type="button" class="btn btn-primary" (click)='showAddForm("edge")' [hidden]='!addFormBtn'>Add edge</button>
+        <button type="button" class="btn btn-primary" (click)='showAddForm("node")' [hidden]='!addFormBtn'>Add node</button>
+        <button type="button" style='float: right;' class="btn btn-primary" (click)='showAddForm("edge")' [hidden]='!addFormBtn'>Add edge</button>
         <form [hidden]='!addNodeForm' [formGroup]="nodeForm" (ngSubmit)="createNode()">
             <div class="form-group">
                 <label>Node id</label>
@@ -11,7 +11,8 @@
               <label>Node label</label>
               <input type="text" formControlName="label" class="form-control" placeholder="Enter node label">
             </div>
-            <button type="submit" class="btn btn-primary">Create node</button>
+            <button type="submit"class="btn btn-primary">Create node</button>
+            <button type="button" style='float: right;' class="btn btn-danger" (click)='showAddForm("")'>Cancel</button>
         </form>
         <form [hidden]='!addEdgeForm' [formGroup]="edgeForm" (ngSubmit)="createEdge()">
             <div class="form-group">
@@ -20,7 +21,7 @@
               </div>
             <div class="form-group">
                 <label>Source node</label>
-                <ul class="list-group" style='cursor: pointer;'>
+                <ul class="list-group" style='cursor: pointer; max-height: 250px; overflow-y: scroll;'>
                     <li class="list-group-item list-group-item-action" 
                         (click)='selectSourceNode(node.id);'
                         id='sn_{{node.id}}' *ngFor='let node of nodes'>{{node.label}}</li>
@@ -32,13 +33,14 @@
               </div>
             <div class="form-group">
                 <label>Target node</label>
-                <ul class="list-group" style='cursor: pointer;'>
+                <ul class="list-group" style='cursor: pointer; max-height: 250px; overflow-y: scroll;'>
                     <li class="list-group-item list-group-item-action" 
                         (click)='selectTargetNode(node.id);'    
                         id='tn_{{node.id}}' *ngFor='let node of nodes'>{{node.label}}</li>
                 </ul>
             </div>
             <button type="submit" class="btn btn-primary">Create edge</button>
+            <button type="button" style='float: right;' class="btn btn-danger" (click)='showAddForm("")'>Cancel</button>
         </form>
     </div>
     <div class='container divEditor' style='float: left; width: 80%;'>

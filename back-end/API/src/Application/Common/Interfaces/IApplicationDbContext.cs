@@ -20,6 +20,8 @@ namespace API.Application.Common.Interfaces
         DbSet<QuestionTime> QuestionTimes { get; set; }
         DbSet<Answer> Answers { get; set; }
         DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
+        DbSet<Node> Nodes { get; set; }
+        DbSet<Edge> Edges { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

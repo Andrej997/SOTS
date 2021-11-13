@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { ToastrService } from 'ngx-toastr';
+import { GraphService } from '../services/graph.service';
 
 @Component({
   selector: 'app-graph',
@@ -9,14 +10,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnInit {
-
-  public innerWidth: any = 0;
-  public innerHeight: any = 0;
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.innerWidth = window.innerWidth - 20;
-    this.innerHeight = window.innerHeight - 120;
-  }
 
   nodeForm: FormGroup;
   addNodeForm: boolean = false;
@@ -28,6 +21,7 @@ export class GraphComponent implements OnInit {
   edges: Edge[] = [];
 
   constructor(private fb: FormBuilder,
+    private graphService: GraphService,
     private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -39,56 +33,40 @@ export class GraphComponent implements OnInit {
       id: ['', Validators.required],
       label: ['', Validators.required],
     });
-    this.innerWidth = window.innerWidth - 20;
-    this.innerHeight = window.innerHeight - 120;
 
-    this.nodes = [
-      {
-        id: 'first',
-        label: 'Node one'
-        }, {
-        id: 'second',
-        label: 'Node two'
-        }, {
-        id: 'c1',
-        label: 'Node three'
-        }, {
-        id: 'c2',
-        label: 'Node four'
-        }, {
-        id: 'd',
-        label: 'Node five'
-        }
-    ]
+    this.getNodes();
 
-    this.edges = [
-      {
-      id: 'a',
-      source: 'first',
-      target: 'second',
-      label: 'is parent of'
-      }, {
-      id: 'b',
-      source: 'first',
-      target: 'c1',
-      label: 'custom label'
-      }, {
-      id: 'd',
-      source: 'first',
-      target: 'c2',
-      label: 'custom label'
-      }, {
-      id: 'e',
-      source: 'c1',
-      target: 'd',
-      label: 'first link'
-      }, {
-      id: 'f',
-      source: 'c1',
-      target: 'd',
-      label: 'second link'
-      }
-  ]
+  }
+
+  private getNodes() {
+    this.nodes = [];
+    let body = {};
+    this.graphService.getNodes(body).subscribe(result => {
+      console.log(result);
+      (result as any[]).forEach(x => {
+        this.nodes.push(JSON.parse(x.nodeJson));
+      });
+      this.nodes = [...this.nodes];
+      this.getEdges();
+    }, error => {
+        this.toastr.error(error.error);
+        console.error(error);
+    });
+  }
+
+  private getEdges() {
+    this.edges = [];
+    let body = {};
+    this.graphService.getEdges(body).subscribe(result => {
+      console.log(result);
+      (result as any[]).forEach(x => {
+        this.edges.push(JSON.parse(x.edgeJson));
+      });
+      this.edges = [...this.edges];
+    }, error => {
+        this.toastr.error(error.error);
+        console.error(error);
+    });
   }
 
   createNode() {
@@ -121,7 +99,16 @@ export class GraphComponent implements OnInit {
       };
       this.nodes.push(node);
       this.nodes = [...this.nodes];
-      this.showAddForm('');
+
+      let body = {
+        NodeJson: JSON.stringify(node)
+      };
+      this.graphService.createNode(body).subscribe(result => {
+        this.getNodes();
+      }, error => {
+          this.toastr.error(error.error);
+          console.error(error);
+      });
     }
   }
 
@@ -216,7 +203,16 @@ export class GraphComponent implements OnInit {
       };
       this.edges.push(edge);
       this.edges = [...this.edges];
-      this.showAddForm('');
+
+      let body = {
+        EdgeJson: JSON.stringify(edge)
+      };
+      this.graphService.createEdge(body).subscribe(result => {
+            
+      }, error => {
+          this.toastr.error(error.error);
+          console.error(error);
+      });
     }
   }
 }

@@ -45,6 +45,8 @@ namespace API.Infrastructure.Persistence
         public DbSet<QuestionTime> QuestionTimes { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
+        public DbSet<Node> Nodes { get; set; }
+        public DbSet<Edge> Edges { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
