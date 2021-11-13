@@ -2,7 +2,9 @@
 using API.Application.QA.Commands.CreateQuestion;
 using API.Application.QA.Commands.CreateQuestionAnswers;
 using API.Application.QA.Commands.DeleteAnswer;
+using API.Application.QA.Commands.DeleteQuestion;
 using API.Application.QA.Commands.EditAnswer;
+using API.Application.QA.Commands.EditQuestion;
 using API.Application.QA.Commands.QuestionEndTime;
 using API.Application.QA.Commands.QuestionStartTime;
 using API.Application.QA.Commands.SaveUserAnswer;
@@ -144,13 +146,45 @@ namespace API.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("update/question")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> EditQuestion(EditQuestionCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("update/answer")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> EditAnswer(EditAnswerCommand command)
         {
             try
             {
                 await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("detele/{questionId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteQuestion(long questionId)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteQuestionCommand { QuestionId = questionId });
                 return Ok();
             }
             catch (Exception ex)

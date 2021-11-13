@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TestsService } from '../services/tests.service';
 
@@ -20,6 +21,7 @@ export class AnswersComponent implements OnInit {
   data: any[] = [];
 
   constructor(private route: ActivatedRoute,
+    private toastr: ToastrService,
     private router: Router,
     private testsService: TestsService) { }
 
@@ -31,56 +33,65 @@ export class AnswersComponent implements OnInit {
     });
   }
 
-  edit(answerId: number) {
-    this.editRow = true;
-    this.editAnswer = answerId;
+  save(data: any) {
+    let canSave: boolean = true;
+
+    if (data.text == '') {
+      this.toastr.error("Answer can't be empty");
+      canSave = false;
+      return;
+    }
+    else {
+      this.answers.forEach(result => {
+        if (result.text == data.text) {
+          this.toastr.error("Answer already exists");
+          canSave = false;
+          return;
+        }
+      });
+    }
+
+    let isCorrectStr = data.isCorrect.toString();
+
+    if (isCorrectStr != 'true' && isCorrectStr != 'false') {
+      this.toastr.error("Not a boolean value");
+      canSave = false;
+      return;
+    }
+
+    if (canSave) {
+      let body = {
+        TestId: this.testId,
+        QuestionId: this.questionId,
+        AnswerText: data.text,
+        IsCorrect: (isCorrectStr == 'true')? true : false
+      };
+      this.testsService.createAnswer(body).subscribe(result => {
+        this.getAnswers(this.testId, this.questionId);
+      }, error => {
+          console.error(error);
+      });
+    }
   }
 
-  cancel(answerId: number) {
-    this.editRow = false;
-    let index = this.answers.findIndex(x => x.id == answerId);
-    if (answerId === 0)
-      this.answers.splice(index, 1);
-  }
 
-  save(answerId: number) {
-    this.editRow = false;
-    let index = this.answers.findIndex(x => x.id == answerId);
-    if (answerId === 0)
-      this.saveNewAnswer();
-    else 
-      this.updateAnswer(answerId);
-  }
+  edit(data: any) {
+    if (data.text == '') {
+      this.toastr.error("Answer can't be empty");
+      return;
+    }
 
-  addAnswer() {
-    this.editRow = true;
-    this.editAnswer = 0;
-    this.answers.push({
-      id: 0,
-      text: '',
-      isCorrect: false
-    })
-  }
+    let isCorrectStr = data.isCorrect.toString();
 
-  private saveNewAnswer() {
+    if (isCorrectStr != 'true' && isCorrectStr != 'false') {
+      this.toastr.error("Not a boolean value");
+      return;
+    }
+    
     let body = {
-      TestId: this.testId,
-      QuestionId: this.questionId,
-      AnswerText: (<HTMLInputElement>document.getElementById("i_0")).value,
-      IsCorrect: ((<HTMLSelectElement>document.getElementById("s_0")).value == 'true')? true : false
-    };
-    this.testsService.createAnswer(body).subscribe(result => {
-      this.getAnswers(this.testId, this.questionId);
-    }, error => {
-        console.error(error);
-    });
-  }
-
-  private updateAnswer(answerId: number) {
-    let body = {
-      AnswerId: answerId,
-      AnswerText: (<HTMLInputElement>document.getElementById("i_" + answerId)).value,
-      IsCorrect: ((<HTMLSelectElement>document.getElementById("s_" + answerId)).value == 'true')? true : false
+      AnswerId: data.id,
+      AnswerText: data.text,
+      IsCorrect: (data.isCorrect == 'true')? true : false
     };
     this.testsService.editAnswer(body).toPromise()
       .then(result => {
@@ -107,7 +118,13 @@ export class AnswersComponent implements OnInit {
     this.answers = [];
     this.testsService.getAnswers(testId, questionId).subscribe(result => {
       this.answers = result as any[];
-      this.questionText = this.answers[0].questionText;
+      if (this.answers.length > 1) {
+        this.questionText = this.answers[0].questionText;
+      } else {
+        this.questionText = 'Missing answers';
+        this.toastr.warning('Missing answers');
+      }
+      
       this.data = this.answers;
       console.log(this.answers);
     }, error => {

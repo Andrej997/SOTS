@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TestsService } from '../services/tests.service';
 
@@ -19,6 +20,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
   data: any[] = [];
 
   constructor(private route: ActivatedRoute,
+    private toastr: ToastrService,
     private router: Router,
     private testsService: TestsService) { }
 
@@ -29,20 +31,15 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  addQuestion() {
-    this.editRow = true;
-    this.editQuestion = 0;
-    this.questions.push({
-      id: 0,
-      text: '',
-      testId: this.testId
-    })
-  }
-
   private getQustions(testId: number) {
     this.testsService.getQustions(testId).subscribe(result => {
       this.questions = result as any[];
-      this.testText = this.questions[0].testText;
+      if (this.questions.length > 1) {
+        this.testText = this.questions[0].testText;
+      } else {
+        this.testText = 'Missing answers';
+        this.toastr.warning('Missing answers');
+      }
       this.data = this.questions;
       console.log(this.questions);
     }, error => {
@@ -50,35 +47,54 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  save(questionId: number) {
-    this.editRow = false;
-    let index = this.questions.findIndex(x => x.id == questionId);
-    if (questionId === 0)
-      this.saveNewAnswer();
-    else 
-      this.updateAnswer(questionId);
+  save(data: any) {
+    let canCreate: boolean = true;
+
+    if (data.text == '') {
+      this.toastr.error("Question can't be empty");
+      canCreate = false;
+      return;
+    }
+
+    let points = Number.parseInt(data.points);
+    if (points <= 0) {
+      this.toastr.error("Points can't be that low");
+      canCreate = false;
+      return;
+    }
+
+    if (canCreate) {
+      let body = {
+        TestId: this.testId,
+        QuestionText: data.text,
+        Points: points
+      };
+      this.testsService.createQuestion(body).subscribe(result => {
+        this.getQustions(this.testId);
+      }, error => {
+          console.error(error);
+      });
+    }
   }
 
-  private saveNewAnswer() {
-    let body = {
-      TestId: this.testId,
-      QuestionText: (<HTMLInputElement>document.getElementById("i_0")).value,
-      Points: (<HTMLSelectElement>document.getElementById("in_0")).value
-    };
-    this.testsService.createQuestion(body).subscribe(result => {
-      this.getQustions(this.testId);
-    }, error => {
-        console.error(error);
-    });
-  }
+  edit(data: any) {
+    if (data.text == '') {
+      this.toastr.error("Question can't be empty");
+      return;
+    }
 
-  private updateAnswer(answerId: number) {
+    let points = Number.parseInt(data.points);
+    if (points <= 0) {
+      this.toastr.error("Points can't be that low");
+      return;
+    }
+
     let body = {
-      AnswerId: answerId,
-      AnswerText: (<HTMLInputElement>document.getElementById("i_" + answerId)).value,
-      IsCorrect: ((<HTMLSelectElement>document.getElementById("s_" + answerId)).value == 'true')? true : false
+      QuestionId: data.id,
+      QuestionText: data.text,
+      Points: points
     };
-    this.testsService.editAnswer(body).toPromise()
+    this.testsService.editQuestion(body).toPromise()
       .then(result => {
         this.getQustions(this.testId);
       })
@@ -88,12 +104,15 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         });
   }
 
-  cancel(questionId: number) {
-
-  }
-
   delete(questionId: number) {
-
+    this.testsService.deleteQuestion(questionId).toPromise()
+    .then(result => {
+      this.getQustions(this.testId);
+    })
+    .catch(
+      error => {
+        console.error(error);
+      });
   }
 
   ngOnDestroy() {
@@ -101,11 +120,17 @@ export class QuestionsComponent implements OnInit, OnDestroy {
   }
 
   onUserRowSelect(event: any) {
-    // console.log(event);
     this.router.navigate([`/test/${event.data.testId}/question/${event.data.id}/answers`]);
   }
 
   settings = {
+    rowClassFunction: (row: any) => {
+      if (row.data.answersCount == 0) {
+          return 'text-danger';
+      } else {
+          return 'text';
+      }
+    },
     delete: {
       confirmDelete: true,
     },
@@ -120,7 +145,9 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         title: 'Question'
       },
       answersCount: {
-        title: 'Number of answers'
+        title: 'Number of answers',
+        editable:false,
+        addable: false,
       },
       points: {
         title: 'Points'

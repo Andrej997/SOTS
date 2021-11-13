@@ -9,4 +9,6 @@
     [settings]="settings" 
     [source]="data" 
     allowPaging='true' 
+    (editConfirm)="edit($event.newData)"
+    (deleteConfirm)="delete($event.data.id)"
     (userRowSelect)="onUserRowSelect($event)"></ng2-smart-table>

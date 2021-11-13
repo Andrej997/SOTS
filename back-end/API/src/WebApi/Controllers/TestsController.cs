@@ -1,5 +1,6 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Commands.DeleteTest;
+using API.Application.Tests.Commands.UpdateTest;
 using API.Application.Tests.Queries.GetSubjects;
 using API.Application.Tests.Queries.GetTakeTest;
 using API.Application.Tests.Queries.GetTests;
@@ -60,6 +61,22 @@ namespace API.WebApi.Controllers
         [Route("create")]
         [ApiExplorerSettings(GroupName = "v1")]
         public async Task<IActionResult> CreateTest(CreateTestCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("update")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> UpdateTest(UpdateTestCommand command)
         {
             try
             {

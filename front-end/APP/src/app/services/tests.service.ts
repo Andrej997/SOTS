@@ -66,11 +66,23 @@ export class TestsService {
   }
 
   editAnswer(body: any) {
-    return this.http.put(environment.api + `QA/update`, body);
+    return this.http.put(environment.api + `QA/update/answer`, body);
+  }
+
+  editQuestion(body: any) {
+    return this.http.put(environment.api + `QA/update/question`, body);
+  }
+
+  editTest(body: any) {
+    return this.http.put(environment.api + `Tests/update`, body);
   }
 
   deleteAnswer(answerId: number) {
     return this.http.delete(environment.api + `QA/detele/answer/${answerId}`);
+  }
+
+  deleteQuestion(questionId: number) {
+    return this.http.delete(environment.api + `QA/detele/${questionId}`);
   }
 
   deleteTest(testId: number) {
