@@ -1,0 +1,106 @@
+<div>   
+    <div class='container' style='float: left; width: 20%;'>
+        <button type="button" style='margin-right: 10px;' class="btn btn-primary" (click)='showAddForm("node")' [hidden]='!addFormBtn'>Add node</button>
+        <button type="button" class="btn btn-primary" (click)='showAddForm("edge")' [hidden]='!addFormBtn'>Add edge</button>
+        <form [hidden]='!addNodeForm' [formGroup]="nodeForm" (ngSubmit)="createNode()">
+            <div class="form-group">
+                <label>Node id</label>
+                <input type="text" formControlName="id" class="form-control" placeholder="Enter node id">
+              </div>
+            <div class="form-group">
+              <label>Node label</label>
+              <input type="text" formControlName="label" class="form-control" placeholder="Enter node label">
+            </div>
+            <button type="submit" class="btn btn-primary">Create node</button>
+        </form>
+        <form [hidden]='!addEdgeForm' [formGroup]="edgeForm" (ngSubmit)="createEdge()">
+            <div class="form-group">
+                <label>Edge id</label>
+                <input type="text" formControlName="id" class="form-control" placeholder="Enter node id">
+              </div>
+            <div class="form-group">
+                <label>Source node</label>
+                <ul class="list-group" style='cursor: pointer;'>
+                    <li class="list-group-item list-group-item-action" 
+                        (click)='selectSourceNode(node.id);'
+                        id='sn_{{node.id}}' *ngFor='let node of nodes'>{{node.label}}</li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label>Edge label</label>
+                <input type="text" formControlName="label" class="form-control" placeholder="Enter node label">
+              </div>
+            <div class="form-group">
+                <label>Target node</label>
+                <ul class="list-group" style='cursor: pointer;'>
+                    <li class="list-group-item list-group-item-action" 
+                        (click)='selectTargetNode(node.id);'    
+                        id='tn_{{node.id}}' *ngFor='let node of nodes'>{{node.label}}</li>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">Create edge</button>
+        </form>
+    </div>
+    <div class='container divEditor' style='float: left; width: 80%;'>
+        <ngx-graph
+            class="chart-container"
+            [view]="[1300, 800]"
+            [links]="edges"
+            [nodes]="nodes"
+            [clusters]="[]"
+            layout="dagreCluster"
+            >
+            <ng-template #defsTemplate>
+                <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                </svg:marker>
+            </ng-template>
+            
+            <ng-template #clusterTemplate let-cluster>
+                <svg:g
+                class="node cluster"
+                ngx-tooltip
+                
+                >
+                <svg:rect
+                    rx="5"
+                    ry="5"
+                    [attr.width]="cluster.dimension.width"
+                    [attr.height]="cluster.dimension.height"
+                    [attr.fill]="cluster.data.color"
+                />
+                </svg:g>
+            </ng-template>
+            
+            <ng-template #nodeTemplate let-node>
+                <svg:g class="node" ngx-tooltip >
+                <svg:rect
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="node.dimension.height"
+                    [attr.fill]="node.data.color"
+                />
+                <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+                    {{node.label}}
+                </svg:text>
+                </svg:g>
+            </ng-template>
+            
+            <ng-template #linkTemplate let-link>
+                <svg:g class="edge">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+                <svg:text class="edge-label" text-anchor="middle">
+                    <textPath
+                    class="text-path"
+                    [attr.href]="'#' + link.id"
+                    [style.dominant-baseline]="link.dominantBaseline"
+                    startOffset="50%"
+                    >
+                    {{link.label}}
+                    </textPath>
+                </svg:text>
+                </svg:g>
+            </ng-template>
+        </ngx-graph>
+    </div>
+</div>
+

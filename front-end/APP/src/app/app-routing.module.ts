@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnswersComponent } from './answers/answers.component';
 import { AppComponent } from './app.component';
+import { GraphComponent } from './graph/graph.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -24,6 +25,12 @@ const routes: Routes = [
   {
     path: 'tests',
     component: TestsComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'graph',
+    component: GraphComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

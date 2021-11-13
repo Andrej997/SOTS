@@ -4,7 +4,6 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,15 +18,12 @@ namespace API.Application.Tests.Queries.GetTests
     {
         private readonly IApplicationDbContext _context;
         private readonly IDateTime _dateTime;
-        private readonly IMapper _mapper;
 
         public GetTestsInfoQueryHandler(IApplicationDbContext context,
-            IMapper mapper,
             IDateTime dateTime)
         {
             _context = context;
             _dateTime = dateTime;
-            _mapper = mapper;
         }
 
         public async Task<List<TestsInfoDto>> Handle(GetTestsInfoQuery request, CancellationToken cancellationToken)

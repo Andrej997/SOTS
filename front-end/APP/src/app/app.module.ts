@@ -29,6 +29,8 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
 import { CountdownModule } from 'ngx-countdown';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { GraphComponent } from './graph/graph.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { ToastrModule } from 'ngx-toastr';
     QuestionsComponent,
     AnswersComponent,
     LoginComponent,
-    TakeTestComponent
+    TakeTestComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,8 @@ import { ToastrModule } from 'ngx-toastr';
     NgxMaterialTimepickerModule,
     Ng2SmartTableModule,
     ToastrModule.forRoot(),
-    CountdownModule 
+    CountdownModule,
+    NgxGraphModule
   ],
   providers: [],
   bootstrap: [AppComponent]
