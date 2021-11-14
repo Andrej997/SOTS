@@ -19,6 +19,7 @@ using API.Application.Common.Interfaces;
 using API.Infrastructure;
 using API.Infrastructure.Persistence;
 using API.WebApi.Services;
+using Virtuoso;
 
 namespace API.WebApi
 {
@@ -62,6 +63,9 @@ namespace API.WebApi
                 options.SuppressModelStateInvalidFilter = true;
             });
             //
+
+            services.Configure<Virtuoso.Model.Virtuoso>(Configuration.GetSection("Virtuoso"));
+            services.AddVirtuoso();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
