@@ -60,7 +60,7 @@ export class GraphComponent implements OnInit {
   }
 
   changeDomain(event: any) {
-    this.domainId = event.target.value;
+    this.domainId = <number>event.target.value;
     this.getNodes(this.domainId);
   }
 
@@ -68,8 +68,9 @@ export class GraphComponent implements OnInit {
     this.domains = [];
     this.domainService.getDomains().subscribe(result => {
       this.domains = result as any[];
-      console.log(this.domains);
+      // console.log(this.domains);
       if (this.domains.length > 0 && this.domainId == 0) {
+        this.domainId = this.domains[0].id;
         this.selectedLevel = this.domains[0].id;
         this.getNodes(this.domains[0].id);
       }
@@ -86,7 +87,7 @@ export class GraphComponent implements OnInit {
       DomainId: domainId
     };
     this.graphService.getNodes(body).subscribe(result => {
-      console.log(result);
+      // console.log(result);
       (result as any[]).forEach(x => {
         this.nodes.push(x.nodeJson);
         this.sourceNodes.push(x.nodeJson);
@@ -106,7 +107,7 @@ export class GraphComponent implements OnInit {
       DomainId: domainId
     };
     this.graphService.getEdges(body).subscribe(result => {
-      console.log(result);
+      // console.log(result);
       (result as any[]).forEach(x => {
         this.edges.push(x.edgeJson);
       });
@@ -120,16 +121,6 @@ export class GraphComponent implements OnInit {
 
   createNode() {
     let canCreate: boolean = true;
-
-    if (this.domainId != 0) {
-      
-    }
-
-    if (this.nodeForm.value.domain == 0) {
-      this.toastr.error("Select a domain");
-      canCreate = false;
-      return;
-    }
 
     if (this.nodeForm.value.id == '') {
       this.toastr.error("Node id is empty");
@@ -177,6 +168,12 @@ export class GraphComponent implements OnInit {
   onSearchSourceNode(input: any) {
     this.sourceNodes = [];
     this.nodes.forEach(node => {
+      if (this.selectedSourceNodeId != '') {
+        let elem = <HTMLElement>document.getElementById("sn_" + this.selectedSourceNodeId);
+        if (elem != null)
+          elem.style.background = 'green';
+      }
+      
       if (node.label?.toLowerCase().includes(input.target.value)) {
         this.sourceNodes.push(node);
       }
@@ -187,6 +184,12 @@ export class GraphComponent implements OnInit {
   onSearchTargetNode(input: any) {
     this.targetNodes = [];
     this.nodes.forEach(node => {
+      if (this.selectedTargetNodeId != '') {
+        let elem = <HTMLElement>document.getElementById("tn_" + this.selectedTargetNodeId);
+        if (elem != null)
+          elem.style.background = 'green';
+      }
+
       if (node.label?.toLowerCase().includes(input.target.value)) {
         this.targetNodes.push(node);
       }
