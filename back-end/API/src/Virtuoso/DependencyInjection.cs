@@ -9,6 +9,7 @@ namespace Virtuoso
         public static IServiceCollection AddVirtuoso(this IServiceCollection services)
         {
             services.AddTransient<IGraph, Graph>();
+            services.AddTransient<ITriple, Triple>();
 
             return services;
         }

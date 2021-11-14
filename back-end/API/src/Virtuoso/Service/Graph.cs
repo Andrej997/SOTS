@@ -8,9 +8,9 @@ namespace Virtuoso.Service
 {
     public class Graph : IGraph
     {
-        private readonly Virtuoso.Model.Virtuoso config;
+        private readonly Model.Virtuoso config;
 
-        public Graph(IOptions<Virtuoso.Model.Virtuoso> settings)
+        public Graph(IOptions<Model.Virtuoso> settings)
         {
             config = settings.Value;
         }
@@ -30,7 +30,7 @@ namespace Virtuoso.Service
         {
             var client = new RestClient(config.Url);
             client.AddDefaultParameter("format", config.Format);
-            client.AddDefaultParameter("query", "SELECT DISTINCT ?graph WHERE { GRAPH ?graph { ?s ?p ?o }}");
+            client.AddDefaultParameter("query", "SELECT DISTINCT ?graph WHERE { GRAPH ?graph { ?subject ?predicate ?object }}");
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
