@@ -138,6 +138,10 @@ export class TestsComponent implements OnInit {
         title: 'Subject',
         editable:false
       },
+      domainName: {
+        title: 'Domain',
+        editable:false
+      },
       questionCount: {
         title: 'Number of questions',
         editable:false

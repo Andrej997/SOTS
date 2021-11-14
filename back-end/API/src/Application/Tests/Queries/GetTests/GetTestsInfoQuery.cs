@@ -56,7 +56,12 @@ namespace API.Application.Tests.Queries.GetTests
                             .Where(tt => tt.Id == test.TestTimeId)
                             .Select(tt => tt.End)
                             .FirstOrDefault(),
-                        Published = test.Published
+                        Published = test.Published,
+                        DomainId = test.DomainId,
+                        DomainName = _context.Domains
+                            .Where(domain => domain.Id == test.DomainId)
+                            .Select(domain => domain.Name)
+                            .FirstOrDefault()
                     });
 
                 var userRoleId = _context.UserRoles.Where(ur => ur.UserId == request.UserId).Select(ur => ur.RoleId).FirstOrDefault();

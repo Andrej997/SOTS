@@ -37,6 +37,9 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Published)
                 .HasDefaultValue(false)
                 .HasColumnName("published");
+
+            builder.Property(e => e.DomainId)
+                .HasColumnName("domain_id");
         }
     }
 }

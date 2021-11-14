@@ -14,6 +14,8 @@ namespace API.Application.Tests.Commands.CreateTest
     {
         public string Name { get; set; }
 
+        public long DomainId { get; set; }
+
         public long SubjectId { get; set; }
 
         public List<Question> Questions { get; set; }
@@ -63,6 +65,7 @@ namespace API.Application.Tests.Commands.CreateTest
                    .Add(new Test
                    {
                        Name = request.Name,
+                       DomainId = request.DomainId,
                        SubjectId = request.SubjectId,
                        CreatedAt = _dateTime.UtcNow,
                        CreatorId = request.CreatorId,

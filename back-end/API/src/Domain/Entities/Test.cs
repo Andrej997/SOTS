@@ -21,6 +21,7 @@ namespace API.Domain.Entities
 
         public bool Published { get; set; }
 
+        public long DomainId { get; set; }
 
         public virtual List<Question> Questions { get; set; }
         public virtual TestTime TestTime { get; set; }

@@ -12,7 +12,11 @@ namespace API.Application.Tests.Queries.GetTests
 
         public long SubjectId { get; set; }
 
+        public long DomainId { get; set; }
+
         public string SubjectName { get; set; }
+
+        public string DomainName { get; set; }
 
         public long CreatorId { get; set; }
 

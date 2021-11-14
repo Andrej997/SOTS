@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { DomainService } from 'src/app/services/domain.services';
 import { Answer, Question } from '../../models/question';
 import { TestsService } from '../../services/tests.service';
 
@@ -16,8 +17,11 @@ export class NewTestComponent implements OnInit {
   subjects: any[] = [];
   questions: Question[] = [];
   answers: Answer[] = [];
+  domains: any[] = [];
+  serviceDomains: any[] = [];
 
   constructor(private testsService: TestsService,
+    private domainService: DomainService,
     private toastr: ToastrService,
     private fb: FormBuilder) { }
 
@@ -25,20 +29,41 @@ export class NewTestComponent implements OnInit {
     this.testForm = this.fb.group({
       name: ['', Validators.required],
       subject: [0, Validators.required],
+      domain: [0, Validators.required],
       maxPoints: [100, Validators.required],
       start: ['', Validators.required],
       end: ['', Validators.required],
     });
     this.getSubjects();
     this.addQuestion();
+    this.getDomains();
   }
 
   private getSubjects() {
     this.testsService.getSubjects().subscribe(result => {
       this.subjects = result as any[];
-      console.log(this.subjects);
+      // console.log(this.subjects);
     }, error => {
         console.error(error);
+    });
+  }
+
+  private getDomains() {
+    this.domains = [];
+    this.domainService.getDomains().subscribe(result => {
+      this.domains = result as any[];
+      // console.log(this.domains);
+    }, error => {
+        console.error(error);
+    });
+  }
+
+  changeSubject(event: any) {
+    this.serviceDomains = [];
+    // console.log(event.target.value);
+    this.domains.forEach(domain => {
+      if (domain.subjectId == event.target.value)
+        this.serviceDomains.push(domain);
     });
   }
 
@@ -91,6 +116,12 @@ export class NewTestComponent implements OnInit {
     
     if (this.testForm.value.name == '') {
       this.toastr.error("Missing name");
+      canCreate = false;
+      return;
+    }
+
+    if (this.testForm.value.domain === 0) {
+      this.toastr.error("Missing domain");
       canCreate = false;
       return;
     }
@@ -178,6 +209,7 @@ export class NewTestComponent implements OnInit {
       let body = {
         Name: this.testForm.value.name,
         SubjectId: this.testForm.value.subject,
+        DomainId: this.testForm.value.domain,
         Questions: this.questions,
         CreatorId: 1,
         MaxPoints: this.testForm.value.maxPoints,

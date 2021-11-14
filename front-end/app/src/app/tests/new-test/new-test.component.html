@@ -8,8 +8,15 @@
     
             <div class="form-group">
                 <label>Subject</label>
-                <select class="form-control"  formControlName="subject">
+                <select class="form-control"  formControlName="subject" (change)="changeSubject($event)">
                     <option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Domain</label>
+                <select class="form-control" formControlName="domain">
+                    <option *ngFor="let domain of serviceDomains" [value]="domain.id">{{ domain.name }}</option>
                 </select>
             </div>
 
