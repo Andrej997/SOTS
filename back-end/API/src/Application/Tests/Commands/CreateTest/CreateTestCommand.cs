@@ -1,5 +1,6 @@
 ﻿using API.Application.Common.Interfaces;
 using API.Domain.Entities;
+using API.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace API.Application.Tests.Commands.CreateTest
                 if (!_context.UserRoles.Any(ur => ur.UserId == request.CreatorId))
                     throw new Exception("Creator not found!");
 
-                if (_context.UserRoles.Any(ur => ur.UserId == request.CreatorId && (ur.RoleId != (long)Domain.Enums.Roles.admin && ur.RoleId != (long)Domain.Enums.Roles.proffesor)))
+                if (_context.UserRoles.Any(ur => ur.UserId == request.CreatorId && (ur.RoleId != (long)Roles.admin && ur.RoleId != (long)Roles.proffesor)))
                     throw new Exception("Not allowd to create a test!");
 
                 if (!_context.Subjects.Any(ur => ur.Id == request.SubjectId))

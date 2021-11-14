@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnswersComponent } from './answers/answers.component';
 import { AppComponent } from './app.component';
+import { DomainsComponent } from './domains/domains.component';
 import { GraphComponent } from './graph/graph.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
@@ -35,6 +36,18 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'graph/domain/:d_id',
+    component: GraphComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'domains',
+    component: DomainsComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'new-test',
     component: NewTestComponent,
     pathMatch: 'full',
@@ -51,8 +64,7 @@ const routes: Routes = [
     component: QuestionsComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
-  }
-  ,
+  },
   {
     path: 'test/:t_id/question/:q_id/answers',
     component: AnswersComponent,

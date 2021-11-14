@@ -31,6 +31,7 @@ import { CountdownModule } from 'ngx-countdown';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { GraphComponent } from './graph/graph.component';
+import { DomainsComponent } from './domains/domains.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { GraphComponent } from './graph/graph.component';
     AnswersComponent,
     LoginComponent,
     TakeTestComponent,
-    GraphComponent
+    GraphComponent,
+    DomainsComponent
   ],
   imports: [
     BrowserModule,

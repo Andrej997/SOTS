@@ -10,6 +10,8 @@ namespace API.Application.Graph.Commands.CreateNode
 {
     public class CreateNodeCommand : IRequest
     {
+        public long DomainId { get; set; }
+
         public string NodeJson { get; set; }
     }
     public class CreateNodeCommandHandler : IRequestHandler<CreateNodeCommand>
@@ -28,10 +30,19 @@ namespace API.Application.Graph.Commands.CreateNode
             try
             {
                 JsonDocument json = JsonDocument.Parse(request.NodeJson);
-                _context.Nodes
+                var node = _context.Nodes
                     .Add(new Node
                     {
                         NodeJson = json
+                    });
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                _context.DomainNodes
+                    .Add(new DomainNodes
+                    {
+                        DomainId = request.DomainId,
+                        NodeId = node.Entity.Id
                     });
 
                 await _context.SaveChangesAsync(cancellationToken);

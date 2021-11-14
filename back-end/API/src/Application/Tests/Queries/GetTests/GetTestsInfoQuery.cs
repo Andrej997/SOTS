@@ -1,5 +1,5 @@
 ﻿using API.Application.Common.Interfaces;
-using AutoMapper;
+using API.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -61,10 +61,10 @@ namespace API.Application.Tests.Queries.GetTests
 
                 var userRoleId = _context.UserRoles.Where(ur => ur.UserId == request.UserId).Select(ur => ur.RoleId).FirstOrDefault();
 
-                if (userRoleId == (long)Domain.Enums.Roles.proffesor)
+                if (userRoleId == (long)Roles.proffesor)
                     testsQuery = testsQuery
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == test.CreatorId && us.SubjectId == test.SubjectId));
-                else if (userRoleId == (long)Domain.Enums.Roles.student)
+                else if (userRoleId == (long)Roles.student)
                     testsQuery = testsQuery
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == request.UserId && us.SubjectId == test.SubjectId) && test.Published == true);
 

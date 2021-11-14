@@ -12,6 +12,7 @@ namespace API.Application.Graph.Queries.GetNodes
 {
     public class GetNodesQuerry : IRequest<List<Node>>
     {
+        public long DomainId { get; set; }
     }
     public class GetNodesQuerryHandler : IRequestHandler<GetNodesQuerry, List<Node>>
     {
@@ -28,10 +29,13 @@ namespace API.Application.Graph.Queries.GetNodes
         {
             try
             {
-                var nodes = _context.Nodes
-                    .ToList();
+                IQueryable<Node> nodesQuerry = _context.Nodes;
 
-                return nodes;
+                if (request.DomainId > 0)
+                    nodesQuerry = nodesQuerry
+                        .Where(node => _context.DomainNodes.Any(dn => dn.NodeId == node.Id && dn.DomainId == request.DomainId));
+
+                return nodesQuerry.ToList();
             }
             catch (Exception e)
             {

@@ -17,7 +17,11 @@ namespace API.Infrastructure.Persistence.Configurations
                 .HasColumnName("id");
 
             builder.Property(e => e.Name)
+                .IsRequired(true)
                 .HasColumnName("name");
+
+            builder.Property(e => e.Description)
+                .HasColumnName("description");
         }
     }
 }

@@ -7,5 +7,7 @@ namespace API.Domain.Entities
         public long Id { get; set; }
 
         public JsonDocument EdgeJson { get; set; }
+
+        public long DomainId { get; set; }
     }
 }

@@ -1,7 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import { DomainService } from '../services/domain.services';
 import { GraphService } from '../services/graph.service';
 
 @Component({
@@ -19,16 +22,31 @@ export class GraphComponent implements OnInit {
   nodes: Node[] = [];
   sourceNodes: Node[] = [];
   targetNodes: Node[] = [];
-
+  domains: any[] = [];
   edgeForm: FormGroup;
   addEdgeForm: boolean = false;
   edges: Edge[] = [];
+  domainId: number = 0;
+  private routeSub: Subscription;
+  selectedLevel: number = 0;
 
   constructor(private fb: FormBuilder,
+    private domainService: DomainService,
+    private route: ActivatedRoute,
     private graphService: GraphService,
     private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.routeSub = this.route.params.subscribe(params => {
+      this.domainId = params['d_id']; 
+      if (this.domainId == undefined) {
+        this.domainId = 0;
+      }
+      else {
+        this.selectedLevel = this.domainId;
+        this.getNodes(this.domainId);
+      }
+    });
     this.nodeForm = this.fb.group({
       id: ['', Validators.required],
       label: ['', Validators.required],
@@ -37,13 +55,36 @@ export class GraphComponent implements OnInit {
       id: ['', Validators.required],
       label: ['', Validators.required],
     });
-
-    this.getNodes();
+    
+    this.getDomains();
   }
 
-  private getNodes() {
+  changeDomain(event: any) {
+    this.domainId = event.target.value;
+    this.getNodes(this.domainId);
+  }
+
+  private getDomains() {
+    this.domains = [];
+    this.domainService.getDomains().subscribe(result => {
+      this.domains = result as any[];
+      console.log(this.domains);
+      if (this.domains.length > 0 && this.domainId == 0) {
+        this.selectedLevel = this.domains[0].id;
+        this.getNodes(this.domains[0].id);
+      }
+    }, error => {
+        console.error(error);
+    });
+  }
+
+  private getNodes(domainId: number) {
     this.nodes = [];
-    let body = {};
+    this.sourceNodes = [];
+    this.targetNodes = [];
+    let body = {
+      DomainId: domainId
+    };
     this.graphService.getNodes(body).subscribe(result => {
       console.log(result);
       (result as any[]).forEach(x => {
@@ -52,16 +93,18 @@ export class GraphComponent implements OnInit {
         this.targetNodes.push(x.nodeJson);
       });
       this.nodes = [...this.nodes];
-      this.getEdges();
+      this.getEdges(domainId);
     }, error => {
         this.toastr.error(error.error);
         console.error(error);
     });
   }
 
-  private getEdges() {
+  private getEdges(domainId: number) {
     this.edges = [];
-    let body = {};
+    let body = {
+      DomainId: domainId
+    };
     this.graphService.getEdges(body).subscribe(result => {
       console.log(result);
       (result as any[]).forEach(x => {
@@ -77,6 +120,16 @@ export class GraphComponent implements OnInit {
 
   createNode() {
     let canCreate: boolean = true;
+
+    if (this.domainId != 0) {
+      
+    }
+
+    if (this.nodeForm.value.domain == 0) {
+      this.toastr.error("Select a domain");
+      canCreate = false;
+      return;
+    }
 
     if (this.nodeForm.value.id == '') {
       this.toastr.error("Node id is empty");
@@ -107,10 +160,12 @@ export class GraphComponent implements OnInit {
       this.nodes = [...this.nodes];
 
       let body = {
+        DomainId: this.domainId,
         NodeJson: JSON.stringify(node)
       };
       this.graphService.createNode(body).subscribe(result => {
-        this.getNodes();
+        this.toastr.success("Node created");
+        this.getNodes(this.domainId);
       }, error => {
           this.toastr.error(error.error);
           console.error(error);
@@ -229,10 +284,11 @@ export class GraphComponent implements OnInit {
       this.edges = [...this.edges];
 
       let body = {
+        DomainId: this.domainId,
         EdgeJson: JSON.stringify(edge)
       };
       this.graphService.createEdge(body).subscribe(result => {
-            
+        this.toastr.success("Edge created");
       }, error => {
           this.toastr.error(error.error);
           console.error(error);
@@ -267,7 +323,7 @@ export class GraphComponent implements OnInit {
           id: '',
           label: ''
         }
-        this.getNodes();
+        this.getNodes(this.domainId);
       }, error => {
           this.toastr.error(error.error);
           console.error(error);
@@ -294,7 +350,7 @@ export class GraphComponent implements OnInit {
     }
     this.graphService.deleteEdge(body).subscribe(result => {
       this.toastr.success("Deteled edge " + this.clickedEdge.label);
-      this.getNodes();
+      this.getNodes(this.domainId);
       this.clickedEdge = {
         id: '',
         label: '',

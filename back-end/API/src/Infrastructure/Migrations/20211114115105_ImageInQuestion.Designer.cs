@@ -4,15 +4,17 @@ using System.Text.Json;
 using API.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace API.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211114115105_ImageInQuestion")]
+    partial class ImageInQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,58 +75,6 @@ namespace API.Infrastructure.Migrations
                     b.ToTable("choosen_answers", "project");
                 });
 
-            modelBuilder.Entity("API.Domain.Entities.Domain", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("date_created");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<long>("SubjectId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("subject_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_domain");
-
-                    b.ToTable("domains", "project");
-                });
-
-            modelBuilder.Entity("API.Domain.Entities.DomainNodes", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<long>("DomainId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("domain_id");
-
-                    b.Property<long>("NodeId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("node_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_domain_nodes");
-
-                    b.ToTable("domain_nodes", "project");
-                });
-
             modelBuilder.Entity("API.Domain.Entities.Edge", b =>
                 {
                     b.Property<long>("Id")
@@ -132,10 +82,6 @@ namespace API.Infrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<long>("DomainId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("domain_id");
 
                     b.Property<JsonDocument>("EdgeJson")
                         .HasColumnType("json")
@@ -323,12 +269,7 @@ namespace API.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 

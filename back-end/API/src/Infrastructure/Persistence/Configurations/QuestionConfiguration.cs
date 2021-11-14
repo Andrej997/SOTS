@@ -27,6 +27,9 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.Points)
                 .HasColumnName("points");
+
+            builder.Property(e => e.Image)
+                .HasColumnName("image");
         }
     }
 }

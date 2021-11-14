@@ -1,4 +1,5 @@
 ﻿using API.Application.Common.Interfaces;
+using API.Domain.Entities;
 using MediatR;
 using System;
 using System.Threading;
@@ -28,7 +29,7 @@ namespace API.Application.QA.Commands.QuestionStartTime
             try
             {
                 _context.QuestionTimes
-                    .Add(new Domain.Entities.QuestionTime
+                    .Add(new QuestionTime
                     {
                         QuestionId = request.QuestionId,
                         StudentTestsId = request.StudentTestsId,

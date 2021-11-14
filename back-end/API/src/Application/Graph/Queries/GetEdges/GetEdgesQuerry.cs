@@ -4,7 +4,6 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +11,7 @@ namespace API.Application.Graph.Queries.GetEdges
 {
     public class GetEdgesQuerry : IRequest<List<Edge>>
     {
+        public long DomainId { get; set; }
     }
     public class GetEdgesQuerryHandler : IRequestHandler<GetEdgesQuerry, List<Edge>>
     {
@@ -28,10 +28,13 @@ namespace API.Application.Graph.Queries.GetEdges
         {
             try
             {
-                var edges = _context.Edges
-                    .ToList();
+                IQueryable<Edge> edgesQuerry = _context.Edges;
 
-                return edges;
+                if (request.DomainId > 0)
+                    edgesQuerry = edgesQuerry
+                        .Where(edge => edge.DomainId == request.DomainId);
+
+                return edgesQuerry.ToList();
             }
             catch (Exception e)
             {

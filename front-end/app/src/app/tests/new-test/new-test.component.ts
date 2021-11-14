@@ -136,15 +136,16 @@ export class NewTestComponent implements OnInit {
       return;
     }
     else {
-      let maxQuestionPointsSum = 0;
+      let maxQuestionPointsSum: number = 0;
       this.questions.forEach(x => {
+        let questionPoint: number = x.Points;
         if (x.TextQuestion == '') {
           this.toastr.error("Missing question text");
           canCreate = false;
           return;
         }
 
-        if (x.Points == 0) {
+        if (questionPoint == 0) {
           this.toastr.error("Points of questions must be greater than 0");
           canCreate = false;
           return;
@@ -164,7 +165,7 @@ export class NewTestComponent implements OnInit {
             }
           });
         }
-        maxQuestionPointsSum += x.Points;
+        maxQuestionPointsSum = +<number>maxQuestionPointsSum + +<number>questionPoint;
       });
 
       if (maxQuestionPointsSum != this.testForm.value.maxPoints) {
@@ -184,7 +185,7 @@ export class NewTestComponent implements OnInit {
         End: this.testForm.value.end
       };
       this.testsService.createTest(body).subscribe(result => {
-        console.log("Created");
+        this.toastr.success("Test created")
       }, error => {
           console.error(error);
       });

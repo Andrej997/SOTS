@@ -36,7 +36,7 @@ namespace API.Application.QA.Commands.CreateQuestionAnswers
                 if (!_context.UserRoles.Any(ur => ur.UserId == request.CreatorId))
                     throw new Exception("Creator not found!");
 
-                if (_context.UserRoles.Any(ur => ur.UserId == request.CreatorId && (ur.RoleId != (long)Domain.Enums.Roles.admin && ur.RoleId != (long)Domain.Enums.Roles.proffesor)))
+                if (_context.UserRoles.Any(ur => ur.UserId == request.CreatorId && (ur.RoleId != (long)API.Domain.Enums.Roles.admin && ur.RoleId != (long)API.Domain.Enums.Roles.proffesor)))
                     throw new Exception("Not allowd to create a test!");
 
                 foreach (var answer in request.Answers)

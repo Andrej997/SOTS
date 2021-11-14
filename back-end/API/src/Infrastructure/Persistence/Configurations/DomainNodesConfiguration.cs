@@ -4,24 +4,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace API.Infrastructure.Persistence.Configurations
 {
-    public class EdgeConfiguration : IEntityTypeConfiguration<Edge>
+    public class DomainNodesConfiguration : IEntityTypeConfiguration<DomainNodes>
     {
-        public void Configure(EntityTypeBuilder<Edge> builder)
+        public void Configure(EntityTypeBuilder<DomainNodes> builder)
         {
-            builder.ToTable("edges", "project");
+            builder.ToTable("domain_nodes", "project");
 
             builder.HasKey(e => e.Id)
-                    .HasName("pk_edge");
+                    .HasName("pk_domain_nodes");
 
             builder.Property(e => e.Id)
                 .HasColumnName("id");
 
-            builder.Property(e => e.EdgeJson)
-                .HasColumnType("json")
-                .HasColumnName("edge_json");
-
             builder.Property(e => e.DomainId)
                 .HasColumnName("domain_id");
+
+            builder.Property(e => e.NodeId)
+                .HasColumnName("node_id");
         }
     }
 }

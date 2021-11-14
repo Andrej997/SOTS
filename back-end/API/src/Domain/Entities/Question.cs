@@ -15,6 +15,8 @@ namespace API.Domain.Entities
 
         public long Points { get; set; }
 
+        public string Image { get; set; }
+
 
         public virtual List<Answer> Answers { get; set; }
     }

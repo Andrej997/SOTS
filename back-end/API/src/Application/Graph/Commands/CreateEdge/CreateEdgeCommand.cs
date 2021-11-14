@@ -10,6 +10,8 @@ namespace API.Application.Graph.Commands.CreateEdge
 {
     public class CreateEdgeCommand : IRequest
     {
+        public long DomainId { get; set; }
+
         public string EdgeJson { get; set; }
     }
     public class CreateEdgeCommandHandler : IRequestHandler<CreateEdgeCommand>
@@ -31,6 +33,7 @@ namespace API.Application.Graph.Commands.CreateEdge
                 _context.Edges
                     .Add(new Edge
                     {
+                        DomainId = request.DomainId,
                         EdgeJson = json
                     });
 

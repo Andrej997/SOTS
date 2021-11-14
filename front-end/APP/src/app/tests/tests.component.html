@@ -4,12 +4,34 @@
     </a>
 </div>
 
-<ng2-smart-table 
-    style="cursor: pointer;"
-    [settings]="settings" 
-    [source]="data" 
-    allowPaging='true' 
-    (editConfirm)="edit($event.newData)"
-    (deleteConfirm)="delete($event.data.id)"
-    (userRowSelect)="onUserRowSelect($event)"
-    (custom)="onCustomAction($event.data.id)"></ng2-smart-table>
+<div *ngIf='!authGuard.isStudent()'>
+    <ng2-smart-table 
+        style="cursor: pointer;"
+        [settings]="settings" 
+        [source]="data" 
+        allowPaging='true' 
+        (editConfirm)="edit($event.newData)"
+        (deleteConfirm)="delete($event.data.id)"
+        (userRowSelect)="onUserRowSelect($event)"
+        (custom)="onCustomAction($event.data.id)">
+    </ng2-smart-table>
+</div>
+
+<div class="card-deck" *ngIf='authGuard.isStudent()' style="margin-top: 2%;">
+    <div class="card" *ngFor='let test of tests'>
+        <div class="card-header">
+            <h1 class="card-title" style='margin-top: 4px; margin-bottom: 0px;'>{{test.name}}</h1>
+        </div>
+        <div class="card-body">
+            <h3 class="card-text">Subject: {{test.subjectName}}</h3>
+            <p class="card-text">Proffesor: {{test.creatorName}}</p>
+            <p class="card-text"><small class="text-muted">Max points: {{test.maxPoints}}</small></p>
+            <p class="card-text">
+                <small class="text-muted">Start time: {{test.start}}</small>
+                <br>
+                <small class="text-muted">End time: {{test.end}}</small>
+            </p>
+            <a href="/take-test/{{test.id}}" class="btn btn-primary">Take test</a>
+        </div>
+    </div>
+</div>

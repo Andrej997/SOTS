@@ -1,11 +1,20 @@
 <div>   
     <div class='container' style='float: left; width: 20%;'>
+        <div class="form-group">
+            <label>Domain</label>
+            <select [(ngModel)]="selectedLevel" class="form-control" (change)="changeDomain($event)">
+                <option *ngFor="let domain of domains" [value]="domain.id">{{ domain.name }}</option>
+            </select>
+        </div>
         <button type="button" class="btn btn-primary" (click)='showAddForm("node")' [hidden]='!addFormBtn'>Add node</button>
         <button type="button" style='float: right;' class="btn btn-primary" (click)='showAddForm("edge")' [hidden]='!addFormBtn'>Add edge</button>
         <form [hidden]='!addNodeForm' [formGroup]="nodeForm" (ngSubmit)="createNode()">
+            
             <div class="form-group">
                 <label>Node id</label>
-                <input type="text" formControlName="id" class="form-control" placeholder="Enter node id">
+                <input type="text" formControlName="id" 
+                    onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"
+                    class="form-control" placeholder="Enter node id">
               </div>
             <div class="form-group">
               <label>Node label</label>
@@ -34,12 +43,14 @@
         <form [hidden]='!addEdgeForm' [formGroup]="edgeForm" (ngSubmit)="createEdge()">
             <div class="form-group">
                 <label>Edge id</label>
-                <input type="text" formControlName="id" class="form-control" placeholder="Enter node id">
+                <input type="text" formControlName="id" 
+                    onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)"
+                    class="form-control" placeholder="Enter node id">
               </div>
             <div class="form-group">
                 <label>Source node</label>
                 <input type="text" class="form-control" placeholder="Search source node" (input)="onSearchSourceNode($event)">
-                <ul class="list-group" style='cursor: pointer; max-height: 200px; overflow-y: scroll;'>
+                <ul class="list-group" style='cursor: pointer; max-height: 150px; overflow-y: scroll;'>
                     <li class="list-group-item list-group-item-action" 
                         (click)='selectSourceNode(node.id);'
                         id='sn_{{node.id}}' *ngFor='let node of sourceNodes'>{{node.label}}</li>
@@ -52,7 +63,7 @@
             <div class="form-group">
                 <label>Target node</label>
                 <input type="text" class="form-control" placeholder="Search target node" (input)="onSearchTargetNode($event)">
-                <ul class="list-group" style='cursor: pointer; max-height: 200px; overflow-y: scroll;'>
+                <ul class="list-group" style='cursor: pointer; max-height: 150px; overflow-y: scroll;'>
                     <li class="list-group-item list-group-item-action" 
                         (click)='selectTargetNode(node.id);'    
                         id='tn_{{node.id}}' *ngFor='let node of targetNodes'>{{node.label}}</li>

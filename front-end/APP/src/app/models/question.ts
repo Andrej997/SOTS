@@ -4,12 +4,14 @@ export class Question {
     TextQuestion: string;
     Points: number;
     Answers: Answer[];
+    Image: string;
 
     constructor(id: number) {
         this.question_id = id;
         this.Answers = [];
         this.TextQuestion = '';
         this.Points = 0;
+        this.Image = '';
     }
 }
 
