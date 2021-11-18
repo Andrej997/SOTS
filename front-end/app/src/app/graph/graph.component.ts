@@ -87,11 +87,14 @@ export class GraphComponent implements OnInit {
       DomainId: domainId
     };
     this.graphService.getNodes(body).subscribe(result => {
-      // console.log(result);
       (result as any[]).forEach(x => {
-        this.nodes.push(x.nodeJson);
-        this.sourceNodes.push(x.nodeJson);
-        this.targetNodes.push(x.nodeJson);
+        let node: Node = {
+          id: x.id,
+          label: x.label
+        };
+        this.nodes.push(node);
+        this.sourceNodes.push(node);
+        this.targetNodes.push(node);
       });
       this.nodes = [...this.nodes];
       this.getEdges(domainId);
@@ -107,9 +110,14 @@ export class GraphComponent implements OnInit {
       DomainId: domainId
     };
     this.graphService.getEdges(body).subscribe(result => {
-      // console.log(result);
       (result as any[]).forEach(x => {
-        this.edges.push(x.edgeJson);
+        let edge: Edge = {
+          id: x.id,
+          label: x.label,
+          source: x.sourceId,
+          target: x.targetId
+        };
+        this.edges.push(edge);
       });
       this.edges = [...this.edges];
       this.allLoaded = true;

@@ -4,7 +4,6 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +16,15 @@ namespace API.Application.Graph.Queries.GetNodes
     public class GetNodesQuerryHandler : IRequestHandler<GetNodesQuerry, List<Node>>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IDateTime _dateTime;
 
-        public GetNodesQuerryHandler(IApplicationDbContext context, IDateTime dateTime)
+        public GetNodesQuerryHandler(IApplicationDbContext context)
         {
             _context = context;
-            _dateTime = dateTime;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<Node>> Handle(GetNodesQuerry request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -33,11 +32,11 @@ namespace API.Application.Graph.Queries.GetNodes
 
                 if (request.DomainId > 0)
                     nodesQuerry = nodesQuerry
-                        .Where(node => _context.DomainNodes.Any(dn => dn.NodeId == node.Id && dn.DomainId == request.DomainId));
+                        .Where(node => node.DomainId == request.DomainId);
 
                 return nodesQuerry.ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

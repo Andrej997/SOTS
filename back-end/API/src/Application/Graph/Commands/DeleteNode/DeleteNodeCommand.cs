@@ -29,16 +29,18 @@ namespace API.Application.Graph.Commands.DeleteNode
             try
             {
                 var node = _context.Nodes
-                        .Where(edge => edge.NodeJson.RootElement.GetProperty("id").GetString() == request.NodeId)
+                        .Where(node => node.Id == request.NodeId)
                         .FirstOrDefault();
-                if (node != null)
-                    _context.Nodes.Remove(node);
 
-                await _context.SaveChangesAsync(cancellationToken);
+                if (node != null)
+                {
+                    _context.Nodes.Remove(node);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

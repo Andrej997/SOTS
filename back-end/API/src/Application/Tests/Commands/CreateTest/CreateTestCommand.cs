@@ -78,7 +78,7 @@ namespace API.Application.Tests.Commands.CreateTest
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

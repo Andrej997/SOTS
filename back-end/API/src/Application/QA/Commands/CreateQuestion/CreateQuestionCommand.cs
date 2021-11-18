@@ -48,7 +48,7 @@ namespace API.Application.QA.Commands.CreateQuestion
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

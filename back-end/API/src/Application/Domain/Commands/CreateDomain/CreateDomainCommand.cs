@@ -42,7 +42,7 @@ namespace API.Application.Domain.Commands.CreateDomain
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -1,10 +1,9 @@
-﻿using System;
-using API.Application.Common.Interfaces;
+﻿using API.Application.Common.Interfaces;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace API.Application.QA.Commands.QuestionEndTime
 {
@@ -38,7 +37,7 @@ namespace API.Application.QA.Commands.QuestionEndTime
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

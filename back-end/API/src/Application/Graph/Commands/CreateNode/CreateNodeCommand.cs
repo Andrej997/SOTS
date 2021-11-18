@@ -33,23 +33,17 @@ namespace API.Application.Graph.Commands.CreateNode
                 var node = _context.Nodes
                     .Add(new Node
                     {
-                        NodeJson = json
-                    });
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                _context.DomainNodes
-                    .Add(new DomainNodes
-                    {
+                        Id = json.RootElement.GetProperty("id").ToString(),
+                        Label = json.RootElement.GetProperty("label").ToString(),
                         DomainId = request.DomainId,
-                        NodeId = node.Entity.Id
+                        DateCreated = _dateTime.UtcNow
                     });
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

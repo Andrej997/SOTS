@@ -103,7 +103,7 @@ namespace API.Application.Users.Commands.FinishTest
                     Points = persentage
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -49,7 +49,7 @@ namespace API.Application.Users.Commands.StartTest
 
                 return startTest.Entity.Id;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

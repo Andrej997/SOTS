@@ -23,7 +23,6 @@ namespace API.Application.Common.Interfaces
         DbSet<Node> Nodes { get; set; }
         DbSet<Edge> Edges { get; set; }
         DbSet<API.Domain.Entities.Domain> Domains { get; set; }
-        DbSet<DomainNodes> DomainNodes { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

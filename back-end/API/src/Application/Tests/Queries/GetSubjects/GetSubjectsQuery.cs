@@ -38,7 +38,7 @@ namespace API.Application.Tests.Queries.GetSubjects
                             .ProjectTo<SubjectDto>(_mapper.ConfigurationProvider)
                             .ToListAsync(cancellationToken);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -33,15 +33,19 @@ namespace API.Application.Graph.Commands.CreateEdge
                 _context.Edges
                     .Add(new Edge
                     {
+                        Id = json.RootElement.GetProperty("id").ToString(),
+                        Label = json.RootElement.GetProperty("label").ToString(),
+                        SourdeId = json.RootElement.GetProperty("source").ToString(),
+                        TargetId = json.RootElement.GetProperty("target").ToString(),
                         DomainId = request.DomainId,
-                        EdgeJson = json
+                        DateCreated = _dateTime.UtcNow
                     });
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

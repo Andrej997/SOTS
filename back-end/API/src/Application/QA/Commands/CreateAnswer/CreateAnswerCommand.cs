@@ -49,7 +49,7 @@ namespace API.Application.QA.Commands.CreateAnswer
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

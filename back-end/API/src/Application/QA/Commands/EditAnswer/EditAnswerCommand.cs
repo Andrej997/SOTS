@@ -46,7 +46,7 @@ namespace API.Application.QA.Commands.EditAnswer
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

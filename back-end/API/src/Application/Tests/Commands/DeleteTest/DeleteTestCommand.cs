@@ -37,7 +37,7 @@ namespace API.Application.Tests.Commands.DeleteTest
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

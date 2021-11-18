@@ -45,7 +45,7 @@ namespace API.Application.Tests.Commands.UpdateTest
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -26,7 +26,9 @@ namespace API.Application.Tests.Queries.GetTests
             _dateTime = dateTime;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<TestsInfoDto>> Handle(GetTestsInfoQuery request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -75,7 +77,7 @@ namespace API.Application.Tests.Queries.GetTests
 
                 return testsQuery.OrderBy(test => test.Name).ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -23,7 +23,9 @@ namespace API.Application.Tests.Queries.GetTakeTest
             _context = context;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<TakeTestDto> Handle(GetTakeTestQuery request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -70,7 +72,7 @@ namespace API.Application.Tests.Queries.GetTakeTest
 
                 return testsQuery.FirstOrDefault();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

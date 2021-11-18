@@ -30,7 +30,9 @@ namespace API.Application.QA.Queries.GetAnswersInfo
             _mapper = mapper;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<AnswersInfoDto>> Handle(GetAnswersInfoQuery request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -48,7 +50,7 @@ namespace API.Application.QA.Queries.GetAnswersInfo
 
                 return answerQuery.OrderBy(answer => answer.Text).ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

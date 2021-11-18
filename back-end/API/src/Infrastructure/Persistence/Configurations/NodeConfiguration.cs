@@ -16,9 +16,14 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Id)
                 .HasColumnName("id");
 
-            builder.Property(e => e.NodeJson)
-                .HasColumnType("json")
-                .HasColumnName("node_json");
+            builder.Property(e => e.Label)
+                .HasColumnName("label");
+
+            builder.Property(e => e.DomainId)
+                .HasColumnName("domain_id");
+
+            builder.Property(e => e.DateCreated)
+                .HasColumnName("date_created");
         }
     }
 }

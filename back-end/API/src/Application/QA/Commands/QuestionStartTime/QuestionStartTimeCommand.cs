@@ -40,7 +40,7 @@ namespace API.Application.QA.Commands.QuestionStartTime
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

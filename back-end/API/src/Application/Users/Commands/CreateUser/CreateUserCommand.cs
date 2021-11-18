@@ -72,7 +72,7 @@ namespace API.Application.Users.Commands.CreateUser
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

@@ -68,7 +68,7 @@ namespace API.Application.QA.Commands.CreateQuestionAnswers
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

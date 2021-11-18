@@ -16,12 +16,20 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Id)
                 .HasColumnName("id");
 
-            builder.Property(e => e.EdgeJson)
-                .HasColumnType("json")
-                .HasColumnName("edge_json");
+            builder.Property(e => e.Label)
+                .HasColumnName("label");
+
+            builder.Property(e => e.SourdeId)
+                .HasColumnName("souce_id");
+
+            builder.Property(e => e.TargetId)
+                .HasColumnName("target_id");
 
             builder.Property(e => e.DomainId)
                 .HasColumnName("domain_id");
+
+            builder.Property(e => e.DateCreated)
+                .HasColumnName("date_created");
         }
     }
 }

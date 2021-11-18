@@ -26,7 +26,9 @@ namespace API.Application.Users.Queries.ChoosenAnswers
             _dateTime = dateTime;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<ChoosenAnswersDto> Handle(ChoosenAnswersCommand request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -80,7 +82,7 @@ namespace API.Application.Users.Queries.ChoosenAnswers
 
                 return retVal;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

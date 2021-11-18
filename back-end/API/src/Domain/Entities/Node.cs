@@ -1,11 +1,16 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace API.Domain.Entities
 {
     public class Node
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
 
-        public JsonDocument NodeJson { get; set; }
+        public string Label { get; set; }
+
+        public long DomainId { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }

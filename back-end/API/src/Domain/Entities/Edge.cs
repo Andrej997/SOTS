@@ -1,13 +1,20 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace API.Domain.Entities
 {
     public class Edge
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
 
-        public JsonDocument EdgeJson { get; set; }
+        public string Label { get; set; }
+
+        public string SourdeId { get; set; }
+
+        public string TargetId { get; set; }
 
         public long DomainId { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }

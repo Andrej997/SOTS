@@ -32,9 +32,15 @@ namespace API.Infrastructure.Persistence
         }
 
 
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public DbSet<User> Users { get; set; }
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public DbSet<Role> Roles { get; set; }
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public DbSet<UserRole> UserRoles { get; set; }
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
         public DbSet<UserSubject> UserSubjects { get; set; }
         public DbSet<StudentTest> StudentTests { get; set; }
         public DbSet<Test> Tests { get; set; }
@@ -48,7 +54,6 @@ namespace API.Infrastructure.Persistence
         public DbSet<Node> Nodes { get; set; }
         public DbSet<Edge> Edges { get; set; }
         public DbSet<Domain.Entities.Domain> Domains { get; set; }
-        public DbSet<DomainNodes> DomainNodes { get; set; }
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

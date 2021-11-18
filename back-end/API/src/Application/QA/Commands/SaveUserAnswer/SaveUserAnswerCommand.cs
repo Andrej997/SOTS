@@ -63,7 +63,7 @@ namespace API.Application.QA.Commands.SaveUserAnswer
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

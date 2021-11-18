@@ -24,7 +24,9 @@ namespace API.Application.Graph.Queries.GetEdges
             _dateTime = dateTime;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<List<Edge>> Handle(GetEdgesQuerry request, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -36,7 +38,7 @@ namespace API.Application.Graph.Queries.GetEdges
 
                 return edgesQuerry.ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

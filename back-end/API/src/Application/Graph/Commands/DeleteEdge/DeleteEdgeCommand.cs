@@ -31,7 +31,7 @@ namespace API.Application.Graph.Commands.DeleteEdge
                 foreach (var edgeId in request.EdgeIds)
                 {
                     var edge = _context.Edges
-                        .Where(edge => edge.EdgeJson.RootElement.GetProperty("id").GetString() == edgeId)
+                        .Where(edge => edge.Id == edgeId)
                         .FirstOrDefault();
                     if (edge != null)
                         _context.Edges.Remove(edge);
@@ -42,7 +42,7 @@ namespace API.Application.Graph.Commands.DeleteEdge
 
                 return Unit.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
