@@ -32,7 +32,7 @@ namespace API.WebApi.Controllers
         [HttpPost]
         [Route("finish/test")]
         [ApiExplorerSettings(GroupName = "v1")]
-        public async Task<ActionResult<TestGradeDto>> FinishTest(FinishTestCommand command)
+        public async Task<ActionResult<object>> FinishTest(FinishTestCommand command)
         {
             try
             {

@@ -9,7 +9,7 @@ namespace API.Domain.Entities
 
         public string Label { get; set; }
 
-        public string SourdeId { get; set; }
+        public string SourceId { get; set; }
 
         public string TargetId { get; set; }
 

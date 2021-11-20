@@ -17,6 +17,8 @@ namespace API.Application.QA.Commands.CreateQuestion
         public string QuestionText { get; set; }
 
         public long Points { get; set; }
+
+        public string ProblemNodeId { get; set; }
     }
     public class CreateAnswerCommandHandler : IRequestHandler<CreateQuestionCommand>
     {
@@ -40,7 +42,8 @@ namespace API.Application.QA.Commands.CreateQuestion
                         {
                             TestId = request.TestId,
                             TextQuestion = request.QuestionText,
-                            Points = request.Points
+                            Points = request.Points,
+                            ProblemNodeId = request.ProblemNodeId
                         });
 
                     await _context.SaveChangesAsync(cancellationToken);

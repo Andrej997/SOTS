@@ -16,6 +16,8 @@ namespace API.Application.QA.Commands.EditQuestion
         public string QuestionText { get; set; }
 
         public long Points { get; set; }
+
+        public string ProblemNodeId { get; set; }
     }
     public class EditQuestionCommandHandler : IRequestHandler<EditQuestionCommand>
     {
@@ -39,6 +41,7 @@ namespace API.Application.QA.Commands.EditQuestion
                 {
                     question.TextQuestion = request.QuestionText;
                     question.Points = request.Points;
+                    question.ProblemNodeId = request.ProblemNodeId;
                     await _context.SaveChangesAsync(cancellationToken);
                 }
                 else throw new Exception("Unknown id");

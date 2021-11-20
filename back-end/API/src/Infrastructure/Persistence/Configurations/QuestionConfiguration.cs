@@ -30,6 +30,9 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.Image)
                 .HasColumnName("image");
+
+            builder.Property(e => e.ProblemNodeId)
+                .HasColumnName("problem_node_id");
         }
     }
 }

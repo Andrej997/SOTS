@@ -19,7 +19,7 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Label)
                 .HasColumnName("label");
 
-            builder.Property(e => e.SourdeId)
+            builder.Property(e => e.SourceId)
                 .HasColumnName("souce_id");
 
             builder.Property(e => e.TargetId)

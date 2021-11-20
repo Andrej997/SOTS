@@ -42,16 +42,17 @@ namespace API.Application.QA.Queries.GetQustionsInfo
                     {
                         Id = question.Id,
                         TestId = question.TestId,
-                        TestText = _context.Tests
-                            .Where(test => test.Id == question.TestId)
-                            .Select(test => test.Name)
-                            .FirstOrDefault(),
                         Points = question.Points,
                         Text = question.TextQuestion,
-                        AnswersCount = question.Answers.Count
+                        AnswersCount = question.Answers.Count,
+                        ProblemNodeId = question.ProblemNodeId,
+                        ProblemNodeLabel = _context.Nodes
+                            .Where(node => node.Id == question.ProblemNodeId)
+                            .Select(node => node.Label)
+                            .FirstOrDefault()
                     });
 
-                return questionsQuery.OrderBy(question => question.TestText).ToList();
+                return questionsQuery.OrderBy(question => question.Text).ToList();
             }
             catch (Exception)
             {

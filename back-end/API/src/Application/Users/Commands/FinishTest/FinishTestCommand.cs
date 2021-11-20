@@ -1,6 +1,7 @@
 ﻿using API.Application.Common.Interfaces;
 using API.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace API.Application.Users.Commands.FinishTest
 {
-    public class FinishTestCommand : IRequest<TestGradeDto>
+    public class FinishTestCommand : IRequest<object>
     {
         public long StudentTestId { get; set; }
 
@@ -18,7 +19,7 @@ namespace API.Application.Users.Commands.FinishTest
         public long UserId { get; set; }
     }
 
-    public class FinishTestCommandHandler : IRequestHandler<FinishTestCommand, TestGradeDto>
+    public class FinishTestCommandHandler : IRequestHandler<FinishTestCommand, object>
     {
         private readonly IApplicationDbContext _context;
         private readonly IDateTime _dateTime;
@@ -29,7 +30,7 @@ namespace API.Application.Users.Commands.FinishTest
             _dateTime = dateTime;
         }
 
-        public async Task<TestGradeDto> Handle(FinishTestCommand request, CancellationToken cancellationToken)
+        public async Task<object> Handle(FinishTestCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,6 +40,7 @@ namespace API.Application.Users.Commands.FinishTest
                     throw new Exception("Wrong test");
 
                 var studentTest = _context.StudentTests
+                    .Include(st => st.Test)
                     .Where(studentTest => studentTest.Id == request.StudentTestId)
                     .FirstOrDefault();
 
@@ -82,7 +84,7 @@ namespace API.Application.Users.Commands.FinishTest
                         ++correctAnswersCount;
                 }
 
-                var persentage = (correctAnswersCount / allCorrectAnswersCount) * 100;
+                var persentage = ((double)correctAnswersCount / allCorrectAnswersCount) * 100;
                 studentTest.Points = persentage;
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -97,11 +99,12 @@ namespace API.Application.Users.Commands.FinishTest
                     await _context.SaveChangesAsync(cancellationToken);
                 }
 
-                return new TestGradeDto 
-                {
-                    Grade = gradeStr,
-                    Points = persentage
-                };
+                dynamic retVal = new System.Dynamic.ExpandoObject();
+                retVal.Grade = gradeStr;
+                retVal.MaxPoints = studentTest.Test.MaxPoints;
+                retVal.Points = ((double)studentTest.Test.MaxPoints * persentage) / 100;
+
+                return retVal;
             }
             catch (Exception)
             {

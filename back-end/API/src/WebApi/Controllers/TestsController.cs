@@ -8,6 +8,7 @@ using API.Application.Tests.Queries.GetTests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.WebApi.Controllers
@@ -21,6 +22,21 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(new GetTestsInfoQuery { UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("test")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<TestsInfoDto>> GetTestInfo(long testId)
+        {
+            try
+            {
+                return (await Mediator.Send(new GetTestsInfoQuery { TestIds = new List<long> { testId } })).FirstOrDefault();
             }
             catch (Exception ex)
             {

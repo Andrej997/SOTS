@@ -12,6 +12,8 @@ namespace API.Application.Tests.Queries.GetTests
     public class GetTestsInfoQuery : IRequest<List<TestsInfoDto>>
     {
         public long UserId { get; set; }
+
+        public List<long> TestIds { get; set; }
     }
 
     public class GetTestsInfoQueryHandler : IRequestHandler<GetTestsInfoQuery, List<TestsInfoDto>>
@@ -73,7 +75,13 @@ namespace API.Application.Tests.Queries.GetTests
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == test.CreatorId && us.SubjectId == test.SubjectId));
                 else if (userRoleId == (long)Roles.student)
                     testsQuery = testsQuery
-                        .Where(test => _context.UserSubjects.Any(us => us.UserId == request.UserId && us.SubjectId == test.SubjectId) && test.Published == true);
+                        .Where(test => _context.UserSubjects.Any(us => us.UserId == request.UserId && us.SubjectId == test.SubjectId) 
+                            && test.Published == true
+                            && !_context.StudentTests.Any(st => st.UserId == request.UserId && st.TestId == test.Id));
+
+                if (request.TestIds != null && request.TestIds.Any())
+                    testsQuery = testsQuery
+                        .Where(test => request.TestIds.Contains(test.Id));
 
                 return testsQuery.OrderBy(test => test.Name).ToList();
             }

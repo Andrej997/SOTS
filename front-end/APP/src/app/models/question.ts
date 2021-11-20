@@ -5,6 +5,7 @@ export class Question {
     Points: number;
     Answers: Answer[];
     Image: string;
+    ProblemNodeId: string;
 
     constructor(id: number) {
         this.question_id = id;
@@ -12,6 +13,7 @@ export class Question {
         this.TextQuestion = '';
         this.Points = 0;
         this.Image = '';
+        this.ProblemNodeId = '';
     }
 }
 

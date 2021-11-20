@@ -17,6 +17,7 @@ namespace API.Domain.Entities
 
         public string Image { get; set; }
 
+        public string ProblemNodeId { get; set; }
 
         public virtual List<Answer> Answers { get; set; }
     }

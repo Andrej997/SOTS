@@ -35,7 +35,7 @@ namespace API.Application.Graph.Commands.CreateEdge
                     {
                         Id = json.RootElement.GetProperty("id").ToString(),
                         Label = json.RootElement.GetProperty("label").ToString(),
-                        SourdeId = json.RootElement.GetProperty("source").ToString(),
+                        SourceId = json.RootElement.GetProperty("source").ToString(),
                         TargetId = json.RootElement.GetProperty("target").ToString(),
                         DomainId = request.DomainId,
                         DateCreated = _dateTime.UtcNow
