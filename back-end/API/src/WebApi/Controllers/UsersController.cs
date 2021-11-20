@@ -3,6 +3,7 @@ using API.Application.Users.Commands.FinishTest;
 using API.Application.Users.Commands.Login;
 using API.Application.Users.Commands.StartTest;
 using API.Application.Users.Queries.ChoosenAnswers;
+using API.Application.Users.Queries.GetStudentTests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,21 @@ namespace API.WebApi.Controllers
 {
     public class UsersController : ApiControllerBase
     {
+        [HttpGet]
+        [Route("tests")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<object>> GetStudentTests(long userId)
+        {
+            try
+            {
+                return await Mediator.Send(new GetStudentTestsQuery { UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("start/test")]
         [ApiExplorerSettings(GroupName = "v1")]

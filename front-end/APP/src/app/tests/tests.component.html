@@ -24,7 +24,6 @@
 </div>
 
 <div class="card-deck" *ngIf='authGuard.isStudent()' style="margin-top: 2%;">
-    
     <div class="card" *ngFor='let test of tests'>
         <div class="card-header">
             <h1 class="card-title" style='margin-top: 4px; margin-bottom: 0px;'>{{test.name}}</h1>

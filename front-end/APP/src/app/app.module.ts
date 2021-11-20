@@ -32,6 +32,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { GraphComponent } from './graph/graph.component';
 import { DomainsComponent } from './domains/domains.component';
+import { ResultsComponent } from './tests/results/results.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { DomainsComponent } from './domains/domains.component';
     LoginComponent,
     TakeTestComponent,
     GraphComponent,
-    DomainsComponent
+    DomainsComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,52 @@
+<div class="container" *ngIf='authGuard.isStudent() && !seeTestResults'>
+    <div class="row">
+        <div class="col-sm-3" *ngFor='let test of tests'>
+            <div class="card" style='width: 300px;'>
+                <div class="card-header">
+                    <h1 class="card-title" style='margin-top: 4px; margin-bottom: 0px;'>{{test.testName}}</h1>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-text">Subject: {{test.subjectLabel}}</h3>
+                    <h3 class="card-text">Domain: {{test.domainLabel}}</h3>
+                    <p class="card-text"><small class="text-muted"></small></p>
+                    <p class="card-text">
+                        <small class="text-muted">Start time: {{test.studentTestStarted}}</small>
+                        <br>
+                        <small class="text-muted">End time: {{test.studentTestFinished}}</small>
+                    </p>
+                    <button type="button" class="btn btn-info" (click)='seeTestResults = true; seeTestResult(test.id);'>See result</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf='authGuard.isStudent() && seeTestResults'>
+    <button type="button" class="btn btn-info" (click)='seeTestResults = false; studentTestId = 0;'>All tests</button>
+    <hr>
+    <h1 class="card-title">Test: {{test.testName}}</h1>
+    <h1 class="card-title">Subject: {{test.subjectLabel}}</h1>
+    <h1 class="card-title">Domain: {{test.domainLabel}}</h1>
+    <h1 class="card-title">Test started: {{test.testStarted}}</h1>
+    <h1 class="card-title">Test ended: {{test.testEnded}}</h1>
+    <hr>
+    <h1 class="card-title">Points: {{test.points}} / {{test.maxTestPoints}}</h1>
+    <h1 class="card-title">Grade: {{test.gradeLabel}}</h1>
+    <h1 class="card-title">Student started: {{test.studentTestStarted}}</h1>
+    <h1 class="card-title">Student finished: {{test.studentTestFinished}}</h1>
+    <hr>
+    <div style='margin-left: 2%;' *ngFor='let question of test.questions'>
+        <h2 class="card-title">Question text: {{question.questionText}}</h2>
+        <h2 class="card-title">Domain problem: {{question.problemLabel}}</h2>
+        <h2 class="card-title">Student started question: {{question.questionStart}}</h2>
+        <h2 class="card-title">Student finished question: {{question.questionEnd}}</h2>
+        <hr>
+        <div style='margin-left: 2%;' *ngFor='let answer of question.answers'>
+            <h2 class="card-title">Answer text: {{answer.textAnswer}}</h2>
+            <h2 class="card-title">Is answer true: {{answer.isCorrect}}</h2>
+            <h2 class="card-title">Did student choose this answer: {{answer.didStudentAnswer}}</h2>
+            <h2 class="card-title" *ngIf='!answer.answerDated.includes("0001-01-01T00:00:00")'>Answer dated: {{answer.answerDated}}</h2>
+            <hr>
+        </div>
+    </div>
+</div>

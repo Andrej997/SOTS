@@ -18,6 +18,11 @@ export class TestsService {
     return this.http.get(environment.api + `Tests/test`, {params: params});
   }
 
+  getTestOfStudent(userId: number) {
+    let params = new HttpParams().set('userId', userId);
+    return this.http.get(environment.api + `Users/tests`, {params: params});
+  }
+
   getTakeTest(testId: number) {
     return this.http.get(environment.api + `Tests/take-test/` + testId);
   }
