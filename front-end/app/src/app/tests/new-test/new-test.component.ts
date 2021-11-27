@@ -44,7 +44,7 @@ export class NewTestComponent implements OnInit {
       end: ['', Validators.required],
     });
     this.getSubjects();
-    this.addQuestion();
+    // this.addQuestion();
     this.getDomains();
   }
 
@@ -127,19 +127,51 @@ export class NewTestComponent implements OnInit {
     });
   }
 
-  addQuestion() {
-    let id = this.questions.length + 1;
-    this.questions.push(new Question(id));
+  addQuestion(problemNodeId: string) {
+    let node = this.nodes.find(x => x.id == problemNodeId);
+    if (node?.id.includes('new_node_question_id_')) {
+      this.toastr.error('That node represents a question');
+    }
+    else {
+      let newQuestion = new Question(this.questions.length + 1)
+      newQuestion.ProblemNodeId = problemNodeId;
+      this.questions.push(newQuestion);
+      let newNode: Node = {
+        id: 'new_node_question_id_' + (newQuestion.question_id),
+        label: ''
+      };
+      this.nodes.push(newNode);
+      this.nodes = [... this.nodes];
+      let newEdge: Edge = {
+        id: 'new_edge_question_id_' + (newQuestion.question_id),
+        label: 'containsQuestion',
+        source: problemNodeId,
+        target: newNode.id
+      };
+      this.edges.push(newEdge);
+      this.edges = [... this.edges];
+    }
   }
 
   deleteQuestion(question_id: number) {
     let index = this.questions.findIndex(x => x.question_id == question_id);
+    let question = this.questions.find(x => x.question_id == question_id);
+    let nIndex = this.nodes.findIndex(x => x.id == 'new_node_question_id_' + (question?.question_id));
+    let eIndex = this.edges.findIndex(x => x.id == 'new_edge_question_id_' + (question?.question_id));
+    this.edges.splice(eIndex, 1);
+    this.edges = [... this.edges];
+    this.nodes.splice(nIndex, 1);
+    this.nodes = [... this.nodes];
     this.questions.splice(index, 1);
   }
 
   addQuestionText(event: any, questionId: number) {
     let question = <Question>this.questions.find(x => x.question_id == questionId);
     question.TextQuestion = event.srcElement.value;
+    let node = this.nodes.find(x => x.id == 'new_node_question_id_' + question.question_id);
+    if(node != undefined)
+      node.label = event.srcElement.value
+    this.nodes = [... this.nodes];
   }
 
   addQuestionPoints(event: any, questionId: number) {
@@ -177,6 +209,8 @@ export class NewTestComponent implements OnInit {
   }
   clickOnNode(node: Node) {
     this.clickedNode = node;
+    console.log(this.clickedNode);
+    this.addQuestion(this.clickedNode.id);
   }
 
   setProblemNodeToQuestion(questionId: number, event: any) {
