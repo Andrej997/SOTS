@@ -26,7 +26,7 @@
     <hr>
     <h1 class="card-title">Test: {{test.testName}}</h1>
     <h1 class="card-title">Subject: {{test.subjectLabel}}</h1>
-    <h1 class="card-title">Domain: {{test.domainLabel}}</h1>
+    <!-- <h1 class="card-title">Domain: {{test.domainLabel}}</h1> -->
     <h1 class="card-title">Test started: {{test.testStarted}}</h1>
     <h1 class="card-title">Test ended: {{test.testEnded}}</h1>
     <hr>
@@ -37,7 +37,7 @@
     <hr>
     <div style='margin-left: 2%;' *ngFor='let question of test.questions'>
         <h2 class="card-title">Question text: {{question.questionText}}</h2>
-        <h2 class="card-title">Domain problem: {{question.problemLabel}}</h2>
+        <!-- <h2 class="card-title">Domain problem: {{question.problemLabel}}</h2> -->
         <h2 class="card-title">Student started question: {{question.questionStart}}</h2>
         <h2 class="card-title">Student finished question: {{question.questionEnd}}</h2>
         <hr>

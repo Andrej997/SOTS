@@ -31,6 +31,8 @@ namespace API.Application.Tests.Queries.GetTakeTest
 
         public string Question { get; set; }
 
+        public string ProblemNodeId { get; set; }
+
         public List<TakeTestQuestionAnswerDto> Answers { get; set; }
     }
 
