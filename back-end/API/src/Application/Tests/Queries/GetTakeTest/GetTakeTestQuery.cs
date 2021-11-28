@@ -107,7 +107,7 @@ namespace API.Application.Tests.Queries.GetTakeTest
 
                 return testsQuery;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

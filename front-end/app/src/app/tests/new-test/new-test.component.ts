@@ -68,8 +68,14 @@ export class NewTestComponent implements OnInit {
   }
 
   changeDomain(event: any) {
-    this.domainId = <number>event.target.value;
-    this.getNodes(this.domainId);
+    if(this.domainId == 0 || this.questions.length == 0) {
+      this.domainId = <number>event.target.value;
+      this.getNodes(this.domainId);
+    }
+    else if (this.questions.length > 0) {
+      this.toastr.warning("Delete first all questions before changing domain");
+      event.target.value = this.domainId;
+    }
   }
 
   private getNodes(domainId: number) {
@@ -82,7 +88,10 @@ export class NewTestComponent implements OnInit {
       (result as any[]).forEach(x => {
         let node: Node = {
           id: x.id,
-          label: x.label
+          label: x.label,
+          data: {
+            customColor: '#807977'
+          }
         };
         this.nodes.push(node);
         this.sourceNodes.push(node);
@@ -118,13 +127,21 @@ export class NewTestComponent implements OnInit {
     });
   }
 
+  private choosenSubject: number = 0;
   changeSubject(event: any) {
-    this.serviceDomains = [];
-    // console.log(event.target.value);
-    this.domains.forEach(domain => {
-      if (domain.subjectId == event.target.value)
-        this.serviceDomains.push(domain);
-    });
+    if (this.questions.length > 0) {
+      this.toastr.warning("Delete first all questions before changing subject");
+      event.target.value = this.choosenSubject;
+    }
+    else {
+      this.choosenSubject = event.target.value;
+      this.serviceDomains = [];
+      // console.log(event.target.value);
+      this.domains.forEach(domain => {
+        if (domain.subjectId == event.target.value)
+          this.serviceDomains.push(domain);
+      });
+    }
   }
 
   addQuestion(problemNodeId: string) {
@@ -133,12 +150,17 @@ export class NewTestComponent implements OnInit {
       this.toastr.error('That node represents a question');
     }
     else {
+      if (node && node.data && node.data.customColor)
+        node.data.customColor = '#15C232';
       let newQuestion = new Question(this.questions.length + 1)
       newQuestion.ProblemNodeId = problemNodeId;
       this.questions.push(newQuestion);
       let newNode: Node = {
         id: 'new_node_question_id_' + (newQuestion.question_id),
-        label: ''
+        label: '',
+        data: {
+          customColor: '#3A9FB4'
+        }
       };
       this.nodes.push(newNode);
       this.nodes = [... this.nodes];
