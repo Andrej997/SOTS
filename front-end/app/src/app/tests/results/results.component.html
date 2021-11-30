@@ -15,6 +15,7 @@
                         <small class="text-muted">End time: {{test.studentTestFinished}}</small>
                     </p>
                     <button type="button" class="btn btn-info" (click)='seeTestResults = true; seeTestResult(test.id);'>See result</button>
+                    
                 </div>
             </div>
         </div>
@@ -23,6 +24,7 @@
 
 <div class="container" *ngIf='authGuard.isStudent() && seeTestResults'>
     <button type="button" class="btn btn-info" (click)='seeTestResults = false; studentTestId = 0;'>All tests</button>
+    <button type="button" class="btn btn-info" style="float: right;" (click)='seeRealKnowlageGraph(test.id);'>See real knowlage graph</button>
     <hr>
     <h1 class="card-title">Test: {{test.testName}}</h1>
     <h1 class="card-title">Subject: {{test.subjectLabel}}</h1>

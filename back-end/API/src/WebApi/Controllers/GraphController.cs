@@ -6,6 +6,7 @@ using API.Application.Graph.Commands.DeleteNode;
 using API.Application.Graph.Queries.ExpectedKnowlageGraphForTest;
 using API.Application.Graph.Queries.GetEdges;
 using API.Application.Graph.Queries.GetNodes;
+using API.Application.Graph.Queries.RealKnowlageGraphForTestForUser;
 using API.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,20 +32,20 @@ namespace API.WebApi.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("real-knowlage-domain/test/{testId}/user/{userId}")]
-        //[ApiExplorerSettings(GroupName = "v1")]
-        //public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> RealKnowlageGraphForTestForUser(long testId, long userId)
-        //{
-        //    try
-        //    {
-        //        return await Mediator.Send(new RealKnowlageGraphForTestForUserQuery { TestId = testId, UserId = userId });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet]
+        [Route("real-knowlage-domain/test/{testId}/user/{userId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> RealKnowlageGraphForTestForUser(long testId, long userId)
+        {
+            try
+            {
+                return await Mediator.Send(new RealKnowlageGraphForTestForUserQuery { StundetTestId = testId, UserId = userId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPost]
         [Route("get/nodes")]

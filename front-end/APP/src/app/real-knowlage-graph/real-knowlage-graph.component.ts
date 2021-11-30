@@ -4,13 +4,14 @@ import { GraphService } from '../services/graph.service';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-expected-knowlage-graph',
-  templateUrl: './expected-knowlage-graph.component.html',
-  styleUrls: ['./expected-knowlage-graph.component.css']
+  selector: 'app-real-knowlage-graph',
+  templateUrl: './real-knowlage-graph.component.html',
+  styleUrls: ['./real-knowlage-graph.component.css']
 })
-export class ExpectedKnowlageGraphComponent implements OnInit {
+export class RealKnowlageGraphComponent implements OnInit {
 
   nodes: Node[] = [];
   edges: Edge[] = [];
@@ -19,6 +20,7 @@ export class ExpectedKnowlageGraphComponent implements OnInit {
 
   constructor(private graphService: GraphService,
     private route: ActivatedRoute,
+    private authService: AuthService,
     private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -29,7 +31,10 @@ export class ExpectedKnowlageGraphComponent implements OnInit {
   }
 
   private getGraph(testId: number) {
-    this.graphService.expectedKnowlageGraphForTest(testId).subscribe(result => {
+    console.log(testId);
+    
+    this.graphService.realKnowlageGraphForTest(testId, this.authService.getUserId()).subscribe(result => {
+      console.log(result);
       ((result as any).item1 as any[]).forEach(x => {
         let node: Node = {
           id: x.id,

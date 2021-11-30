@@ -61,7 +61,7 @@ namespace API.Application.Graph.Queries.ExpectedKnowlageGraphForTest
                     {
                         Id = questionEdge.TargetId,
                         Label = questionEdge.NodeLabel,
-                        CustomColor = "#42B1EC"
+                        CustomColor = "#42EC61"
                     });
                     edges.Add(new Edge
                     {
@@ -70,7 +70,7 @@ namespace API.Application.Graph.Queries.ExpectedKnowlageGraphForTest
                         SourceId = questionEdge.SourceId,
                         TargetId = questionEdge.TargetId
                     });
-                    nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#42EC61";
+                    nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#42B1EC";
                 }
 
                 return new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);

@@ -9,6 +9,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { QuestionsComponent } from './questions/questions.component';
+import { RealKnowlageGraphComponent } from './real-knowlage-graph/real-knowlage-graph.component';
 import { NewTestComponent } from './tests/new-test/new-test.component';
 import { ResultsComponent } from './tests/results/results.component';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
@@ -44,8 +45,14 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'expected-knowlage-graph/:test_id',
+    path: 'expected-knowlage-graph/:t_id',
     component: ExpectedKnowlageGraphComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'real-knowlage-graph/:t_id',
+    component: RealKnowlageGraphComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

@@ -27,8 +27,10 @@ export class ResultsComponent implements OnInit {
 
   seeTestResult(studentTestId: number) {
     this.test = this.tests.find(t => t.id == studentTestId);
-    // console.log(this.test);
-    
+  }
+
+  seeRealKnowlageGraph(studentTestId: number) {
+    this.router.navigate([`/real-knowlage-graph/${studentTestId}`]);
   }
 
   private getTests() {

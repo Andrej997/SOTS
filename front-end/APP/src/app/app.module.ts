@@ -34,6 +34,7 @@ import { GraphComponent } from './graph/graph.component';
 import { DomainsComponent } from './domains/domains.component';
 import { ResultsComponent } from './tests/results/results.component';
 import { ExpectedKnowlageGraphComponent } from './expected-knowlage-graph/expected-knowlage-graph.component';
+import { RealKnowlageGraphComponent } from './real-knowlage-graph/real-knowlage-graph.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ExpectedKnowlageGraphComponent } from './expected-knowlage-graph/expect
     GraphComponent,
     DomainsComponent,
     ResultsComponent,
-    ExpectedKnowlageGraphComponent
+    ExpectedKnowlageGraphComponent,
+    RealKnowlageGraphComponent
   ],
   imports: [
     BrowserModule,
