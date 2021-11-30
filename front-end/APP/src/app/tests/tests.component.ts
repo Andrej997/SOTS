@@ -97,20 +97,27 @@ export class TestsComponent implements OnInit {
       this.router.navigate([`/test/${event.data.id}/questions`]);
   }
 
-  onCustomAction(testId: any) {
-    this.testsService.publishTest(testId).subscribe(result => {
-      this.getTests();
-    }, error => {
-        this.toastr.error(error.error);
-        console.error(error);
-    });
+  onCustomAction(event: any) {
+    console.log(event);
+    if (event.action === 'publish') {
+      this.testsService.publishTest(event.data.id).subscribe(result => {
+        this.getTests();
+      }, error => {
+          this.toastr.error(error.error);
+          console.error(error);
+      });
+    }
+    else if (event.action === 'expextedKnowlage') {
+      this.router.navigate([`/expected-knowlage-graph/${event.data.id}`]);
+    }
   }
 
   settings = {
     actions: !this.authGuard.isStudent() ? {
         add: false,
         custom: [
-          { name: 'publish', title: 'Publish '}
+          { name: 'publish', title: 'Publish '},
+          { name: 'expextedKnowlage', title: 'Expexted knowlage '}
         ],
         position: 'right'
       } : false,

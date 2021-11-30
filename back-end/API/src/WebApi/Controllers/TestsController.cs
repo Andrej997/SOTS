@@ -93,12 +93,11 @@ namespace API.WebApi.Controllers
         [HttpPost]
         [Route("create")]
         [ApiExplorerSettings(GroupName = "v1")]
-        public async Task<IActionResult> CreateTest(CreateTestCommand command)
+        public async Task<ActionResult<long>> CreateTest(CreateTestCommand command)
         {
             try
             {
-                await Mediator.Send(command);
-                return Ok();
+                return await Mediator.Send(command);
             }
             catch (Exception ex)
             {

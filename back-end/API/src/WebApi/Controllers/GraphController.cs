@@ -1,7 +1,9 @@
-﻿using API.Application.Graph.Commands.CreateEdge;
+﻿using API.Application.Common.Models;
+using API.Application.Graph.Commands.CreateEdge;
 using API.Application.Graph.Commands.CreateNode;
 using API.Application.Graph.Commands.DeleteEdge;
 using API.Application.Graph.Commands.DeleteNode;
+using API.Application.Graph.Queries.ExpectedKnowlageGraphForTest;
 using API.Application.Graph.Queries.GetEdges;
 using API.Application.Graph.Queries.GetNodes;
 using API.Domain.Entities;
@@ -14,6 +16,36 @@ namespace API.WebApi.Controllers
 {
     public class GraphController : ApiControllerBase
     {
+        [HttpGet]
+        [Route("expected-knowlage-domain/test/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> ExpectedKnowlageGraphForTest(long testId)
+        {
+            try
+            {
+                return await Mediator.Send(new ExpectedKnowlageGraphForTestQuery { TestId = testId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[HttpGet]
+        //[Route("real-knowlage-domain/test/{testId}/user/{userId}")]
+        //[ApiExplorerSettings(GroupName = "v1")]
+        //public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> RealKnowlageGraphForTestForUser(long testId, long userId)
+        //{
+        //    try
+        //    {
+        //        return await Mediator.Send(new RealKnowlageGraphForTestForUserQuery { TestId = testId, UserId = userId });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
         [HttpPost]
         [Route("get/nodes")]
         [ApiExplorerSettings(GroupName = "v1")]

@@ -16,6 +16,10 @@ export class GraphService {
     return this.http.post(environment.api + `Graph/get/edges`, body);
   }
 
+  expectedKnowlageGraphForTest(testId: any) {
+    return this.http.get(environment.api + `Graph/expected-knowlage-domain/test/` + testId);
+  }
+
   createNode(body: any) {
     return this.http.post(environment.api + `Graph/create/node`, body);
   }

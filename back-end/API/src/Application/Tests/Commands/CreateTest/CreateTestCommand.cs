@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace API.Application.Tests.Commands.CreateTest
 {
-    public class CreateTestCommand : IRequest
+    public class CreateTestCommand : IRequest<long>
     {
         public string Name { get; set; }
 
@@ -29,7 +29,7 @@ namespace API.Application.Tests.Commands.CreateTest
         public DateTime End { get; set; }
     }
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateTestCommand>
+    public class CreateUserCommandHandler : IRequestHandler<CreateTestCommand, long>
     {
         private readonly IApplicationDbContext _context;
         private readonly IDateTime _dateTime;
@@ -40,7 +40,7 @@ namespace API.Application.Tests.Commands.CreateTest
             _dateTime = dateTime;
         }
 
-        public async Task<Unit> Handle(CreateTestCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(CreateTestCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace API.Application.Tests.Commands.CreateTest
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return Unit.Value;
+                return testDb.Entity.Id;
             }
             catch (Exception)
             {

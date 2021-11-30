@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AnswersComponent } from './answers/answers.component';
 import { AppComponent } from './app.component';
 import { DomainsComponent } from './domains/domains.component';
+import { ExpectedKnowlageGraphComponent } from './expected-knowlage-graph/expected-knowlage-graph.component';
 import { GraphComponent } from './graph/graph.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
@@ -39,6 +40,12 @@ const routes: Routes = [
   {
     path: 'graph/domain/:d_id',
     component: GraphComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'expected-knowlage-graph/:test_id',
+    component: ExpectedKnowlageGraphComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

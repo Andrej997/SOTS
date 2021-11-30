@@ -33,6 +33,7 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { GraphComponent } from './graph/graph.component';
 import { DomainsComponent } from './domains/domains.component';
 import { ResultsComponent } from './tests/results/results.component';
+import { ExpectedKnowlageGraphComponent } from './expected-knowlage-graph/expected-knowlage-graph.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ResultsComponent } from './tests/results/results.component';
     TakeTestComponent,
     GraphComponent,
     DomainsComponent,
-    ResultsComponent
+    ResultsComponent,
+    ExpectedKnowlageGraphComponent
   ],
   imports: [
     BrowserModule,
