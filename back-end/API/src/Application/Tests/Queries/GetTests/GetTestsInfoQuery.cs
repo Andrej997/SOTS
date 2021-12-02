@@ -77,7 +77,8 @@ namespace API.Application.Tests.Queries.GetTests
                     testsQuery = testsQuery
                         .Where(test => _context.UserSubjects.Any(us => us.UserId == request.UserId && us.SubjectId == test.SubjectId) 
                             && test.Published == true
-                            && !_context.StudentTests.Any(st => st.UserId == request.UserId && st.TestId == test.Id));
+                            && !_context.StudentTests.Any(st => st.UserId == request.UserId && st.TestId == test.Id)
+                            );
 
                 if (request.TestIds != null && request.TestIds.Any())
                     testsQuery = testsQuery

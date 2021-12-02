@@ -35,21 +35,43 @@ namespace API.Application.Tests.Queries.GetTakeTest
                     .Select(domain => domain.Id)
                     .FirstOrDefault();
 
+                //var markedNodes = _context.Nodes
+                //    .Where(node => node.DomainId == domainId)
+                //    .Select(node => new MarkedNode
+                //    {
+                //        Id = node.Id,
+                //        PermanentMark = false,
+                //        TemporaryMark = false
+                //    })
+                //    .ToList();
+
                 var nodes = _context.Nodes
                     .Where(node => node.DomainId == domainId)
-                    .Select(node => new MarkedNode
-                    {
-                        Id = node.Id,
-                        PermanentMark = false,
-                        TemporaryMark = false
-                    })
                     .ToList();
 
                 var edges = _context.Edges
                     .Where(edge => edge.DomainId == domainId)
                     .ToList();
 
-                var sortedNodes = DFS(nodes, edges).Select(x => x.Id).ToList();
+                var lonelyNodes = nodes.Where(node => !edges.Any(edge => edge.SourceId == node.Id) && !edges.Any(edge => edge.TargetId == node.Id)).ToList();
+                lonelyNodes.ForEach(node => nodes.Remove(node));
+                var layers = new Dictionary<int, List<Node>>();
+                layers.Add(0, lonelyNodes);
+
+                GetNextLayer(layers, nodes, edges);
+                var sortedNodes = new List<string>();
+                sortedNodes.AddRange(layers[0].Select(n => n.Id).ToList());
+                if (layers.Count > 1)
+                {
+                    sortedNodes.AddRange(layers[1].Select(n => n.Id).ToList());
+                    for (int i = 2; i < layers.Count; i++)
+                    {
+                        sortedNodes.AddRange(SortLayers(layers[i - 1], layers[i], edges));
+                    }
+                }
+                
+
+                //var sortedNodes = DFS(markedNodes, edges).Select(x => x.Id).ToList();
 
                 var testsQuery = _context.Tests
                     .Where(test => test.Id == request.TestId)
@@ -96,11 +118,15 @@ namespace API.Application.Tests.Queries.GetTakeTest
                 var questions = testsQuery.Questions;
                 var sortedQuestions = new List<TakeTestQuestionDto>();
 
-                for (int i = sortedNodes.Count - 1; i >= 0; i--)
+                for (int i = 0; i < sortedNodes.Count; i++)
                 {
                     var nodeId = sortedNodes[i];
                     var questionsInProblem = questions.Where(q => q.ProblemNodeId == nodeId).ToList();
-                    sortedQuestions.AddRange(questionsInProblem);
+                    foreach (var qip in questionsInProblem)
+                    {
+                        if (!sortedQuestions.Contains(qip))
+                            sortedQuestions.Add(qip);
+                    }
                 }
 
                 testsQuery.Questions = sortedQuestions;
@@ -111,6 +137,60 @@ namespace API.Application.Tests.Queries.GetTakeTest
             {
                 throw;
             }
+        }
+
+        private void GetNextLayer(Dictionary<int, List<Node>> layers, List<Node> nodes, List<Edge> edges)
+        {
+            List<Node> currenLayer = null;
+            if (layers.Count == 1) // if only lonely nodes
+            {
+                currenLayer = new List<Node>();
+                for (var i = nodes.Count - 1; i >= 0; i--)
+                {
+                    var firstLayerEdges = edges.Where(edge => nodes[i].Id == edge.TargetId).Count();
+                    if (firstLayerEdges == 0)
+                    {
+                        currenLayer.Add(nodes[i]);
+                        nodes.RemoveAt(i);
+                    }
+                }
+
+                layers.Add(layers.Count, currenLayer);
+            }
+            else
+            {
+                currenLayer = new List<Node>();
+                var prevLayer = layers.Where(x => x.Key == layers.Count - 1).Select(x => x.Value).FirstOrDefault();
+                foreach (var node in prevLayer)
+                {
+                    var nodeEdges = edges.Where(edge => edge.SourceId == node.Id).Select(edge => edge.TargetId).ToList();
+                    var nodesFromNodeEdges = nodes.Where(n => nodeEdges.Contains(n.Id)).ToList();
+                    currenLayer.AddRange(nodesFromNodeEdges);
+                    nodesFromNodeEdges.ForEach(n => nodes.Remove(n));
+                }
+                layers.Add(layers.Count, currenLayer);
+            }
+            if (nodes.Any())
+                GetNextLayer(layers, nodes, edges);
+        }
+
+        private List<string> SortLayers(List<Node> preLayer, List<Node> currentLayer, List<Edge> edges)
+        {
+            var sortedArray = new List<string>();
+
+            foreach (var node in preLayer)
+            {
+                var targets = edges.Where(edge => edge.SourceId == node.Id).Select(edge => edge.TargetId).ToList();
+                foreach (var nodeId in targets)
+                {
+                    if (!sortedArray.Contains(nodeId))
+                        sortedArray.Add(nodeId);
+                }
+            }
+
+            currentLayer = currentLayer.OrderBy(o => sortedArray.IndexOf(o.Id)).ToList();
+
+            return sortedArray;
         }
 
         private List<Node> Kahn(List<Node> nodes, List<Edge> edges)
