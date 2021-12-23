@@ -5,6 +5,9 @@
   <title>App</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -12,7 +15,37 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body class="mat-typography">
+  <!-- <script>
+    let pyodide;
+
+    async function init() {
+      pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+      await pyodide.loadPackage('micropip');
+      await pyodide.runPythonAsync(`
+        from micropip import install
+        await install('https://raw.githubusercontent.com/milansegedinac/kst/update-package/dist/learning_spaces-0.2.0-py3-none-any.whl')
+      `);
+    }
+
+    async function run() {
+      await pyodide.runPython(`
+        import pandas as pd
+        from learning_spaces.kst import iita
+        data_frame = pd.DataFrame({'a': [1, 0, 1], 'b': [0, 1, 0], 'c': [0, 1, 1]})
+        response = iita(data_frame, v=1)
+      `);
+
+      const response = pyodide.globals.get('response').toJs()
+      console.log(response)
+    }
+
+    (async () => {
+      await init()
+      await run()
+    })();
+  </script> -->
   <app-root></app-root>
+
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
