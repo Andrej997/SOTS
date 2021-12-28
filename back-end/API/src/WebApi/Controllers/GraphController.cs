@@ -33,13 +33,13 @@ namespace API.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("real-knowlage-domain/test/{testId}/user/{userId}")]
+        [Route("real-knowlage-domain/test/{testId}")]
         [ApiExplorerSettings(GroupName = "v1")]
-        public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> RealKnowlageGraphForTestForUser(long testId, long userId)
+        public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> RealKnowlageGraphForTestForUser(long testId)
         {
             try
             {
-                return await Mediator.Send(new RealKnowlageGraphForTestForUserQuery { StundetTestId = testId, UserId = userId });
+                return await Mediator.Send(new RealKnowlageGraphForTestForUserQuery { TestId = testId });
             }
             catch (Exception ex)
             {

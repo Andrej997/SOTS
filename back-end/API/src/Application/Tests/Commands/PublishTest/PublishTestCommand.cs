@@ -34,8 +34,8 @@ namespace API.Application.Tests.Commands.PublishTest
                     if (!_context.Questions.Any(question => question.TestId == test.Id))
                         throw new Exception("Can't publish, test does not have questions");
 
-                    if (_context.Answers.Any(answer => !_context.Questions.Any(question => question.TestId == test.Id && answer.QuestionId == question.Id)))
-                        throw new Exception("Can't publish, some questions does not have answers");
+                    //if (_context.Answers.Any(answer => !_context.Questions.Any(question => question.TestId == test.Id && answer.QuestionId == question.Id)))
+                    //    throw new Exception("Can't publish, some questions does not have answers");
 
                     test.Published = true;
                     await _context.SaveChangesAsync(cancellationToken);

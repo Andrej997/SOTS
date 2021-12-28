@@ -33,7 +33,7 @@ export class RealKnowlageGraphComponent implements OnInit {
   private getGraph(testId: number) {
     console.log(testId);
     
-    this.graphService.realKnowlageGraphForTest(testId, this.authService.getUserId()).subscribe(result => {
+    this.graphService.realKnowlageGraphForTest(testId).subscribe(result => {
       console.log(result);
       ((result as any).item1 as any[]).forEach(x => {
         let node: Node = {

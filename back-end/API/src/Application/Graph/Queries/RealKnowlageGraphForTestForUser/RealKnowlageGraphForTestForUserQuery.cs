@@ -2,8 +2,12 @@
 using API.Application.Common.Models;
 using API.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +16,7 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
 {
     public class RealKnowlageGraphForTestForUserQuery : IRequest<Tuple<List<NodeDto>, List<Edge>>>
     {
-        public long StundetTestId { get; set; }
-
-        public long UserId { get; set; }
+        public long TestId { get; set; }
     }
     public class RealKnowlageGraphForTestForUserQueryHandler : IRequestHandler<RealKnowlageGraphForTestForUserQuery, Tuple<List<NodeDto>, List<Edge>>>
     {
@@ -31,67 +33,33 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
         {
             try
             {
-                var testId = _context.StudentTests.Where(st => st.Id == request.StundetTestId && st.UserId == request.UserId).Select(st => st.TestId).FirstOrDefault();
-                var nodes = _context.Nodes
-                    .Where(node => _context.Tests.Any(test => test.Id == testId && node.DomainId == test.DomainId))
-                    .Select(node => new NodeDto
-                    {
-                        Id = node.Id,
-                        Label = node.Label,
-                        CustomColor = "#837B7F"
-                    })
+                var dynamic = new ExpandoObject() as IDictionary<string, Object>;
+
+                var test = _context.Tests
+                    .Include(test => test.Questions)
+                        .ThenInclude(questions => questions.Answers)
+                    .Where(test => test.Id == request.TestId)
+                    .FirstOrDefault();
+
+                var users = _context.Users
+                    .Where(user => _context.StudentTests.Any(st => st.TestId == test.Id && user.Id == st.UserId))
                     .ToList();
 
-                var edges = _context.Edges
-                    .Where(edge => _context.Tests.Any(test => test.Id == testId && edge.DomainId == test.DomainId))
+                var domainNodes = _context.Nodes
+                    .Where(node => node.DomainId == test.DomainId)
                     .ToList();
 
-                var questionEdges = _context.Questions
-                    .Where(question => question.TestId == testId)
-                    .Select(questionEdge => new
-                    {
-                        Label = "hasQuestion",
-                        Id = "qustionNodeEdge" + questionEdge.Id,
-                        TargetId = "questionNode" + questionEdge.Id,
-                        SourceId = questionEdge.ProblemNodeId,
-                        NodeLabel = questionEdge.TextQuestion
-                    })
-                    .ToList();
-
-                foreach (var questionEdge in questionEdges)
+                foreach (var user in users)
                 {
-                    var questionId = long.Parse(questionEdge.TargetId.Split("questionNode")[1]);
-                    if (IsQuestionAnsweredTrue(request.StundetTestId, questionId))
-                    {
-                        nodes.Add(new NodeDto
-                        {
-                            Id = questionEdge.TargetId,
-                            Label = questionEdge.NodeLabel,
-                            CustomColor = "#42EC61"
-                        });
-                        if (nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor != "#D53424")
-                            nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#42EC61";
-                    }
-                    else
-                    {
-                        nodes.Add(new NodeDto
-                        {
-                            Id = questionEdge.TargetId,
-                            Label = questionEdge.NodeLabel,
-                            CustomColor = "#D53424"
-                        });
-                        nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#D53424";
-                    }
-                    edges.Add(new Edge
-                    {
-                        Id = questionEdge.Id,
-                        Label = questionEdge.Label,
-                        SourceId = questionEdge.SourceId,
-                        TargetId = questionEdge.TargetId
-                    });
+                    dynamic.Add(user.Id.ToString(), GetArray(test.Id, user.Id, domainNodes, test.Questions));
                 }
 
-                return new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);
+                var client = new RestClient("http://192.168.0.20:5003");
+                var restRequest = new RestRequest("api/calculate/kst", Method.POST);
+                restRequest.AddJsonBody(dynamic);
+                var response = client.Execute(restRequest);
+
+                return null;// new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);
             }
             catch (Exception)
             {
@@ -99,19 +67,43 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
             }
         }
 
-        private bool IsQuestionAnsweredTrue(long studentTestId, long questionId)
+        private int[] GetArray(long testId, long userId, List<Node> nodes, List<Question> questions)
         {
-            var answers = _context.Answers.Where(answer => answer.QuestionId == questionId).ToList();
-            foreach (var answer in answers)
+            var studentTest = _context.StudentTests
+                .Where(st => st.UserId == userId && st.TestId == testId)
+                .Select(st => st.Id)
+                .FirstOrDefault();
+
+            var knownProblems = new int[nodes.Count];
+
+            for (int i = 0; i < nodes.Count - 1; i++)
             {
-                var choosenAnswer = _context.ChoosenAnswers.Where(canswer => canswer.StudentTestId == studentTestId && canswer.AnswerId == answer.Id && canswer.QuestionId == questionId).FirstOrDefault();
-                if (choosenAnswer != null && !answer.IsCorrect)
+                var questionsForProblem = questions.Where(q => q.ProblemNodeId == nodes[i].Id).ToList();
+                double chosenCorrectAnswers = 0;
+                double totalCorrectAnswers = 0;
+                foreach (var question in questionsForProblem)
                 {
-                    return false;
+                    var choosenAnswers = _context.ChoosenAnswers
+                        .Where(ca => ca.StudentTestId == studentTest && ca.QuestionId == question.Id)
+                        .ToList();
+                    var correctAnswers = question.Answers.Where(answer => answer.IsCorrect == true).ToList();
+
+                    totalCorrectAnswers += correctAnswers.Count;
+                    
+                    choosenAnswers.ForEach(choa =>
+                    {
+                        if (correctAnswers.Any(ca => ca.Id == choa.AnswerId && ca.IsCorrect == true))
+                            ++chosenCorrectAnswers;
+                    });
                 }
+                if (chosenCorrectAnswers / totalCorrectAnswers > 0.5)
+                    knownProblems[i] = 1;
+                else
+                    knownProblems[i] = 0;
+
             }
 
-            return true;
+            return knownProblems;
         }
     }
 }

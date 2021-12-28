@@ -34,7 +34,7 @@
     <h2>Grade: {{ finishTest.Grade }}</h2>
     <hr>
     <div *ngFor='let question of choosenAnswerDto.questions'>
-        <h3>Test: {{question.qustionText}}</h3>
+        <h3>Question: {{question.qustionText}}</h3>
         <div *ngFor='let answer of question.awnsers'>
             <h3 *ngIf='answer.isChoosen && answer.isCorrect' style="background-color: green;">Answer: {{answer.answerText}}</h3>
             <h3 *ngIf='answer.isChoosen && !answer.isCorrect' style="background-color: red;">Answer: {{answer.answerText}}</h3>

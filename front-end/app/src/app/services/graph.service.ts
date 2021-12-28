@@ -20,8 +20,8 @@ export class GraphService {
     return this.http.get(environment.api + `Graph/expected-knowlage-domain/test/` + testId);
   }
 
-  realKnowlageGraphForTest(testId: any, userId: any) {
-    return this.http.get(environment.api + `Graph/real-knowlage-domain/test/` + testId + '/user/' + userId);
+  realKnowlageGraphForTest(testId: any) {
+    return this.http.get(environment.api + `Graph/real-knowlage-domain/test/` + testId);
   }
 
   createNode(body: any) {
