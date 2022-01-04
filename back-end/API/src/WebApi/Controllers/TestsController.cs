@@ -2,6 +2,7 @@
 using API.Application.Tests.Commands.DeleteTest;
 using API.Application.Tests.Commands.PublishTest;
 using API.Application.Tests.Commands.UpdateTest;
+using API.Application.Tests.Queries.ExportQTI;
 using API.Application.Tests.Queries.GetSubjects;
 using API.Application.Tests.Queries.GetTakeTest;
 using API.Application.Tests.Queries.GetTests;
@@ -37,6 +38,22 @@ namespace API.WebApi.Controllers
             try
             {
                 return (await Mediator.Send(new GetTestsInfoQuery { TestIds = new List<long> { testId } })).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("export/qti/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> ExportQTI(long testId)
+        {
+            try
+            {
+                var bytes = await Mediator.Send(new ExportQTIQuery { TestId = testId });
+                return Ok(File(bytes, "application/zip", "file.zip"));
             }
             catch (Exception ex)
             {

@@ -110,6 +110,44 @@ export class TestsComponent implements OnInit {
     else if (event.action === 'expextedKnowlage') {
       this.router.navigate([`/expected-knowlage-graph/${event.data.id}`]);
     }
+    else if (event.action === 'realKnowlage') {
+      this.router.navigate([`/real-knowlage-graph/${event.data.id}`]);
+    }
+    else if (event.action === 'qti') {
+      this.testsService.dowloadQTI(event.data.id).subscribe(result => {
+        console.log(result);
+        let type = 'application/zip';
+        let name = 'file.zip';
+        let byteCharacters = null;
+        let byteArray = null;
+        let fileName = null;
+        if ((result as any).fileContents || (result as any).fileBytes) {
+            let content = (result as any).fileContents ? (result as any).fileContents : (result as any).fileBytes;
+              byteCharacters =  atob(content);
+              const byteNumbers = new Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+            byteArray = new Uint8Array(byteNumbers);
+            fileName = name ? name : (result as any).fileDownloadName;
+        } else {
+            fileName = name ? name : (result as any).name;
+            byteArray = (result as any);
+        }
+
+        const blob = new Blob([byteArray], { type });
+
+        const url = window.URL.createObjectURL(blob);
+        var anchor = document.createElement("a");
+        anchor.download = fileName;
+        anchor.href = url;
+        anchor.click();
+        anchor.remove();
+      }, error => {
+          this.toastr.error(error.error);
+          console.error(error);
+      });
+    }
   }
 
   settings = {
@@ -117,7 +155,9 @@ export class TestsComponent implements OnInit {
         add: false,
         custom: [
           { name: 'publish', title: 'Publish '},
-          { name: 'expextedKnowlage', title: 'Expexted knowlage '}
+          { name: 'expextedKnowlage', title: 'Expexted knowlage '},
+          { name: 'realKnowlage', title: 'Real knowlage '},
+          { name: 'qti', title: 'Download qti '}
         ],
         position: 'right'
       } : false,

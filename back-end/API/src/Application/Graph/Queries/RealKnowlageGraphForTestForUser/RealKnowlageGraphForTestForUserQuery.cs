@@ -59,9 +59,38 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                 restRequest.AddJsonBody(dynamic);
                 var response = client.Execute(restRequest);
 
-                return null;// new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);
+
+                var jResponse = JObject.Parse(response.Content)["implications"];
+                var edges = new List<Edge>();
+                foreach (var child in jResponse.Children())
+                {
+                    var from = child.First.Value<int>();
+                    var sourceNode = domainNodes[from];
+                    var to = child.Last.Value<int>();
+                    var targetNode = domainNodes[to];
+                    edges.Add(new Edge
+                    {
+                        Id = sourceNode.Id + "_" + targetNode.Id,
+                        SourceId = sourceNode.Id,
+                        TargetId = targetNode.Id
+                    });
+                }
+
+                var nodes = new List<NodeDto>();
+                foreach (var node in domainNodes)
+                {
+                    nodes.Add(new NodeDto
+                    {
+                        Id = node.Id,
+                        CustomColor = "#87E320",
+                        Label = node.Label,
+                        DomainId = node.DomainId
+                    });
+                }
+
+                return new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }

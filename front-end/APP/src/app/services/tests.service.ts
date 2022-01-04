@@ -18,6 +18,10 @@ export class TestsService {
     return this.http.get(environment.api + `Tests/test`, {params: params});
   }
 
+  dowloadQTI(testId: number) {
+    return this.http.get(environment.api + `Tests/export/qti/${testId}`);
+  }
+
   getTestOfStudent(userId: number) {
     let params = new HttpParams().set('userId', userId);
     return this.http.get(environment.api + `Users/tests`, {params: params});
