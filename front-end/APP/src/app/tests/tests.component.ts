@@ -148,6 +148,9 @@ export class TestsComponent implements OnInit {
           console.error(error);
       });
     }
+    else if (event.action === 'comporeKnowledge') {
+      this.router.navigate([`/compore-knowledge/${event.data.id}`]);
+    }
   }
 
   settings = {
@@ -155,9 +158,10 @@ export class TestsComponent implements OnInit {
         add: false,
         custom: [
           { name: 'publish', title: 'Publish '},
-          { name: 'expextedKnowlage', title: 'Expexted knowlage '},
-          { name: 'realKnowlage', title: 'Real knowlage '},
-          { name: 'qti', title: 'Download qti '}
+          { name: 'expextedKnowlage', title: 'Expexted knowledge '},
+          { name: 'realKnowlage', title: 'Real knowledge '},
+          { name: 'qti', title: 'Download qti '},
+          { name: 'comporeKnowledge', title: 'Compore knowledge '}
         ],
         position: 'right'
       } : false,
