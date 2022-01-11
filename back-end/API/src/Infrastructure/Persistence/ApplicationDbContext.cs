@@ -53,6 +53,7 @@ namespace API.Infrastructure.Persistence
         public DbSet<ChoosenAnswer> ChoosenAnswers { get; set; }
         public DbSet<Node> Nodes { get; set; }
         public DbSet<Edge> Edges { get; set; }
+        public DbSet<EdgeRK> EdgeRKs { get; set; }
         public DbSet<Domain.Entities.Domain> Domains { get; set; }
 
 

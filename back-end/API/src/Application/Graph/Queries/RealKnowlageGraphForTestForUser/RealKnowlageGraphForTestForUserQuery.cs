@@ -61,6 +61,14 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
 
 
                 var jResponse = JObject.Parse(response.Content)["implications"];
+
+                var egdesForReal = _context.EdgeRKs
+                    .Where(edge => edge.TestId == request.TestId)
+                    .ToList();
+
+                _context.EdgeRKs.RemoveRange(egdesForReal);
+                await _context.SaveChangesAsync(cancellationToken);
+
                 var edges = new List<Edge>();
                 foreach (var child in jResponse.Children())
                 {
@@ -75,7 +83,15 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                         TargetId = targetNode.Id,
                         Label = "preduslov"
                     });
+
+                    _context.EdgeRKs.Add(new EdgeRK
+                    {
+                        TestId = request.TestId,
+                        SourceId = sourceNode.Id,
+                        TargetId = targetNode.Id
+                    });
                 }
+                await _context.SaveChangesAsync(cancellationToken);
 
                 var nodes = new List<NodeDto>();
                 foreach (var node in domainNodes)
