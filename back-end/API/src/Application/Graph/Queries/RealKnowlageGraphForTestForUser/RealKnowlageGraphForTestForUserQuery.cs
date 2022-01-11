@@ -54,7 +54,7 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                     dynamic.Add(user.Id.ToString(), GetArray(test.Id, user.Id, domainNodes, test.Questions));
                 }
 
-                var client = new RestClient("http://192.168.0.20:5003");
+                var client = new RestClient("http://192.168.0.34:5003");
                 var restRequest = new RestRequest("api/calculate/kst", Method.POST);
                 restRequest.AddJsonBody(dynamic);
                 var response = client.Execute(restRequest);
@@ -72,7 +72,8 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                     {
                         Id = sourceNode.Id + "_" + targetNode.Id,
                         SourceId = sourceNode.Id,
-                        TargetId = targetNode.Id
+                        TargetId = targetNode.Id,
+                        Label = "preduslov"
                     });
                 }
 
@@ -82,10 +83,40 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                     nodes.Add(new NodeDto
                     {
                         Id = node.Id,
-                        CustomColor = "#87E320",
+                        CustomColor = "#42B1EC",
                         Label = node.Label,
                         DomainId = node.DomainId
                     });
+                }
+
+                var questionEdges = _context.Questions
+                    .Where(question => question.TestId == request.TestId)
+                    .Select(questionEdge => new
+                    {
+                        Label = "hasQuestion",
+                        Id = "qustionNodeEdge" + questionEdge.Id,
+                        TargetId = "questionNode" + questionEdge.Id,
+                        SourceId = questionEdge.ProblemNodeId,
+                        NodeLabel = questionEdge.TextQuestion
+                    })
+                    .ToList();
+
+                foreach (var questionEdge in questionEdges)
+                {
+                    nodes.Add(new NodeDto
+                    {
+                        Id = questionEdge.TargetId,
+                        Label = questionEdge.NodeLabel,
+                        CustomColor = "#42EC61"
+                    });
+                    edges.Add(new Edge
+                    {
+                        Id = questionEdge.Id,
+                        Label = questionEdge.Label,
+                        SourceId = questionEdge.SourceId,
+                        TargetId = questionEdge.TargetId
+                    });
+                    //nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#42B1EC";
                 }
 
                 return new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);
