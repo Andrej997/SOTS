@@ -1,6 +1,7 @@
 ﻿using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Commands.DeleteTest;
 using API.Application.Tests.Commands.PublishTest;
+using API.Application.Tests.Commands.SortBy;
 using API.Application.Tests.Commands.UpdateTest;
 using API.Application.Tests.Queries.ExportQTI;
 using API.Application.Tests.Queries.GetSubjects;
@@ -115,6 +116,22 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("sortby")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> SortBy(SortByCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
             }
             catch (Exception ex)
             {

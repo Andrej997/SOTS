@@ -26,6 +26,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
 
   settings: any = {};
 
+  sortBy: number = 0;
+
   constructor(private route: ActivatedRoute,
     private toastr: ToastrService,
     private router: Router,
@@ -43,9 +45,27 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     });
   }
 
+  orderTestBy(sortBy: number) {
+    let body = {
+      TestId: this.testId,
+      SortBy: sortBy
+    };
+    this.testsService.sortBy(body).toPromise()
+      .then(result => {
+        this.toastr.success('Ordered');
+        this.sortBy = sortBy;
+      })
+      .catch(
+        error => {
+          console.error(error);
+        });
+  }
+
   private getTest(testId: number) {
     this.testsService.getTest(testId).subscribe(result => {
       this.testText = (result as any).name;
+      this.sortBy = (result as any).sortBy;
+      
       this.getNodes((result as any).domainId);
     }, error => {
         this.toastr.error(error.error);

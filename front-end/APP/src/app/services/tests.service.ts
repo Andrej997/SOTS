@@ -87,6 +87,10 @@ export class TestsService {
     return this.http.put(environment.api + `QA/update/question`, body);
   }
 
+  sortBy(body: any) {
+    return this.http.put(environment.api + `Tests/sortby`, body);
+  }
+
   editTest(body: any) {
     return this.http.put(environment.api + `Tests/update`, body);
   }

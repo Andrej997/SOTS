@@ -40,6 +40,10 @@ namespace API.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.DomainId)
                 .HasColumnName("domain_id");
+
+            builder.Property(e => e.SortBy)
+               .HasColumnName("sort_by")
+               .HasDefaultValue(0);
         }
     }
 }

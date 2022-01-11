@@ -65,7 +65,8 @@ namespace API.Application.Tests.Queries.GetTests
                         DomainName = _context.Domains
                             .Where(domain => domain.Id == test.DomainId)
                             .Select(domain => domain.Name)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                        SortBy = test.SortBy
                     });
 
                 var userRoleId = _context.UserRoles.Where(ur => ur.UserId == request.UserId).Select(ur => ur.RoleId).FirstOrDefault();

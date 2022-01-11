@@ -116,7 +116,6 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                         SourceId = questionEdge.SourceId,
                         TargetId = questionEdge.TargetId
                     });
-                    //nodes.Where(x => x.Id == questionEdge.SourceId).FirstOrDefault().CustomColor = "#42B1EC";
                 }
 
                 return new Tuple<List<NodeDto>, List<Edge>>(nodes, edges);

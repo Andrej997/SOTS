@@ -23,6 +23,8 @@ namespace API.Domain.Entities
 
         public long DomainId { get; set; }
 
+        public int SortBy { get; set; }
+
         public virtual List<Question> Questions { get; set; }
         public virtual TestTime TestTime { get; set; }
     }

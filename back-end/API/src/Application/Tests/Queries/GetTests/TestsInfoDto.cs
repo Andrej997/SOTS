@@ -31,5 +31,7 @@ namespace API.Application.Tests.Queries.GetTests
         public DateTime End { get; set; }
 
         public bool Published { get; set; }
+
+        public int SortBy { get; set; }
     }
 }

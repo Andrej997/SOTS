@@ -1,8 +1,13 @@
 ﻿using API.Application.Common.Interfaces;
+using API.Application.Common.Models;
 using API.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,20 +35,15 @@ namespace API.Application.Tests.Queries.GetTakeTest
         {
             try
             {
+                var sortBy = _context.Tests
+                    .Where(test => test.Id == request.TestId)
+                    .Select(test => test.SortBy)
+                    .FirstOrDefault();
+
                 var domainId = _context.Domains
                     .Where(domain => _context.Tests.Any(test => test.Id == request.TestId && test.DomainId == domain.Id))
                     .Select(domain => domain.Id)
                     .FirstOrDefault();
-
-                //var markedNodes = _context.Nodes
-                //    .Where(node => node.DomainId == domainId)
-                //    .Select(node => new MarkedNode
-                //    {
-                //        Id = node.Id,
-                //        PermanentMark = false,
-                //        TemporaryMark = false
-                //    })
-                //    .ToList();
 
                 var nodes = _context.Nodes
                     .Where(node => node.DomainId == domainId)
@@ -53,25 +53,12 @@ namespace API.Application.Tests.Queries.GetTakeTest
                     .Where(edge => edge.DomainId == domainId)
                     .ToList();
 
-                var lonelyNodes = nodes.Where(node => !edges.Any(edge => edge.SourceId == node.Id) && !edges.Any(edge => edge.TargetId == node.Id)).ToList();
-                lonelyNodes.ForEach(node => nodes.Remove(node));
-                var layers = new Dictionary<int, List<Node>>();
-                layers.Add(0, lonelyNodes);
 
-                GetNextLayer(layers, nodes, edges);
                 var sortedNodes = new List<string>();
-                sortedNodes.AddRange(layers[0].Select(n => n.Id).ToList());
-                if (layers.Count > 1)
-                {
-                    sortedNodes.AddRange(layers[1].Select(n => n.Id).ToList());
-                    for (int i = 2; i < layers.Count; i++)
-                    {
-                        sortedNodes.AddRange(SortLayers(layers[i - 1], layers[i], edges));
-                    }
-                }
-                
-
-                //var sortedNodes = DFS(markedNodes, edges).Select(x => x.Id).ToList();
+                if (sortBy == 0)
+                    sortedNodes = SortByExpexted(nodes, edges);
+                else
+                    sortedNodes = SortByReal(request.TestId);
 
                 var testsQuery = _context.Tests
                     .Where(test => test.Id == request.TestId)
@@ -193,83 +180,139 @@ namespace API.Application.Tests.Queries.GetTakeTest
             return sortedArray;
         }
 
-        private List<Node> Kahn(List<Node> nodes, List<Edge> edges)
+        private List<string> SortByExpexted(List<Node> nodes, List<Edge> edges)
         {
-            var sorted = new List<Node>();
+            var lonelyNodes = nodes.Where(node => !edges.Any(edge => edge.SourceId == node.Id) && !edges.Any(edge => edge.TargetId == node.Id)).ToList();
+            lonelyNodes.ForEach(node => nodes.Remove(node));
+            var layers = new Dictionary<int, List<Node>>();
+            layers.Add(0, lonelyNodes);
 
-            while(nodes.Count > 0)
+            GetNextLayer(layers, nodes, edges);
+            var sortedNodes = new List<string>();
+            sortedNodes.AddRange(layers[0].Select(n => n.Id).ToList());
+            if (layers.Count > 1)
             {
-                var n = nodes.First();
-                nodes.Remove(n);
-                sorted.Add(n);
-
-                foreach (var m in nodes)
+                sortedNodes.AddRange(layers[1].Select(n => n.Id).ToList());
+                for (int i = 2; i < layers.Count; i++)
                 {
-                    if (edges.Any(edge => n.Id == edge.SourceId && m.Id == edge.TargetId))
-                    {
-                        var e = edges.Where(edge => n.Id == edge.SourceId && m.Id == edge.TargetId).FirstOrDefault();
-                        edges.Remove(e);
-                        if (!edges.Any(edge => edge.TargetId == m.Id))
-                        {
-                            nodes.Remove(m);
-                            sorted.Add(m);
-                            break;
-                        }
-                           
-                    }
+                    sortedNodes.AddRange(SortLayers(layers[i - 1], layers[i], edges));
                 }
             }
-
-            return sorted;
+            return sortedNodes;
         }
 
-        private List<Node> DFS(List<MarkedNode> markedNodes, List<Edge> edges)
+        private List<string> SortByReal(long testId)
         {
-            var sorted = new List<Node>();
+            var dynamic = new ExpandoObject() as IDictionary<string, Object>;
 
-            MarkedNode n = null;
-            while ((n = markedNodes.Where(mn => mn.PermanentMark == false).FirstOrDefault()) != null) 
+            var test = _context.Tests
+                .Include(test => test.Questions)
+                    .ThenInclude(questions => questions.Answers)
+                .Where(test => test.Id == testId)
+                .FirstOrDefault();
+
+            var users = _context.Users
+                .Where(user => _context.StudentTests.Any(st => st.TestId == test.Id && user.Id == st.UserId))
+                .ToList();
+
+            var domainNodes = _context.Nodes
+                .Where(node => node.DomainId == test.DomainId)
+                .ToList();
+
+            foreach (var user in users)
             {
-                Visit(n, markedNodes, edges, sorted);
+                dynamic.Add(user.Id.ToString(), GetArray(test.Id, user.Id, domainNodes, test.Questions));
             }
 
-            return sorted;
+            var client = new RestClient("http://192.168.0.34:5003");
+            var restRequest = new RestRequest("api/calculate/kst", Method.POST);
+            restRequest.AddJsonBody(dynamic);
+            var response = client.Execute(restRequest);
+            var jResponse = JObject.Parse(response.Content)["implications"];
+
+            var edges = new List<Edge>();
+            foreach (var child in jResponse.Children())
+            {
+                var from = child.First.Value<int>();
+                var sourceNode = domainNodes[from];
+                var to = child.Last.Value<int>();
+                var targetNode = domainNodes[to];
+                edges.Add(new Edge
+                {
+                    Id = sourceNode.Id + "_" + targetNode.Id,
+                    SourceId = sourceNode.Id,
+                    TargetId = targetNode.Id,
+                    Label = "preduslov"
+                });
+            }
+
+            var nodes = new List<Node>();
+            foreach (var node in domainNodes)
+            {
+                nodes.Add(new Node
+                {
+                    Id = node.Id,
+                    Label = node.Label,
+                    DomainId = node.DomainId
+                });
+            }
+
+            var lonelyNodes = nodes.Where(node => !edges.Any(edge => edge.SourceId == node.Id) && !edges.Any(edge => edge.TargetId == node.Id)).ToList();
+            lonelyNodes.ForEach(node => nodes.Remove(node));
+            var layers = new Dictionary<int, List<Node>>();
+            layers.Add(0, lonelyNodes);
+
+            GetNextLayer(layers, nodes, edges);
+            var sortedNodes = new List<string>();
+            sortedNodes.AddRange(layers[0].Select(n => n.Id).ToList());
+            if (layers.Count > 1)
+            {
+                sortedNodes.AddRange(layers[1].Select(n => n.Id).ToList());
+                for (int i = 2; i < layers.Count; i++)
+                {
+                    sortedNodes.AddRange(SortLayers(layers[i - 1], layers[i], edges));
+                }
+            }
+            return sortedNodes;
         }
 
-        private void Visit(MarkedNode n, List<MarkedNode> markedNodes, List<Edge> edges, List<Node> sorted)
+        private int[] GetArray(long testId, long userId, List<Node> nodes, List<Question> questions)
         {
-            if (n.PermanentMark == true)
-                return;
+            var studentTest = _context.StudentTests
+                .Where(st => st.UserId == userId && st.TestId == testId)
+                .Select(st => st.Id)
+                .FirstOrDefault();
 
-            if (n.TemporaryMark == true)
-                return;
+            var knownProblems = new int[nodes.Count];
 
-            n.TemporaryMark = true;
-
-            foreach (var m in markedNodes)
+            for (int i = 0; i < nodes.Count - 1; i++)
             {
-                if (edges.Any(edge => n.Id == edge.SourceId && m.Id == edge.TargetId))
-                    Visit(m, markedNodes, edges, sorted);
+                var questionsForProblem = questions.Where(q => q.ProblemNodeId == nodes[i].Id).ToList();
+                double chosenCorrectAnswers = 0;
+                double totalCorrectAnswers = 0;
+                foreach (var question in questionsForProblem)
+                {
+                    var choosenAnswers = _context.ChoosenAnswers
+                        .Where(ca => ca.StudentTestId == studentTest && ca.QuestionId == question.Id)
+                        .ToList();
+                    var correctAnswers = question.Answers.Where(answer => answer.IsCorrect == true).ToList();
+
+                    totalCorrectAnswers += correctAnswers.Count;
+
+                    choosenAnswers.ForEach(choa =>
+                    {
+                        if (correctAnswers.Any(ca => ca.Id == choa.AnswerId && ca.IsCorrect == true))
+                            ++chosenCorrectAnswers;
+                    });
+                }
+                if (chosenCorrectAnswers / totalCorrectAnswers > 0.5)
+                    knownProblems[i] = 1;
+                else
+                    knownProblems[i] = 0;
+
             }
 
-            n.TemporaryMark = false;
-            n.PermanentMark = true;
-            sorted.Add(n.node);
-        }
-    }
-
-    public class MarkedNode : Node
-    {
-        public bool TemporaryMark{ get; set; }
-
-        public bool PermanentMark { get; set; }
-
-        public Node node
-        {
-            get
-            {
-                return (Node)this;
-            }
+            return knownProblems;
         }
     }
 }
