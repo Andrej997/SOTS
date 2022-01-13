@@ -1,6 +1,4 @@
 <div id="wrapper">
-
-
 <div>
     <h1>Expected knowlage graph</h1>
     <ngx-graph
@@ -33,7 +31,7 @@
         </ng-template>
         
         <ng-template #nodeTemplate let-node>
-            <svg:g class="node" ngx-tooltip > <!--(click)="clickOnNode(node)"-->
+            <svg:g class="node" ngx-tooltip>
             <svg:rect
                 [attr.width]="node.dimension.width"
                 [attr.height]="node.dimension.height"
@@ -46,7 +44,7 @@
         </ng-template>
         
         <ng-template #linkTemplate let-link>
-            <svg:g class="edge" > <!--(click)="clickOnEdge(link)"-->
+            <svg:g class="edge">
             <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
             <svg:text class="edge-label" text-anchor="middle">
                 <textPath
@@ -95,7 +93,7 @@
         </ng-template>
         
         <ng-template #nodeTemplate let-node>
-            <svg:g class="node" ngx-tooltip > <!--(click)="clickOnNode(node)"-->
+            <svg:g class="node" ngx-tooltip>
             <svg:rect
                 [attr.width]="node.dimension.width"
                 [attr.height]="node.dimension.height"
@@ -108,7 +106,7 @@
         </ng-template>
         
         <ng-template #linkTemplate let-link>
-            <svg:g class="edge" > <!--(click)="clickOnEdge(link)"-->
+            <svg:g class="edge">
             <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
             <svg:text class="edge-label" text-anchor="middle">
                 <textPath

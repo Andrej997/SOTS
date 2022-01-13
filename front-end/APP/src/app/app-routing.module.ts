@@ -15,6 +15,8 @@ import { NewTestComponent } from './tests/new-test/new-test.component';
 import { ResultsComponent } from './tests/results/results.component';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
 import { TestsComponent } from './tests/tests.component';
+import { UserComponent } from './users/user/user.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
   {
@@ -78,6 +80,18 @@ const routes: Routes = [
   {
     path: 'new-test',
     component: NewTestComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'users',
+    component: UsersComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'users/:id',
+    component: UserComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

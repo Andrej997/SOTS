@@ -1,0 +1,44 @@
+<form [formGroup]="userForm" (ngSubmit)="onFirstSubmit()">
+    <div class="container">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" formControlName="username" readonly class="form-control" placeholder="Username">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" formControlName="password" class="form-control" placeholder="Password">
+        </div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" formControlName="name" class="form-control" placeholder="Name">
+        </div>
+
+        <div class="form-group">
+            <label>Surname</label>
+            <input type="text" formControlName="surname" class="form-control" placeholder="Surname">
+        </div>
+
+        <div class="form-group">
+            <label>Role</label>
+            <select class="form-control" formControlName="role">
+                <option hidden disabled selected value>Select role</option>
+                <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Subject</label>
+            <select class="form-control"  formControlName="subjects" multiple>
+                <option hidden disabled selected value>Select subject</option>
+                <option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }}</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+</form>
+<div class='container'>
+    <button class="btn btn-danger" style='float: right; margin-top: -40px;' (click)='deleteUser();'>Delete</button>
+</div>

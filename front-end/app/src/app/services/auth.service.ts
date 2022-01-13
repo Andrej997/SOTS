@@ -1,12 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router,) { }
 
   login(username: string, password: string) {
     let body = {
@@ -15,6 +16,7 @@ export class AuthService {
     };
     return this.http.post(environment.api + `Users/login`, body).subscribe(result => {
         this.setData(result);
+        this.router.navigate([`/`]);
       }, error => {
           console.error(error);
       });

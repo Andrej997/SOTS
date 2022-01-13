@@ -1,6 +1,7 @@
 ﻿using API.Application.Common.Mappings;
 using API.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace API.Application.Users.Commands.Login
 {
@@ -15,5 +16,13 @@ namespace API.Application.Users.Commands.Login
         public string Username { get; set; }
 
         public long RoleId { get; set; }
+
+        public string Role { get; set; }
+
+        public string Password { get; set; }
+
+        public List<Subject> Subjects { get; set; }
+
+        public List<long> SubjectIds { get; set; }
     }
 }

@@ -143,6 +143,7 @@ export class TestsComponent implements OnInit {
         anchor.href = url;
         anchor.click();
         anchor.remove();
+        this.toastr.success("QTI is dowloaded");
       }, error => {
           this.toastr.error(error.error);
           console.error(error);

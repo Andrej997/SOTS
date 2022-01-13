@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<qti-assessment-test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="27" title="Frontend kolokvijum 1" schemaLocation="http://www.imsglobal.org/xsd/imsqti_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/xsd/imsqti_asiv3p0_v1p0.xsd" xml:lang="en-US" xmlns="http://www.imsglobal.org/xsd/imsqti_v3p0">
-  <qti-test-part identifier="??" navigation-mode="nonlinear" submission-mode="individual" xmlns="">
-    <qti-assessment-section identifier="??" title="Section 1" visible="true" />
-    <qti-assessment-item-ref identifier="37" href="question/37" />
-    <qti-assessment-item-ref identifier="38" href="question/38" />
-    <qti-assessment-item-ref identifier="39" href="question/39" />
-  </qti-test-part>
-</qti-assessment-test>

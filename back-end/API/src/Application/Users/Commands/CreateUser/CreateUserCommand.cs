@@ -3,6 +3,7 @@ using API.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace API.Application.Users.Commands.CreateUser
         public string Surname { get; set; }
 
         public long RoleId { get; set; }
+
+        public List<long> SubjectIds { get; set; }
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
@@ -67,6 +70,15 @@ namespace API.Application.Users.Commands.CreateUser
                     UserId = user.Entity.Id,
                     RoleId = request.RoleId
                 });
+
+                foreach (var subjectId in request.SubjectIds)
+                {
+                    _context.UserSubjects.Add(new UserSubject
+                    {
+                        UserId = user.Entity.Id,
+                        SubjectId = subjectId
+                    });
+                }
 
                 await _context.SaveChangesAsync(cancellationToken);
 

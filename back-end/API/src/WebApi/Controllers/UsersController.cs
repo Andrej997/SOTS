@@ -1,9 +1,15 @@
 ﻿using API.Application.Users.Commands.CreateUser;
+using API.Application.Users.Commands.DeleteUser;
+using API.Application.Users.Commands.EditUser;
 using API.Application.Users.Commands.FinishTest;
 using API.Application.Users.Commands.Login;
 using API.Application.Users.Commands.StartTest;
 using API.Application.Users.Queries.ChoosenAnswers;
+using API.Application.Users.Queries.GetRoles;
 using API.Application.Users.Queries.GetStudentTests;
+using API.Application.Users.Queries.GetUser;
+using API.Application.Users.Queries.GetUsers;
+using API.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,6 +21,50 @@ namespace API.WebApi.Controllers
 {
     public class UsersController : ApiControllerBase
     {
+        [HttpGet]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<List<UserDto>>> GetUsers()
+        {
+            try
+            {
+                return await Mediator.Send(new GetUsersQuery());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<UserDto>> GetUser(long id)
+        {
+            try
+            {
+                return await Mediator.Send(new GetUserQuery { Id = id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("roles")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<List<Role>>> GetRoles()
+        {
+            try
+            {
+                return await Mediator.Send(new GetRolesQuery());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route("tests")]
         [ApiExplorerSettings(GroupName = "v1")]
@@ -83,6 +133,38 @@ namespace API.WebApi.Controllers
             try
             {
                 await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("edit")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> EditUser(EditUserCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("delete/{id}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> DeleteUser(long id)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteUserCommand { Id = id });
                 return Ok();
             }
             catch (Exception ex)

@@ -1,0 +1,11 @@
+<div>
+    <a type="button" class="btn btn-secondary" href="/users/0">Add new user</a>
+</div>
+
+<ng2-smart-table 
+        style="cursor: pointer;"
+        [settings]="settings" 
+        [source]="data" 
+        (userRowSelect)="onUserRowSelect($event)"
+        allowPaging='true'>
+</ng2-smart-table>
