@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace API.Infrastructure.Migrations
+namespace API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211030155159_update4")]
-    partial class update4
+    [Migration("20220114223723_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,118 @@ namespace API.Infrastructure.Migrations
                     b.ToTable("answers", "project");
                 });
 
+            modelBuilder.Entity("API.Domain.Entities.ChoosenAnswer", b =>
+                {
+                    b.Property<long>("StudentTestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("student_test_id");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("question_id");
+
+                    b.Property<long>("AnswerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("answer_id");
+
+                    b.Property<DateTime>("AnswerDated")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("answer_dated");
+
+                    b.HasKey("StudentTestId", "QuestionId", "AnswerId")
+                        .HasName("pk_choosen_answer");
+
+                    b.ToTable("choosen_answers", "project");
+                });
+
+            modelBuilder.Entity("API.Domain.Entities.Domain", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("date_created");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<long>("SubjectId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("subject_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_domain");
+
+                    b.ToTable("domains", "project");
+                });
+
+            modelBuilder.Entity("API.Domain.Entities.Edge", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("date_created");
+
+                    b.Property<long>("DomainId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("domain_id");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("text")
+                        .HasColumnName("label");
+
+                    b.Property<string>("SourceId")
+                        .HasColumnType("text")
+                        .HasColumnName("souce_id");
+
+                    b.Property<string>("TargetId")
+                        .HasColumnType("text")
+                        .HasColumnName("target_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_edge");
+
+                    b.ToTable("edges", "project");
+                });
+
+            modelBuilder.Entity("API.Domain.Entities.EdgeRK", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("SourceId")
+                        .HasColumnType("text")
+                        .HasColumnName("souce_id");
+
+                    b.Property<string>("TargetId")
+                        .HasColumnType("text")
+                        .HasColumnName("target_id");
+
+                    b.Property<long>("TestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("test_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_edge");
+
+                    b.ToTable("edges_rk", "project");
+                });
+
             modelBuilder.Entity("API.Domain.Entities.Grade", b =>
                 {
                     b.Property<long>("Id")
@@ -76,6 +188,30 @@ namespace API.Infrastructure.Migrations
                     b.ToTable("grades", "project");
                 });
 
+            modelBuilder.Entity("API.Domain.Entities.Node", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("date_created");
+
+                    b.Property<long>("DomainId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("domain_id");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("text")
+                        .HasColumnName("label");
+
+                    b.HasKey("Id")
+                        .HasName("pk_node");
+
+                    b.ToTable("nodes", "project");
+                });
+
             modelBuilder.Entity("API.Domain.Entities.Question", b =>
                 {
                     b.Property<long>("Id")
@@ -88,9 +224,17 @@ namespace API.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("text")
+                        .HasColumnName("image");
+
                     b.Property<long>("Points")
                         .HasColumnType("bigint")
                         .HasColumnName("points");
+
+                    b.Property<string>("ProblemNodeId")
+                        .HasColumnType("text")
+                        .HasColumnName("problem_node_id");
 
                     b.Property<long>("TestId")
                         .HasColumnType("bigint")
@@ -108,30 +252,28 @@ namespace API.Infrastructure.Migrations
                     b.ToTable("questions", "project");
                 });
 
-            modelBuilder.Entity("API.Domain.Entities.QuestionCompleted", b =>
+            modelBuilder.Entity("API.Domain.Entities.QuestionTime", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<double>("CompletedPercentage")
-                        .HasColumnType("double precision")
-                        .HasColumnName("completed_persentage");
-
-                    b.Property<long>("QuestionId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("question_id");
+                    b.Property<DateTime>("QuestionStart")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("question_start");
 
                     b.Property<long>("StudentTestsId")
                         .HasColumnType("bigint")
                         .HasColumnName("student_tests_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_question_completed");
+                    b.Property<DateTime>("QuestionEnd")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("question_end");
 
-                    b.ToTable("question_completed", "project");
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("question_id");
+
+                    b.HasKey("QuestionStart", "StudentTestsId")
+                        .HasName("pk_question_times");
+
+                    b.ToTable("question_times", "project");
                 });
 
             modelBuilder.Entity("API.Domain.Entities.Role", b =>
@@ -152,11 +294,12 @@ namespace API.Infrastructure.Migrations
                     b.ToTable("roles", "project");
                 });
 
-            modelBuilder.Entity("API.Domain.Entities.StudentTests", b =>
+            modelBuilder.Entity("API.Domain.Entities.StudentTest", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
+                        .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<long>("GradeId")
@@ -164,16 +307,22 @@ namespace API.Infrastructure.Migrations
                         .HasColumnName("grade_id");
 
                     b.Property<double>("Points")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("double precision")
+                        .HasDefaultValue(0.0)
                         .HasColumnName("points");
+
+                    b.Property<DateTime>("TestFinished")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("test_finished");
 
                     b.Property<long>("TestId")
                         .HasColumnType("bigint")
                         .HasColumnName("test_id");
 
-                    b.Property<bool>("TookTest")
-                        .HasColumnType("boolean")
-                        .HasColumnName("took_test");
+                    b.Property<DateTime>("TestStarted")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("test_started");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
@@ -181,6 +330,12 @@ namespace API.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_student_test");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("student_tests", "project");
                 });
@@ -193,7 +348,12 @@ namespace API.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
@@ -219,6 +379,10 @@ namespace API.Infrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("creator_id");
 
+                    b.Property<long>("DomainId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("domain_id");
+
                     b.Property<long>("MaxPoints")
                         .HasColumnType("bigint")
                         .HasColumnName("max_points");
@@ -226,6 +390,18 @@ namespace API.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<bool>("Published")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("published");
+
+                    b.Property<int>("SortBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_by");
 
                     b.Property<long>("SubjectId")
                         .HasColumnType("bigint")
@@ -646,6 +822,33 @@ namespace API.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("API.Domain.Entities.StudentTest", b =>
+                {
+                    b.HasOne("API.Domain.Entities.Grade", "Grade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Domain.Entities.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Domain.Entities.User", "User")
+                        .WithMany("StudentTests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Test");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("API.Domain.Entities.Test", b =>
                 {
                     b.HasOne("API.Domain.Entities.TestTime", "TestTime")
@@ -716,6 +919,11 @@ namespace API.Infrastructure.Migrations
             modelBuilder.Entity("API.Domain.Entities.Test", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("API.Domain.Entities.User", b =>
+                {
+                    b.Navigation("StudentTests");
                 });
 #pragma warning restore 612, 618
         }

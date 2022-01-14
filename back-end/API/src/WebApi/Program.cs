@@ -28,7 +28,7 @@ namespace API.WebApi
 
                     if (context.Database.IsNpgsql())
                     {
-                        //context.Database.Migrate();
+                        context.Database.Migrate();
                     }
                 }
                 catch (Exception ex)
