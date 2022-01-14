@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+    webapp-frontend:     
+      image: webapp
+      restart: always
+      environment:
+        - DEFAULT_LANG=sr
+      ports:
+        - 9045:80
