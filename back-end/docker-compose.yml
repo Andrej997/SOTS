@@ -6,13 +6,15 @@ networks:
 
 services:
   webapp:     
+    container_name: webapp
     image: webapp
     restart: always
     environment:
-      - api=https://localhost:44335/api/
+      - API=https://localhost:5002/api/
     ports:
-        - 9045:80
+        - 5000:80
   webapi:
+    container_name: webapi
     image: ${DOCKER_REGISTRY-}webapi
     depends_on:
       - "postgres_image"
@@ -20,8 +22,8 @@ services:
       context: .
       dockerfile: API/src/WebApi/Dockerfile
     ports:
-      - 8000:80
-      - 44335:443
+      - 5001:80
+      - 5002:443
     environment:
       ConnectionStrings__DefaultConnection: "host=postgres_image;port=5432;database=sotis;username=postgres;password=admin"
     networks:
@@ -35,6 +37,7 @@ services:
     restart: always
 
   postgres_image:
+    container_name: postgres
     image: postgres:latest
     ports:
       - "5432"

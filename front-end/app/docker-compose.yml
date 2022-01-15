@@ -5,6 +5,6 @@ services:
       image: webapp
       restart: always
       environment:
-        - DEFAULT_LANG=sr
+        - API=https://localhost:5002/api/
       ports:
         - 9045:80
