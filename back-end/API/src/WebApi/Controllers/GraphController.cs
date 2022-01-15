@@ -7,6 +7,7 @@ using API.Application.Graph.Queries.ExpectedKnowlageGraphForTest;
 using API.Application.Graph.Queries.GetEdges;
 using API.Application.Graph.Queries.GetNodes;
 using API.Application.Graph.Queries.RealKnowlageGraphForTestForUser;
+using API.Application.Graph.Queries.UserKnowledgeGraphForTest;
 using API.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,6 +26,21 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(new ExpectedKnowlageGraphForTestQuery { TestId = testId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("user/{userId}/knowlage-domain/test/{testId}")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<ActionResult<Tuple<List<NodeDto>, List<Edge>>>> UserKnowlageGraphForTest(long userId, long testId)
+        {
+            try
+            {
+                return await Mediator.Send(new UserKnowledgeGraphForTestQuery { UserId = userId, TestId = testId });
             }
             catch (Exception ex)
             {

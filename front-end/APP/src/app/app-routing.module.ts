@@ -17,6 +17,7 @@ import { NewTestComponent } from './tests/new-test/new-test.component';
 import { ResultsComponent } from './tests/results/results.component';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
 import { TestsComponent } from './tests/tests.component';
+import { UserKnowledgeGraphComponent } from './user-knowledge-graph/user-knowledge-graph.component';
 import { UserComponent } from './users/user/user.component';
 import { UsersComponent } from './users/users.component';
 
@@ -52,6 +53,12 @@ const routes: Routes = [
   {
     path: 'expected-knowlage-graph/:t_id',
     component: ExpectedKnowlageGraphComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'user-knowledge-graph/:t_id',
+    component: UserKnowledgeGraphComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },

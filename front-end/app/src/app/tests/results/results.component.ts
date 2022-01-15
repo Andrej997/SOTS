@@ -30,7 +30,7 @@ export class ResultsComponent implements OnInit {
   }
 
   seeRealKnowlageGraph(studentTestId: number) {
-    this.router.navigate([`/real-knowlage-graph/${studentTestId}`]);
+    this.router.navigate([`/user-knowledge-graph/${studentTestId}`]);
   }
 
   private getTests() {

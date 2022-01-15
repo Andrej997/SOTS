@@ -39,6 +39,7 @@ import { CompareKnowledgeComponent } from './compare-knowledge/compare-knowledge
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './users/user/user.component';
 import { SubjectsComponent } from './subjects/subjects.component';
+import { UserKnowledgeGraphComponent } from './user-knowledge-graph/user-knowledge-graph.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { SubjectsComponent } from './subjects/subjects.component';
     CompareKnowledgeComponent,
     UsersComponent,
     UserComponent,
-    SubjectsComponent
+    SubjectsComponent,
+    UserKnowledgeGraphComponent
   ],
   imports: [
     BrowserModule,
