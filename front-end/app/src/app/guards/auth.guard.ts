@@ -7,9 +7,8 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {
-
-  }
+  constructor(private authService: AuthService) { }
+  
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
@@ -24,6 +23,13 @@ export class AuthGuard implements CanActivate {
   isStudent(): boolean {
     let user = this.authService.getData();
     if (user.roleId == 3) 
+      return true;
+    return false;
+  }
+
+  isAdmin(): boolean {
+    let user = this.authService.getData();
+    if (user.roleId == 1) 
       return true;
     return false;
   }

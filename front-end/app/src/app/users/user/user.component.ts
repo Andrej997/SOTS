@@ -15,7 +15,7 @@ export class UserComponent implements OnInit {
 
   userForm: FormGroup;
 
-  private userId: number;
+  userId: number = 0;
   subjects: any[] = [];
   roles: any[] = [];
   user: any;

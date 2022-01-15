@@ -6,6 +6,7 @@ import { CompareKnowledgeComponent } from './compare-knowledge/compare-knowledge
 import { DomainsComponent } from './domains/domains.component';
 import { ExpectedKnowlageGraphComponent } from './expected-knowlage-graph/expected-knowlage-graph.component';
 import { GraphComponent } from './graph/graph.component';
+import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -82,7 +83,7 @@ const routes: Routes = [
     path: 'subjects',
     component: SubjectsComponent,
     pathMatch: 'full',
-    canActivate: [AuthGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'new-test',
@@ -94,13 +95,13 @@ const routes: Routes = [
     path: 'users',
     component: UsersComponent,
     pathMatch: 'full',
-    canActivate: [AuthGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'users/:id',
     component: UserComponent,
     pathMatch: 'full',
-    canActivate: [AuthGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'take-test/:t_id',
