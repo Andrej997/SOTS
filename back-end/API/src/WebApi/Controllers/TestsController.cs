@@ -1,5 +1,7 @@
-﻿using API.Application.Tests.Commands.CreateTest;
+﻿using API.Application.Tests.Commands.CreateSubject;
+using API.Application.Tests.Commands.CreateTest;
 using API.Application.Tests.Commands.DeleteTest;
+using API.Application.Tests.Commands.EditSubject;
 using API.Application.Tests.Commands.PublishTest;
 using API.Application.Tests.Commands.SortBy;
 using API.Application.Tests.Commands.UpdateTest;
@@ -101,6 +103,38 @@ namespace API.WebApi.Controllers
             try
             {
                 return await Mediator.Send(new GetSubjectsQuery());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("create/subject")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> CreateSubject(CreateSubjectCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("edit/subject")]
+        [ApiExplorerSettings(GroupName = "v1")]
+        public async Task<IActionResult> EditSubjectCommand(EditSubjectCommand command)
+        {
+            try
+            {
+                await Mediator.Send(command);
+                return Ok();
             }
             catch (Exception ex)
             {

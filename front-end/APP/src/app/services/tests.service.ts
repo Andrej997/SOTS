@@ -83,6 +83,14 @@ export class TestsService {
     return this.http.put(environment.api + `QA/update/answer`, body);
   }
 
+  addSubject(body: any) {
+    return this.http.post(environment.api + `Tests/create/subject`, body);
+  }
+
+  editSubject(body: any) {
+    return this.http.put(environment.api + `Tests/edit/subject`, body);
+  }
+
   editQuestion(body: any) {
     return this.http.put(environment.api + `QA/update/question`, body);
   }

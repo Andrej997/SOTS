@@ -1,0 +1,8 @@
+<ng2-smart-table 
+        style="cursor: pointer;"
+        [settings]="settings" 
+        [source]="data" 
+        (createConfirm)="add($event)"
+        (editConfirm)="edit($event.newData)"
+        allowPaging='true'>
+</ng2-smart-table>

@@ -38,6 +38,7 @@ import { RealKnowlageGraphComponent } from './real-knowlage-graph/real-knowlage-
 import { CompareKnowledgeComponent } from './compare-knowledge/compare-knowledge.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './users/user/user.component';
+import { SubjectsComponent } from './subjects/subjects.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { UserComponent } from './users/user/user.component';
     RealKnowlageGraphComponent,
     CompareKnowledgeComponent,
     UsersComponent,
-    UserComponent
+    UserComponent,
+    SubjectsComponent
   ],
   imports: [
     BrowserModule,

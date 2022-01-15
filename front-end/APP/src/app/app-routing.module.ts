@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { RealKnowlageGraphComponent } from './real-knowlage-graph/real-knowlage-graph.component';
+import { SubjectsComponent } from './subjects/subjects.component';
 import { NewTestComponent } from './tests/new-test/new-test.component';
 import { ResultsComponent } from './tests/results/results.component';
 import { TakeTestComponent } from './tests/take-test/take-test.component';
@@ -74,6 +75,12 @@ const routes: Routes = [
   {
     path: 'results',
     component: ResultsComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'subjects',
+    component: SubjectsComponent,
     pathMatch: 'full',
     canActivate: [AuthGuard]
   },
