@@ -1,0 +1,52 @@
+version: '3.4'
+
+networks:
+  dockerapi-dev:
+    driver: bridge
+
+services:
+  webapp:     
+    image: webapp
+    restart: always
+    environment:
+      - api=https://localhost:44335/api/
+    ports:
+        - 9045:80
+  webapi:
+    image: ${DOCKER_REGISTRY-}webapi
+    depends_on:
+      - "postgres_image"
+    build:
+      context: .
+      dockerfile: API/src/WebApi/Dockerfile
+    ports:
+      - 8000:80
+      - 44335:443
+    environment:
+      ConnectionStrings__DefaultConnection: "host=postgres_image;port=5432;database=sotis;username=postgres;password=admin"
+    networks:
+      - dockerapi-dev
+
+  kstapi:
+    container_name: kstapi
+    image: kst-srv
+    ports:
+    - "5003:5003"
+    restart: always
+
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: sotis
+    networks:
+      - dockerapi-dev
+
+volumes:
+  db_volume:
