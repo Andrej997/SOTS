@@ -54,13 +54,13 @@ namespace API.Application.Tests.Queries.ExportQTI
                 xmlDoc.AppendChild(rootNode);
 
                 XmlElement qtiTestPart = xmlDoc.CreateElement("qti-test-part");
-                qtiTestPart.SetAttribute("identifier", "??");
+                qtiTestPart.SetAttribute("identifier", Guid.NewGuid().ToString());
                 qtiTestPart.SetAttribute("navigation-mode", "nonlinear");
                 qtiTestPart.SetAttribute("submission-mode", "individual");
                 rootNode.AppendChild(qtiTestPart);
 
                 XmlElement qtiAssessmentSection = xmlDoc.CreateElement("qti-assessment-section");
-                qtiAssessmentSection.SetAttribute("identifier", "??");
+                qtiAssessmentSection.SetAttribute("identifier", Guid.NewGuid().ToString());
                 qtiAssessmentSection.SetAttribute("title", "Section 1");
                 qtiAssessmentSection.SetAttribute("visible", "true");
                 qtiTestPart.AppendChild(qtiAssessmentSection);
@@ -100,7 +100,7 @@ namespace API.Application.Tests.Queries.ExportQTI
                     archiveFile = archiveStream.ToArray();
                 }
 
-                xmlDoc.Save("test.xml");
+                //xmlDoc.Save("test.xml");
 
                 return archiveFile;
             }
@@ -181,7 +181,7 @@ namespace API.Application.Tests.Queries.ExportQTI
             qtiResponseProcessing.SetAttribute("template", "https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct");
             rootNode.AppendChild(qtiResponseProcessing);
 
-            xmlDoc.Save($"{question.Id}.xml");
+            //xmlDoc.Save($"{question.Id}.xml");
             return xmlDoc;
         }
     }
