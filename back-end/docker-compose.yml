@@ -13,11 +13,14 @@ services:
       - API=https://localhost:5002/api/
     ports:
         - 5000:80
+    networks:
+      - dockerapi-dev
+
   webapi:
     container_name: webapi
     image: ${DOCKER_REGISTRY-}webapi
     depends_on:
-      - "postgres_image"
+      - "postgres"
     build:
       context: .
       dockerfile: API/src/WebApi/Dockerfile
@@ -25,7 +28,7 @@ services:
       - 5001:80
       - 5002:443
     environment:
-      ConnectionStrings__DefaultConnection: "host=postgres_image;port=5432;database=sotis;username=postgres;password=admin"
+      ConnectionStrings__DefaultConnection: "host=postgres;port=5432;database=sotis;username=postgres;password=admin"
     networks:
       - dockerapi-dev
 
@@ -35,15 +38,17 @@ services:
     ports:
     - "5003:5003"
     restart: always
+    networks:
+      - dockerapi-dev
 
-  postgres_image:
+  postgres:
     container_name: postgres
     image: postgres:latest
     ports:
-      - "5432"
+      - "5432:5432"
     restart: always
     volumes:
-      - db_volume:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
@@ -51,5 +56,24 @@ services:
     networks:
       - dockerapi-dev
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - dockerapi-dev
+    restart: unless-stopped
+
 volumes:
-  db_volume:
+  postgres:
+  pgadmin:
