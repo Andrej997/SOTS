@@ -40,18 +40,7 @@ namespace API.Application.Users.Commands.CreateUser
         {
             try
             {
-                byte[] salt = new byte[128 / 8];
-                using (var rngCsp = new RNGCryptoServiceProvider())
-                {
-                    rngCsp.GetNonZeroBytes(salt);
-                }
-
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: request.Password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 100000,
-                    numBytesRequested: 256 / 8));
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
                 var user = _context.Users
                    .Add(new User
@@ -59,7 +48,7 @@ namespace API.Application.Users.Commands.CreateUser
                        Name = request.Name,
                        Surname = request.Surname,
                        Username = request.Username,
-                       PasswordHash = request.Password,
+                       PasswordHash = passwordHash,
                        CreatedAt = _dateTime.UtcNow
                    });
 

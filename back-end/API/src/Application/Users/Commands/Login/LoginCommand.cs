@@ -38,21 +38,18 @@ namespace API.Application.Users.Commands.Login
         {
             try
             {
-                byte[] salt = new byte[128 / 8];
-                using (var rngCsp = new RNGCryptoServiceProvider())
-                {
-                    rngCsp.GetNonZeroBytes(salt);
-                }
+                var passwordHash = _context.Users
+                    .Where(user => user.Username == request.Username)
+                    .Select(user => user.PasswordHash)
+                    .FirstOrDefault();
 
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: request.Password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 100000,
-                    numBytesRequested: 256 / 8));
+                if (passwordHash == null || passwordHash == "") throw new Exception("Unknown username or password");
+
+                bool verified = BCrypt.Net.BCrypt.Verify(request.Password, passwordHash);
+                if (verified == false) throw new Exception("Unknown username or password");
 
                 var user = _context.Users
-                    .Where(user => user.Username == request.Username && user.PasswordHash == request.Password)
+                    .Where(user => user.Username == request.Username)
                     .Select(user => new UserDto
                     {
                         Id = user.Id,
