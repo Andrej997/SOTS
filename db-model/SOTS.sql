@@ -12,6 +12,14 @@ CREATE TABLE "roles" (
   "name" varchar
 );
 
+CREATE TABLE "question_times" (
+  "question_id" bigint,
+  "student_tests_id" bigint,
+  "question_start" timestamp,
+  "question_end" timestamp,
+  PRIMARY KEY ("question_id", "student_tests_id")
+);
+
 CREATE TABLE "user_roles" (
   "user_id" bigint,
   "role_id" bigint,
@@ -20,7 +28,8 @@ CREATE TABLE "user_roles" (
 
 CREATE TABLE "subjects" (
   "id" bigint PRIMARY KEY,
-  "name" text
+  "name" text,
+  "description" text
 );
 
 CREATE TABLE "tests" (
@@ -30,14 +39,16 @@ CREATE TABLE "tests" (
   "created_at" timestamp,
   "creator_id" bigint,
   "test_time_id" bigint,
-  "max_points" int
+  "max_points" int,
+  "published" boolean,
+  "domain_id" bigint,
+  "sort_by" int
 );
 
 CREATE TABLE "student_tests" (
   "id" BIGSERIAL PRIMARY KEY,
   "user_id" bigint,
   "test_id" bigint,
-  "took_test" boolean,
   "points" float,
   "grade_id" bigint,
   "test_started" timestamp,
@@ -60,9 +71,11 @@ CREATE TABLE "grades" (
 CREATE TABLE "questions" (
   "id" BIGSERIAL PRIMARY KEY,
   "text_question" text,
+  "image" text,
   "created_at" timestamp,
   "points" int,
-  "test_id" bigint
+  "test_id" bigint,
+  "problem_node_id" text
 );
 
 CREATE TABLE "answers" (
@@ -82,8 +95,49 @@ CREATE TABLE "choosen_answers" (
   "student_test_id" bigint,
   "question_id" bigint,
   "answer_id" bigint,
+  "answer_dated" timestamp,
   PRIMARY KEY ("student_test_id", "question_id", "answer_id")
 );
+
+CREATE TABLE "nodes" (
+  "id" text PRIMARY KEY,
+  "label" json,
+  "domain_id" bigint
+);
+
+CREATE TABLE "edges" (
+  "id" text PRIMARY KEY,
+  "label" text,
+  "source_id" text,
+  "target_id" text,
+  "domain_id" bigint,
+  "date_created" timestamp
+);
+
+CREATE TABLE "edges_rk" (
+  "id" bigint PRIMARY KEY,
+  "test_id" bigint,
+  "source_id" text,
+  "target_id" text
+);
+
+CREATE TABLE "domains" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "name" text,
+  "description" text,
+  "subject_id" bigint,
+  "date_created" timestamp
+);
+
+CREATE TABLE "test_needs_domains" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "domain_id" bigint,
+  "test_id" bigint
+);
+
+ALTER TABLE "test_needs_domains" ADD FOREIGN KEY ("domain_id") REFERENCES "domains" ("id");
+
+ALTER TABLE "test_needs_domains" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("id");
 
 ALTER TABLE "user_roles" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
 
@@ -110,4 +164,18 @@ ALTER TABLE "choosen_answers" ADD FOREIGN KEY ("student_test_id") REFERENCES "st
 ALTER TABLE "user_subject" ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("id");
 
 ALTER TABLE "user_subject" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
+ALTER TABLE "question_times" ADD FOREIGN KEY ("student_tests_id") REFERENCES "student_tests" ("id");
+
+ALTER TABLE "domains" ADD FOREIGN KEY ("id") REFERENCES "subjects" ("id");
+
+ALTER TABLE "domains" ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("id");
+
+ALTER TABLE "edges" ADD FOREIGN KEY ("domain_id") REFERENCES "domains" ("id");
+
+ALTER TABLE "nodes" ADD FOREIGN KEY ("domain_id") REFERENCES "domains" ("id");
+
+ALTER TABLE "questions" ADD FOREIGN KEY ("problem_node_id") REFERENCES "nodes" ("id");
+
+ALTER TABLE "edges_rk" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("id");
 

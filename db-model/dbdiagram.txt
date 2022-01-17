@@ -12,7 +12,14 @@ Table roles {
   id bigint [pk]
   name varchar
 }
- 
+
+Table question_times {
+  question_id bigint [pk]
+  student_tests_id bigint [pk]
+  question_start timestamp
+  question_end timestamp
+}
+
 Table user_roles {
   user_id bigint [pk]
   role_id bigint [pk]
@@ -21,6 +28,7 @@ Table user_roles {
 Table subjects {
   id bigint [pk]
   name text
+  description text
 }
 
 Table tests {
@@ -31,13 +39,15 @@ Table tests {
   creator_id bigint
   test_time_id bigint
   max_points int
+  published boolean
+  domain_id bigint
+  sort_by int
 }
 
 Table student_tests {
  id bigint [pk, increment]
  user_id bigint
  test_id bigint
- took_test boolean
  points float
  grade_id bigint
  test_started timestamp
@@ -60,9 +70,11 @@ Table grades {
 Table questions {
  id bigint [pk, increment]
  text_question text
+ image text
  created_at timestamp
  points int
  test_id bigint
+ problem_node_id text
 }
 
 Table answers {
@@ -81,8 +93,47 @@ Table choosen_answers {
   student_test_id bigint [pk]
   question_id bigint [pk]
   answer_id bigint [pk]
+  answer_dated timestamp
 }
 
+Table nodes {
+  id text [pk]
+  label json
+  domain_id bigint
+}
+
+Table edges {
+  id text [pk]
+  label text
+  source_id text
+  target_id text
+  domain_id bigint
+  date_created timestamp  
+}
+
+Table edges_rk {
+  id bigint [pk]
+  test_id bigint
+  source_id text
+  target_id text
+}
+
+Table domains {
+  id bigint [pk, increment]
+  name text
+  description text
+  subject_id bigint
+  date_created timestamp
+}
+
+Table test_needs_domains {
+  id bigint [pk, increment]
+  domain_id bigint
+  test_id bigint
+}
+
+Ref: test_needs_domains.domain_id > domains.id
+Ref: test_needs_domains.test_id > tests.id
 Ref: user_roles.role_id > roles.id
 Ref: user_roles.user_id > users.id
 Ref: tests.subject_id > subjects.id
@@ -96,4 +147,10 @@ Ref: questions.id < answers.question_id
 Ref: student_tests.id < choosen_answers.student_test_id
 Ref: user_subject.subject_id > subjects.id
 Ref: users.id < user_subject.user_id
-
+Ref: question_times.student_tests_id > student_tests.id
+Ref: domains.id > subjects.id
+Ref: domains.subject_id > subjects.id
+Ref: edges.domain_id > domains.id
+Ref: nodes.domain_id > domains.id
+Ref: "nodes"."id" < "questions"."problem_node_id"
+Ref: "tests"."id" < "edges_rk"."test_id"
