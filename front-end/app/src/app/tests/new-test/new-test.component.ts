@@ -6,6 +6,7 @@ import { Answer, Question } from '../../models/question';
 import { TestsService } from '../../services/tests.service';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { GraphService } from 'src/app/services/graph.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-new-test',
@@ -32,6 +33,7 @@ export class NewTestComponent implements OnInit {
     private domainService: DomainService,
     private toastr: ToastrService,
     private graphService: GraphService,
+    private auth: AuthService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -347,7 +349,7 @@ export class NewTestComponent implements OnInit {
         SubjectId: this.testForm.value.subject,
         DomainId: this.testForm.value.domain,
         Questions: this.questions,
-        CreatorId: 1,
+        CreatorId: this.auth.getUserId(),
         MaxPoints: this.testForm.value.maxPoints,
         Start: this.testForm.value.start,
         End: this.testForm.value.end
