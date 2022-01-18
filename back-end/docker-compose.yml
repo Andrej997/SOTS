@@ -29,6 +29,7 @@ services:
       - 5002:443
     environment:
       ConnectionStrings__DefaultConnection: "host=postgres;port=5432;database=sotis;username=postgres;password=admin"
+      Kst__API: "http://localhost:5003"
     networks:
       - dockerapi-dev
 
