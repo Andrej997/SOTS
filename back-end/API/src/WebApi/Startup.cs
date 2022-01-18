@@ -34,6 +34,8 @@ namespace API.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Application.Common.Models.Kst>(Configuration.GetSection("Kst"));
+
             services.AddApplication();
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

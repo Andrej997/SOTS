@@ -3,6 +3,7 @@ using API.Application.Common.Models;
 using API.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -23,8 +24,9 @@ namespace API.Application.Tests.Queries.GetTakeTest
     public class GetTestsInfoQueryHandler : IRequestHandler<GetTakeTestQuery, TakeTestDto>
     {
         private readonly IApplicationDbContext _context;
+        private string KstApi;
 
-        public GetTestsInfoQueryHandler(IApplicationDbContext context)
+        public GetTestsInfoQueryHandler(IApplicationDbContext context, IOptions<Kst> settings)
         {
             _context = context;
         }
@@ -224,7 +226,7 @@ namespace API.Application.Tests.Queries.GetTakeTest
                 dynamic.Add(user.Id.ToString(), GetArray(test.Id, user.Id, domainNodes, test.Questions));
             }
 
-            var client = new RestClient("http://192.168.0.34:5003");
+            var client = new RestClient(KstApi);
             var restRequest = new RestRequest("api/calculate/kst", Method.POST);
             restRequest.AddJsonBody(dynamic);
             var response = client.Execute(restRequest);

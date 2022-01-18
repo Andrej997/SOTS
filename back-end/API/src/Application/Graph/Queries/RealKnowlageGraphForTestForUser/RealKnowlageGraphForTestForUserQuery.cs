@@ -3,6 +3,7 @@ using API.Application.Common.Models;
 using API.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -21,10 +22,12 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
     public class RealKnowlageGraphForTestForUserQueryHandler : IRequestHandler<RealKnowlageGraphForTestForUserQuery, Tuple<List<NodeDto>, List<Edge>>>
     {
         private readonly IApplicationDbContext _context;
+        private string KstApi;
 
-        public RealKnowlageGraphForTestForUserQueryHandler(IApplicationDbContext context)
+        public RealKnowlageGraphForTestForUserQueryHandler(IApplicationDbContext context, IOptions<Kst> settings)
         {
             _context = context;
+            KstApi = settings.Value.API;
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -54,7 +57,7 @@ namespace API.Application.Graph.Queries.RealKnowlageGraphForTestForUser
                     dynamic.Add(user.Id.ToString(), GetArray(test.Id, user.Id, domainNodes, test.Questions));
                 }
 
-                var client = new RestClient("http://192.168.0.34:5003");
+                var client = new RestClient(KstApi);
                 var restRequest = new RestRequest("api/calculate/kst", Method.POST);
                 restRequest.AddJsonBody(dynamic);
                 var response = client.Execute(restRequest);
